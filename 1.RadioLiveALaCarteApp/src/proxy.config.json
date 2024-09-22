@@ -1,0 +1,22 @@
+{
+  "/api/*": {
+      "target": "http://localhost:8287/",
+      "secure": false,
+      "logLevel": "debug",
+      "changeOrigin": true
+  },
+  "/app/*": {
+      "target": "http://localhost:8287/",
+      "secure": false,
+      "logLevel": "debug",
+      "changeOrigin": true
+  },
+  "/media/*": {
+      "target": "http://localhost:8287/",
+      "secure": false,
+      "logLevel": "debug",
+      "changeOrigin": true
+  }
+}
+
+  

@@ -1,0 +1,23 @@
+<div class="player">
+    <audio #audioPlayer (timeupdate)="onTimeUpdate()" (ended)="onEnded()">
+      <source [src]="mp3Url" type="audio/mp3">
+      Votre navigateur ne supporte pas l'élément audio.
+    </audio>
+  
+    <!-- Bouton play/pause -->
+    <button (click)="playPause()">
+      {{ isPlaying ? 'Pause' : 'Play' }}
+    </button>
+  
+    <!-- Barre de progression -->
+    <input
+      type="range"
+      [value]="currentTime"
+      [max]="duration"
+      (input)="seek($event)"
+    />
+  
+    <!-- Affichage du temps actuel et de la durée -->
+    <div>{{ currentTime | number: '1.0-0' }} / {{ duration | number: '1.0-0' }} sec</div>
+  </div>
+  
