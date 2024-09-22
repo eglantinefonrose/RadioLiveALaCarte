@@ -1,0 +1,494 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "PiggyBank API",
+    "description": "PiggyBank API Description",
+    "termsOfService": "https://piggybank.tee-xprmnt.xyz/terms/",
+    "contact": {
+      "email": "eglantine.fonrose@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/piggybank/createBankAccount/firstName/{firstName}/lastName/{lastName}/accountBalance/{accountBalance}/currency/{currency}/isOverdraftAllowed/{isOverdraftAllowed}/overDraftLimit/{overDraftLimit}": {
+      "get": {
+        "summary": "Crée un nouveau compte bancaire.",
+        "description": "Crée un compte bancaire avec les informations fournies et retourne l'ID du compte créé.",
+        "operationId": "createBankAccount",
+        "parameters": [
+          {
+            "name": "firstName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "lastName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "accountBalance",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "currency",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isOverdraftAllowed",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "overDraftLimit",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/piggybank/getAccountFromID/accountID/{accountID}": {
+      "get": {
+        "operationId": "getAccountFromID",
+        "parameters": [
+          {
+            "name": "accountID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BankAccountInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/piggybank/getAllIncomingTransactionsFromAccountID/accountID/{accountID}": {
+      "get": {
+        "operationId": "getAllIncomingTransactionsFromAccountID",
+        "parameters": [
+          {
+            "name": "accountID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransactionDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/piggybank/getAllOutgoingTransactionsFromAccountID/accountID/{accountID}": {
+      "get": {
+        "operationId": "getAllOutgoingTransactionsFromAccountID",
+        "parameters": [
+          {
+            "name": "accountID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransactionDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/piggybank/getAllTransactionsFromAccountID/accountID/{accountID}": {
+      "get": {
+        "operationId": "getAllTransactionsFromAccountID",
+        "parameters": [
+          {
+            "name": "accountID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TransactionDTO"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/piggybank/getLastUserSessionInfo": {
+      "get": {
+        "operationId": "getLastUserSessionInfo",
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSessionInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/piggybank/login/user": {
+      "post": {
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userName": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/piggybank/makeDeposit/accountID/{accountID}/amount/{amount}/currency/{currency}": {
+      "get": {
+        "operationId": "makeDeposit",
+        "parameters": [
+          {
+            "name": "accountID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "amount",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "currency",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BankAccountInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/piggybank/makePayment/accountID/{accountID}/amount/{amount}/currency/{currency}": {
+      "get": {
+        "operationId": "makePayment",
+        "parameters": [
+          {
+            "name": "accountID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "amount",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "currency",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BankAccountInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/piggybank/transferMoneyToAccount/senderBankAccountID/{senderBankAccountID}/recipientBankAccountID/{recipientBankAccountID}/thePaymentAmount/{thePaymentAmount}": {
+      "get": {
+        "operationId": "transferMoneyToAccount",
+        "parameters": [
+          {
+            "name": "senderBankAccountID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recipientBankAccountID",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "thePaymentAmount",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BankAccountInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/application.wadl/{path}": {
+      "get": {
+        "operationId": "getExternalGrammar",
+        "parameters": [
+          {
+            "name": "path",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/xml": {}
+            }
+          }
+        }
+      }
+    },
+    "/application.wadl": {
+      "get": {
+        "operationId": "getWadl",
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/vnd.sun.wadl+xml": {},
+              "application/xml": {}
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BankAccountInfo": {
+        "type": "object",
+        "properties": {
+          "accountId": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "accountBalance": {
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "isOverdraftAllowed": {
+            "type": "boolean"
+          },
+          "overDraftLimit": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "TransactionDTO": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "senderAccountID": {
+            "type": "string"
+          },
+          "recipientAccountID": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "timeEpoch": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "transactionNatureEnum": {
+            "type": "string"
+          }
+        }
+      },
+      "UserSessionInfo": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

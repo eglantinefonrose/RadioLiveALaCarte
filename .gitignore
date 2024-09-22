@@ -1,0 +1,10 @@
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build
+gradle
+gradlew*
+0.RadioLiveALaCarteServer/app/src/main/resources/static/media
+0.RadioLiveALaCarteServer/app/src/main/resources/static/ui
+0.RadioLiveALaCarteServer/.idea

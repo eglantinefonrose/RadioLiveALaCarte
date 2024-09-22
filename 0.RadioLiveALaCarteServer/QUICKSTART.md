@@ -1,0 +1,1 @@
+# Build## Building the UI```bash ng build --base-href /app/ui/browser/  --output-path=/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0RadioLiveALaCarteServer/app/src/main/resources/static/ui``` ## Building the Backend```bashgradle run```# Testing## In a local web browserhttp://localhost:8287/app/ui/browser/index.html
