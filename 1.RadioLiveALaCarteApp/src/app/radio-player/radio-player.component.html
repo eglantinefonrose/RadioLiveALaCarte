@@ -1,12 +1,22 @@
 <div class="player">
     <audio #audioPlayer (timeupdate)="onTimeUpdate()" (ended)="onEnded()">
-      <source [src]="mp3Url" type="audio/mp3">
+      <source [src]="mp3Url" type="audio/mp3" />
       Votre navigateur ne supporte pas l'élément audio.
     </audio>
   
     <!-- Bouton play/pause -->
     <button (click)="playPause()">
       {{ isPlaying ? 'Pause' : 'Play' }}
+    </button>
+  
+    <!-- Nouveau bouton pour revenir au début -->
+    <button (click)="rewindToStart()" [disabled]="currentTime === 0">
+      Revenir au début
+    </button>
+
+    <!-- Bouton pour basculer entre vitesse normale et x2 -->
+    <button (click)="toggleSpeed()">
+        {{ isSpeedNormal ? 'Vitesse x2' : 'Vitesse normale' }}
     </button>
   
     <!-- Barre de progression -->
@@ -17,7 +27,13 @@
       (input)="seek($event)"
     />
   
-    <!-- Affichage du temps actuel et de la durée -->
-    <div>{{ currentTime | number: '1.0-0' }} / {{ duration | number: '1.0-0' }} sec</div>
-  </div>
+    <!-- Indicateur temporel -->
+    <div class="time-indicator">
+      {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
+    </div>
+</div>
+  
+  
+  
+  
   
