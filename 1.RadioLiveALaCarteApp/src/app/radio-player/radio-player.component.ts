@@ -9,6 +9,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 })
 
 export class RadioPlayerComponent {
+  
   @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
 
   isPlaying = false;
@@ -77,7 +78,7 @@ export class RadioPlayerComponent {
     this.audioPlayer.nativeElement.playbackRate = 1;
     this.isSpeedNormal = true;
 
-    // Passer à la piste suivante automatiquement seulement si ce n'est pas la dernière
+    // Passer à la piste suivante automatiquement si ce n'est pas la dernière piste
     if (!this.isLastTrack()) {
       this.nextTrack();
     }
@@ -88,6 +89,8 @@ export class RadioPlayerComponent {
     if (!this.isLastTrack()) {
       this.currentTrackIndex++;
       this.loadAndPlayCurrentTrack();
+      this.playPause();
+      this.isPlaying = true;
     }
   }
 
@@ -113,8 +116,9 @@ export class RadioPlayerComponent {
     audio.src = this.mp3Url;  // Modifier explicitement la source audio
     audio.load();  // Recharger le nouvel audio
 
-    if (this.isPlaying) {
-      audio.play();  // Lire automatiquement si l'audio était déjà en lecture
+    // Si l'audio est en lecture, on lance la lecture automatique
+    if (this.isPlaying || audio.autoplay) {
+      audio.play();
     }
   }
 
