@@ -9,14 +9,14 @@
       {{ isPlaying ? 'Pause' : 'Play' }}
     </button>
   
-    <!-- Nouveau bouton pour revenir au début -->
+    <!-- Bouton pour revenir au début -->
     <button (click)="rewindToStart()" [disabled]="currentTime === 0">
       Revenir au début
     </button>
-
-    <!-- Bouton pour basculer entre vitesse normale et x2 -->
-    <button (click)="toggleSpeed()">
-        {{ isSpeedNormal ? 'Vitesse x2' : 'Vitesse normale' }}
+  
+    <!-- Bouton pour passer à la piste suivante -->
+    <button (click)="nextTrack()">
+      >> Piste suivante
     </button>
   
     <!-- Barre de progression -->
@@ -31,7 +31,13 @@
     <div class="time-indicator">
       {{ formatTime(currentTime) }} / {{ formatTime(duration) }}
     </div>
-</div>
+  
+    <!-- Bouton pour basculer entre vitesse normale et x2 -->
+    <button (click)="toggleSpeed()">
+      {{ isSpeedNormal ? 'Vitesse x2' : 'Vitesse normale' }}
+    </button>
+  </div>
+  
   
   
   
