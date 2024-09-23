@@ -9,13 +9,18 @@
       {{ isPlaying ? 'Pause' : 'Play' }}
     </button>
   
+    <!-- Bouton pour revenir à la piste précédente -->
+    <button (click)="previousTrack()" [disabled]="isFirstTrack()">
+      << Piste précédente
+    </button>
+  
     <!-- Bouton pour revenir au début -->
     <button (click)="rewindToStart()" [disabled]="currentTime === 0">
       Revenir au début
     </button>
   
     <!-- Bouton pour passer à la piste suivante -->
-    <button (click)="nextTrack()">
+    <button (click)="nextTrack()" [disabled]="isLastTrack()">
       >> Piste suivante
     </button>
   
@@ -37,9 +42,4 @@
       {{ isSpeedNormal ? 'Vitesse x2' : 'Vitesse normale' }}
     </button>
   </div>
-  
-  
-  
-  
-  
   

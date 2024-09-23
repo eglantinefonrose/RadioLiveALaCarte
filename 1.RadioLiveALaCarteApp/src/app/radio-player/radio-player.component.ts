@@ -28,6 +28,16 @@ export class RadioPlayerComponent {
     return this.mp3Urls[this.currentTrackIndex];
   }
 
+  // Vérifier si l'on est sur la première piste
+  isFirstTrack(): boolean {
+    return this.currentTrackIndex === 0;
+  }
+
+  // Vérifier si l'on est sur la dernière piste
+  isLastTrack(): boolean {
+    return this.currentTrackIndex === this.mp3Urls.length - 1;
+  }
+
   // Démarrer ou mettre en pause la lecture
   playPause() {
     const audio = this.audioPlayer.nativeElement;
@@ -67,19 +77,32 @@ export class RadioPlayerComponent {
     this.audioPlayer.nativeElement.playbackRate = 1;
     this.isSpeedNormal = true;
 
-    // Passer à la piste suivante automatiquement
-    this.nextTrack();
+    // Passer à la piste suivante automatiquement seulement si ce n'est pas la dernière
+    if (!this.isLastTrack()) {
+      this.nextTrack();
+    }
   }
 
-  // Passer à la piste suivante
+  // Passer à la piste suivante (désactivé si on est à la dernière piste)
   nextTrack() {
-    if (this.currentTrackIndex < this.mp3Urls.length - 1) {
+    if (!this.isLastTrack()) {
       this.currentTrackIndex++;
-    } else {
-      this.currentTrackIndex = 0;  // Revenir à la première piste si on est à la fin
+      this.loadAndPlayCurrentTrack();
     }
+  }
 
-    this.loadAndPlayCurrentTrack();
+  // Revenir à la piste précédente (désactivé si on est à la première piste)
+  previousTrack() {
+    const audio = this.audioPlayer.nativeElement;
+
+    // Si on est à plus de 2 secondes sur la piste actuelle, on revient au début
+    if (this.currentTime > 2) {
+      this.rewindToStart();
+    } else if (!this.isFirstTrack()) {
+      // Sinon, passer à la piste précédente seulement si ce n'est pas la première piste
+      this.currentTrackIndex--;
+      this.loadAndPlayCurrentTrack();
+    }
   }
 
   // Charger et jouer la piste actuelle
@@ -113,4 +136,5 @@ export class RadioPlayerComponent {
     const secs = Math.floor(seconds % 60);
     return minutes + ':' + (secs < 10 ? '0' + secs : secs);
   }
+
 }
