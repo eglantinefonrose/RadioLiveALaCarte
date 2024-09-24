@@ -16,7 +16,7 @@ public class JerseyConfig  extends ResourceConfig {
         this.packages("io.swagger.jaxrs.json");
         this.packages("io.swagger.jaxrs.listing");
         //    - Proutechos REST Resources
-        this.packages("com.proutechos.sandbox.radiolivealacarte");
+        this.packages("com.proutechos");
 
         //
         // Configure Exception Handlers to tune result returned (response) to errors

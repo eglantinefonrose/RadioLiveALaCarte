@@ -1,7 +1,8 @@
 package com.proutechos.sandbox.radiolivealacarte.server.api;
 
 import com.proutechos.sandbox.radiolivealacarte.server.model.RadioStation;
-import com.proutechos.sandbox.radiolivealacarte.server.service.RadioStreamingService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.planning.RadioInformationAndPlanningService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RadioRecordingSchedulerService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -11,6 +12,8 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.quartz.*;
+
 import java.io.IOException;
 import javax.ws.rs.core.*;
 import java.io.*;
@@ -19,6 +22,8 @@ import java.net.URL;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+
+import static org.quartz.JobBuilder.newJob;
 
 @Path("/radio")
 public class RadioLiveALaCarteResource {
@@ -33,11 +38,7 @@ public class RadioLiveALaCarteResource {
     @Path("getAllCountries")
     @Produces(MediaType.APPLICATION_JSON)
     public String getAllCountries() throws Exception {
-        try {
-            return RadioStreamingService.getInstance().getAllCountries();
-        } catch (Exception e) {
-            throw e;
-        }
+        return RadioInformationAndPlanningService.getInstance().getAllCountries();
     }
 
 
@@ -50,11 +51,7 @@ public class RadioLiveALaCarteResource {
     @Path("searchByName/{name}")
     @Produces(MediaType.APPLICATION_JSON)
     public RadioStation[] searchByName(@PathParam("name") String name) throws Exception {
-        try {
-            return RadioStreamingService.getInstance().searchByName(name);
-        } catch (Exception e) {
-            throw e;
-        }
+        return RadioInformationAndPlanningService.getInstance().searchByName(name);
     }
 
     private static final String STREAM_URL = "https://stream.radiofrance.fr/franceinter/franceinter_hifi.m3u8?id=radiofrance"; // URL du flux HLS
@@ -141,6 +138,12 @@ public class RadioLiveALaCarteResource {
         return Response.ok(stream, "audio/mpeg")
                 .header("Content-Disposition", "attachment; filename=\"" + mp3File.getName() + "\"")
                 .build();
+    }
+
+    @GET
+    @Path("/program")
+    public void program() throws SchedulerException {
+        RadioRecordingSchedulerService.getInstance().programRecording();
     }
 
 
