@@ -77,10 +77,10 @@ export class RadioPlayerComponent {
     this.isPlaying = false;
     this.audioPlayer.nativeElement.playbackRate = 1;
     this.isSpeedNormal = true;
-
     // Passer à la piste suivante automatiquement si ce n'est pas la dernière piste
     if (!this.isLastTrack()) {
       this.nextTrack();
+      this.loadAndPlayCurrentTrack();
     }
   }
 
@@ -89,7 +89,6 @@ export class RadioPlayerComponent {
     if (!this.isLastTrack()) {
       this.currentTrackIndex++;
       this.loadAndPlayCurrentTrack();
-      this.playPause();
       this.isPlaying = true;
     }
   }
@@ -99,7 +98,7 @@ export class RadioPlayerComponent {
     const audio = this.audioPlayer.nativeElement;
 
     // Si on est à plus de 2 secondes sur la piste actuelle, on revient au début
-    if (this.currentTime > 2) {
+    if (this.isFirstTrack() || (!this.isFirstTrack() && this.currentTime >= 2))  {
       this.rewindToStart();
     } else if (!this.isFirstTrack()) {
       // Sinon, passer à la piste précédente seulement si ce n'est pas la première piste
