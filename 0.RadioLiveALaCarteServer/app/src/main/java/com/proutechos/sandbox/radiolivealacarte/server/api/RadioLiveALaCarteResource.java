@@ -140,10 +140,11 @@ public class RadioLiveALaCarteResource {
                 .build();
     }
 
+    // startHour, startMinute, startSeconds, endHour, endMinute, endSeconds
     @GET
-    @Path("/program")
-    public void program() throws SchedulerException {
-        RadioRecordingSchedulerService.getInstance().programRecording();
+    @Path("/program/startsAt/{startHour}/{startMinute}/{startSeconds}/endsAt/{endHour}/{endMinute}/{endSeconds}")
+    public void program(@PathParam("startHour") int startHour, @PathParam("startMinute") int startMinute, @PathParam("startSeconds") int startSeconds, @PathParam("endHour") int endHour, @PathParam("endMinute") int endMinute, @PathParam("endSeconds") int endSeconds) throws SchedulerException {
+        RadioRecordingSchedulerService.getInstance().programRecording(startHour, startMinute, startSeconds, endHour, endMinute, endSeconds);
     }
 
 
