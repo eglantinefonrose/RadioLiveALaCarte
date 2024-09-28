@@ -1,8 +1,10 @@
 package com.proutechos.sandbox.radiolivealacarte.server.api;
 
 import com.proutechos.sandbox.radiolivealacarte.server.model.RadioStation;
+import com.proutechos.sandbox.radiolivealacarte.server.model.RecordingRetriever;
 import com.proutechos.sandbox.radiolivealacarte.server.service.planning.RadioInformationAndPlanningService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RadioRecordingSchedulerService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.streaming.StreamController;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -147,5 +149,39 @@ public class RadioLiveALaCarteResource {
         RadioRecordingSchedulerService.getInstance().programRecording(startHour, startMinute, startSeconds, endHour, endMinute, endSeconds);
     }
 
+    // curl -s -X GET "http://localhost:8287/api/radio/getRecording/durationInMinutes/35"
+    @GET
+    @Path("getRecording/durationInMinutes/{durationInMinutes}")
+    public Response getRecording(@PathParam("durationInMinutes") int durationInMinutes) {
+
+        RecordingRetriever retriever = new RecordingRetriever();
+        String segmentsDir = "/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer/app/src/main/resources/static/media/mp3/segments";
+        String outputFile = "output-1437.mp3";  // Le nom de votre fichier de sortie
+
+        try {
+            // Appel de la méthode pour récupérer les durationInMinutes dernières minutes
+            File recording = retriever.getRecording(segmentsDir, "/tmp/audio_pipe", durationInMinutes, outputFile);
+            //return recording;  // Retourne le fichier d'enregistrement
+            return Response.ok(recording, "audio/mpeg")
+                    .header("Content-Disposition", "attachment; filename=\"" + outputFile + "\"")
+                    .build();
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            // Gérer les exceptions de manière appropriée
+            return null;
+        }
+
+    }
+
+    /*@GET
+    @Path("getLast10Minutes")
+    public Response getLast10Minutes() {
+        // Exemple pour HLS
+        String m3u8Url = "https://stream.radiofrance.fr/franceinter/franceinter_hifi.m3u8?id=radiofrance";
+        String last10MinutesPlaylist = StreamController.getInstance().filterLast10MinutesFromM3U8(m3u8Url);
+
+        // Utilisation de Response pour retourner la playlist des 10 dernières minutes
+        return Response.ok(last10MinutesPlaylist).build();
+    }*/
 
 }
