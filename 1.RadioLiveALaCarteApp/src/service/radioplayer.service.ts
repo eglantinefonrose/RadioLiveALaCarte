@@ -1,11 +1,19 @@
 import { Injectable } from '@angular/core';
 import { RadioStation } from './RadioStationModel';
+import { Observable, of } from 'rxjs';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { map, catchError } from 'rxjs/operators';
+import { HttpClientModule } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
+
 export class RadioplayerService {
-  constructor() {}
+
+  private baseUrl = '/media/mp3';
+
+  constructor(private http: HttpClient) {}
 
   fetchRadioStream(url: string): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -57,19 +65,28 @@ export class RadioplayerService {
     });
   }
 
-  // mp3-player.component.ts
+  // Vérifie si un segment existe
+  checkSegmentExists(segmentUrl: string): Observable<boolean> {
+    return this.http.head(segmentUrl, { observe: 'response' }).pipe(
+      map((response: HttpResponse<Object>) => response.status === 200),
+      catchError(() => of(false)) // Renvoie un observable avec `false` en cas d'erreur
+    );
+  }
 
+  // Génère l'URL du segment suivant à partir du timestamp et du numéro de segment
+  getNextSegmentUrl(timestamp: string, segmentIndex: number): string {
+    // Assurez-vous que segmentIndex est compris dans une plage correcte
+    if (segmentIndex > 9999) {
+      console.warn('Le numéro de segment est trop grand ! Réinitialisation à 0.');
+      segmentIndex = 0; // Ou autre stratégie de gestion
+    }
 
-  // Fonction pour charger et afficher le MP3
-  /*loadMp3(): void {
-    const mp3Endpoint = 'http://localhost:8080/api/mp3file'; // Remplace par l'URL correcte
-    this.fetchRadioStream(mp3Endpoint).then((response) => {
-      const url = URL.createObjectURL(response); // Créer une URL pour le fichier Blob
-      this.mp3Url = url; // Stocke cette URL pour la passer dans l'élément audio
-    }).catch(error => {
-      console.error('Erreur lors du téléchargement du fichier MP3', error);
-    });
-  }*/
+    //output_20240929_095201_0000.mp3
+  
+    const paddedIndex = String(segmentIndex).padStart(4, '0');
+    console.log(`Generated URL with paddedIndex: ${paddedIndex}`);
+    return `${this.baseUrl}/output_${timestamp}_${paddedIndex}.mp3`;
+  }
 
 
   //
