@@ -25,7 +25,7 @@ export class RadioPlayerComponent {
 
   @Input() initialSegment: string = 'output_20240929_095201_0000.mp3'; // Le premier segment, ex: output_20240929_095201_0000.mp3
   audio = new Audio();
-  currentTimestamp: string = '';
+  currentTimestamp: number = 0;
   currentSegmentIndex: number = 0;
 
   constructor(private radioplayerService: RadioplayerService) {}
@@ -37,8 +37,9 @@ export class RadioPlayerComponent {
 
   ngOnInit(): void {
     const parts = this.initialSegment.split('_');
-    this.currentTimestamp = '20240929_095201';
+    this.currentTimestamp = +parts[3];
     this.currentSegmentIndex = +parts[3].split('.')[0];
+
     this.playNextSegment();
   }
 
@@ -49,7 +50,8 @@ export class RadioPlayerComponent {
 
 
   playNextSegment(): void {
-    const nextSegmentUrl = this.radioplayerService.getNextSegmentUrl(this.currentTimestamp, this.currentSegmentIndex);
+    const nextSegmentUrl = this.radioplayerService.getNextSegmentUrl(this.currentSegmentIndex);
+    console.log(`nextSegmentUrl = [${this.currentSegmentIndex}]`)
     
     // Affichez la valeur de segmentIndex pour déboguer
     console.log(`Current Segment Index: ${this.currentSegmentIndex}`);
@@ -64,6 +66,7 @@ export class RadioPlayerComponent {
         // Une fois le segment terminé, charge le suivant
         this.audio.onended = () => {
           this.currentSegmentIndex++; // Incrémente correctement
+          console.log(` currentSegmentIndex = ${this.currentSegmentIndex}`)
           this.playNextSegment();
         };
       } else {
@@ -73,6 +76,14 @@ export class RadioPlayerComponent {
   }
 
   //output_20240929_095201_0000.mp3
+
+  //
+  //
+  //
+  // PLAYER PRINCIPAL, PERMETTANT D'ÉCOUTER DIFFÉRENTES PISTES AUDIOS
+  //
+  //
+  //
 
   // Récupérer l'URL de la piste actuelle
   get mp3Url(): string {

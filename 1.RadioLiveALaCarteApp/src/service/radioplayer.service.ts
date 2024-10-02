@@ -74,7 +74,7 @@ export class RadioplayerService {
   }
 
   // Génère l'URL du segment suivant à partir du timestamp et du numéro de segment
-  getNextSegmentUrl(timestamp: string, segmentIndex: number): string {
+  getNextSegmentUrl(segmentIndex: number): string {
     // Assurez-vous que segmentIndex est compris dans une plage correcte
     if (segmentIndex > 9999) {
       console.warn('Le numéro de segment est trop grand ! Réinitialisation à 0.');
@@ -85,7 +85,7 @@ export class RadioplayerService {
   
     const paddedIndex = String(segmentIndex).padStart(4, '0');
     console.log(`Generated URL with paddedIndex: ${paddedIndex}`);
-    return `${this.baseUrl}/output_${timestamp}_${paddedIndex}.mp3`;
+    return `${this.baseUrl}/output_20240929_095201_${paddedIndex}.mp3`;
   }
 
 
