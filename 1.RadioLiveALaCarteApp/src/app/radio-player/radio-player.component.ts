@@ -21,19 +21,25 @@ export class RadioPlayerComponent {
   currentTime = 0;
   duration = 0;
   isSpeedNormal = true;
-  currentTrackIndex = 0;
 
-  constructor(private radioplayerService: RadioplayerService) {}
+  // Nombre maximum de fichiers audio
+  maxFiles: number = 1000; // Ajustez ceci si vous avez plus de 1000 fichiers
+  currentTrackIndex: number = 0; // Index de la piste audio en cours
 
   // Liste des URLs des fichiers MP3
   mp3Urls: string[] = [
-    'media/mp3/output_20241002_210847.mp3'
+    'media/mp3/output_20240929_095201_0000.mp3',
+    'media/mp3/output_20240929_095201_0001.mp3'
   ];
-      
+
+  // CONSTRUCTOR
+  constructor(private radioplayerService: RadioplayerService) {
     
+  }
 
-
-
+  ngOnInit() {
+    this.setupAudioPlayers();
+  }
 
   //
   //
@@ -157,6 +163,82 @@ export class RadioPlayerComponent {
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return minutes + ':' + (secs < 10 ? '0' + secs : secs);
+  }
+
+
+  //
+  //
+  //
+  // DOUBLE PLAYERS
+  //
+  //
+  //
+
+  
+
+  @ViewChild('audioPlayer1', { static: true }) audioPlayer1!: ElementRef<HTMLAudioElement>;
+  @ViewChild('audioPlayer2', { static: true }) audioPlayer2!: ElementRef<HTMLAudioElement>;
+
+  // URLs des fichiers audio
+  audioUrl1 = 'media/mp3/output_20240929_095201_0000.mp3';
+  audioUrl2 = 'media/mp3/output_20240929_095201_0001.mp3';
+  fadeDuration = 1000; // Durée du fondu en millisecondes
+
+  setupAudioPlayers(): void {
+    const audio1 = this.audioPlayer1.nativeElement;
+    const audio2 = this.audioPlayer2.nativeElement;
+
+    // Initialiser les volumes
+    audio1.volume = 1;
+    audio2.volume = 0;
+
+    // Démarrer la première piste audio
+    this.playAudio(audio1);
+
+    // Ajout d'un écouteur pour détecter le temps restant et commencer le fondu enchaîné
+    audio1.addEventListener('timeupdate', () => {
+      const timeLeft = audio1.duration - audio1.currentTime;
+
+      if (timeLeft <= 1 && audio2.paused) {
+        // Lancer le fondu enchaîné
+        this.crossfade(audio1, audio2);
+      }
+    });
+  }
+
+  // Méthode pour jouer un fichier audio avec gestion de la promesse
+  async playAudio(audio: HTMLAudioElement): Promise<void> {
+    try {
+      await audio.play();
+    } catch (error) {
+      console.error('Erreur lors de la lecture du fichier audio :', error);
+    }
+  }
+
+  // Méthode pour gérer le fondu enchaîné entre deux fichiers audio
+  crossfade(audio1: HTMLAudioElement, audio2: HTMLAudioElement): void {
+    const fadeStep = 0.05; // Pas de changement de volume
+    const fadeInterval = 50; // Intervalle en millisecondes entre chaque changement de volume
+    const fadeSteps = this.fadeDuration / fadeInterval; // Nombre total d'étapes pour le fondu
+
+    // Jouer le deuxième fichier audio
+    this.playAudio(audio2);
+
+    // Démarrer le fondu enchaîné
+    const fadeAudio = setInterval(() => {
+      if (audio1.volume > 0) {
+        audio1.volume = Math.max(0, audio1.volume - fadeStep);
+      }
+      if (audio2.volume < 1) {
+        audio2.volume = Math.min(1, audio2.volume + fadeStep);
+      }
+
+      // Si le fondu est terminé, arrêter l'intervalle
+      if (audio1.volume === 0 && audio2.volume === 1) {
+        clearInterval(fadeAudio);
+        audio1.pause(); // Mettre en pause le premier lecteur quand il est complètement fondu
+      }
+    }, fadeInterval);
   }
 
 }
