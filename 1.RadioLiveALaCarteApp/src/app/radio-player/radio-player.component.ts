@@ -23,59 +23,17 @@ export class RadioPlayerComponent {
   isSpeedNormal = true;
   currentTrackIndex = 0;
 
-  @Input() initialSegment: string = 'output_20240929_095201_0000.mp3'; // Le premier segment, ex: output_20240929_095201_0000.mp3
-  audio = new Audio();
-  currentTimestamp: number = 0;
-  currentSegmentIndex: number = 0;
-
   constructor(private radioplayerService: RadioplayerService) {}
 
   // Liste des URLs des fichiers MP3
   mp3Urls: string[] = [
-    
+    'media/mp3/output_20241002_210847.mp3'
   ];
-
-  ngOnInit(): void {
-    const parts = this.initialSegment.split('_');
-    this.currentTimestamp = +parts[3];
-    this.currentSegmentIndex = +parts[3].split('.')[0];
-
-    this.playNextSegment();
-  }
-
-  // Méthode appelée après une interaction utilisateur (clic sur le bouton)
-  startPlayback(): void {
-    this.playNextSegment();
-  }
-
-
-  playNextSegment(): void {
-    const nextSegmentUrl = this.radioplayerService.getNextSegmentUrl(this.currentSegmentIndex);
-    console.log(`nextSegmentUrl = [${this.currentSegmentIndex}]`)
+      
     
-    // Affichez la valeur de segmentIndex pour déboguer
-    console.log(`Current Segment Index: ${this.currentSegmentIndex}`);
-    
-    // Vérifie si le segment existe avant de le jouer
-    this.radioplayerService.checkSegmentExists(nextSegmentUrl).subscribe(exists => {
-      if (exists) {
-        this.audio.src = nextSegmentUrl;
-        this.audio.load();
-        this.audio.play();
-  
-        // Une fois le segment terminé, charge le suivant
-        this.audio.onended = () => {
-          this.currentSegmentIndex++; // Incrémente correctement
-          console.log(` currentSegmentIndex = ${this.currentSegmentIndex}`)
-          this.playNextSegment();
-        };
-      } else {
-        console.log('Plus de segments disponibles.');
-      }
-    });
-  }
 
-  //output_20240929_095201_0000.mp3
+
+
 
   //
   //
