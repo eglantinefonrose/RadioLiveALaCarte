@@ -59,7 +59,21 @@
 
   <div class="audio-player">
     <h2>Radio en direct à la carte</h2>
-    <button (click)="startAudio()">Play</button>
+    
+    <!-- Bouton Play/Pause -->
+    <button (click)="togglePlayPause()">{{ isPlaying ? 'Pause' : 'Play' }}</button>
+  
+    <!-- Slider pour se déplacer dans l'audio -->
+    <input type="range" 
+           min="0" 
+           [max]="totalDuration" 
+           [value]="currentPosition" 
+           (input)="seekTo($event)" 
+           (change)="seekTo($event)" />
+  
+    <!-- Affichage du temps écoulé et total -->
+    <div>{{ formatTime(currentPosition) }} / {{ formatTime(totalDuration) }}</div>
+  
     <p>Lecture en cours du segment {{ currentSegment }}</p>
   </div>
 

@@ -256,80 +256,94 @@ export class RadioPlayerComponent {
     currentSegment: number = 0; // initial segment, e.g. 0003
     timestamp: string = '20240929_095201'; // example timestamp
     currentSound: Howl | null = null;
-    nextSound: Howl | null = null;
+    isPlaying: boolean = false;
+    totalDuration: number = 0; // Durée totale en secondes
+    currentPosition: number = 0; // Position actuelle en secondes
+    updateInterval: any;
   
     //constructor() {}
   
     ngOnInit(): void {
-      this.playSegment(this.currentSegment);
+      //this.playSegment(this.currentSegment);
     }
 
+    // Vérifier si Howler.ctx est initialisé avant de reprendre l'audio
     // Méthode appelée lors du clic sur "Play"
-    startAudio() {
-      // Reprendre l'AudioContext (correction pour les restrictions des navigateurs)
-      Howler.ctx.resume().then(() => {
-        console.log('AudioContext resumed');
-        this.playSegment(this.currentSegment);
-      }).catch((err) => {
-        console.error('Failed to resume AudioContext:', err);
-      });
+  togglePlayPause() {
+    if (this.currentSound) {
+      if (this.isPlaying) {
+        // Si le son est en cours de lecture, on met en pause
+        this.currentSound.pause();
+        this.isPlaying = false;
+        clearInterval(this.updateInterval); // Stopper la mise à jour du slider
+      } else {
+        // Si le son est en pause, on reprend la lecture
+        this.currentSound.play();
+        this.isPlaying = true;
+        this.updateSlider(); // Reprendre la mise à jour du slider
+      }
+    } else {
+      // Si c'est la première fois, on démarre l'audio
+      this.startAudio();
     }
-  
-    playSegment(segmentNumber: number) {
-      // Construct the URL for the current segment
-      const url = `${this.baseUrl}${this.timestamp}_${this.formatSegmentNumber(segmentNumber)}.mp3`;
-  
-      this.currentSound = new Howl({
-        src: [url],
-        html5: true,
-        volume: 1.0,
-        onplay: () => {
-          console.log('Playing segment: ', segmentNumber);
-          // Start preloading the next segment with fade-in
-          this.preloadNextSegment(segmentNumber + 1);
-        },
-        onend: () => {
-          // When the current segment ends, play the next one
-          this.playNextSegment();
-        },
-        onloaderror: (id, err) => {
-          console.error('Error loading segment:', err);
-        }
-      });
-  
-      this.currentSound.play();
-    }
-  
-    preloadNextSegment(nextSegmentNumber: number) {
-      const nextUrl = `${this.baseUrl}${this.timestamp}_${this.formatSegmentNumber(nextSegmentNumber)}.mp3`;
-  
-      this.nextSound = new Howl({
-        src: [nextUrl],
-        html5: true,
-        volume: 0.0,  // Preload with 0 volume
-        onload: () => {
-          console.log('Next segment loaded: ', nextSegmentNumber);
-        },
-        onloaderror: (id, err) => {
-          console.error('Error loading next segment:', err);
-        }
-      });
-    }
-  
-    playNextSegment() {
-      if (this.nextSound) {
-        // Start fading in the next segment
-        this.nextSound.volume(0.0); // Start at 0 volume
-        this.nextSound.play();
-        this.nextSound.fade(0.0, 1.0, 2000);  // Fade in over 2 seconds
-  
+  }
+
+  startAudio() {
+    this.playSegment(this.currentSegment);
+  }
+
+  playSegment(segmentNumber: number) {
+    const url = `${this.baseUrl}${this.timestamp}_${this.formatSegmentNumber(segmentNumber)}.mp3`;
+
+    this.currentSound = new Howl({
+      src: [url],
+      html5: true,
+      volume: 1.0,
+      onplay: () => {
+        this.isPlaying = true;
+        this.totalDuration = this.currentSound?.duration() || 0;
+        this.updateSlider();
+      },
+      onend: () => {
+        // Passer au segment suivant après la fin du segment courant
         this.currentSegment++;
         this.playSegment(this.currentSegment);
+      },
+      onloaderror: (id, err) => {
+        console.error('Error loading segment:', err);
       }
-    }
+    });
 
-    formatSegmentNumber(segmentNumber: number): string {
-      return segmentNumber.toString().padStart(4, '0');
+    this.currentSound.play();
+  }
+
+  // Méthode pour déplacer la position de lecture à partir du slider
+  seekTo(event: any) {
+    const newTime = event.target.value;
+    if (this.currentSound) {
+      this.currentSound.seek(newTime); // Déplace la position de lecture
+      this.currentPosition = newTime;
     }
+  }
+
+  // Mettre à jour le slider pendant que l'audio joue
+  updateSlider() {
+    this.updateInterval = setInterval(() => {
+      if (this.currentSound && this.isPlaying) {
+        this.currentPosition = this.currentSound.seek() as number;
+      }
+    }, 1000);
+  }
+
+  // Formater le temps en minutes:secondes
+  formatTime(seconds: number): string {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+  }
+
+  formatSegmentNumber(segmentNumber: number): string {
+    return segmentNumber.toString().padStart(4, '0');
+  }
 
 }
