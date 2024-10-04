@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild, Input } from '@angular/core';
 import { RadioplayerService } from '../../service/radioplayer.service';
 import { Injectable } from '@angular/core';
+import { Howl, Howler } from 'howler';
 
 @Component({
   selector: 'app-radio-player',
@@ -14,8 +15,19 @@ import { Injectable } from '@angular/core';
 })
 
 export class RadioPlayerComponent {
+
+  // CONSTRUCTOR
+  constructor(private radioplayerService: RadioplayerService) {
+    
+  }
+
+  //ngOnInit() {
+    //this.setupAudioPlayer();
+  //}
+
+  currentTrackIndex: number = 0; // Index de la piste audio en cours
   
-  @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
+  /*@ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
 
   isPlaying = false;
   currentTime = 0;
@@ -24,22 +36,12 @@ export class RadioPlayerComponent {
 
   // Nombre maximum de fichiers audio
   maxFiles: number = 1000; // Ajustez ceci si vous avez plus de 1000 fichiers
-  currentTrackIndex: number = 0; // Index de la piste audio en cours
 
   // Liste des URLs des fichiers MP3
   mp3Urls: string[] = [
     'media/mp3/output_20240929_095201_0000.mp3',
     'media/mp3/output_20240929_095201_0001.mp3'
   ];
-
-  // CONSTRUCTOR
-  constructor(private radioplayerService: RadioplayerService) {
-    
-  }
-
-  ngOnInit() {
-    this.setupAudioPlayers();
-  }
 
   //
   //
@@ -163,8 +165,9 @@ export class RadioPlayerComponent {
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return minutes + ':' + (secs < 10 ? '0' + secs : secs);
-  }
+  }*/
 
+  
 
   //
   //
@@ -174,28 +177,20 @@ export class RadioPlayerComponent {
   //
   //
 
-  
-
-  @ViewChild('audioPlayer1', { static: true }) audioPlayer1!: ElementRef<HTMLAudioElement>;
+  /*@ViewChild('audioPlayer1', { static: true }) audioPlayer1!: ElementRef<HTMLAudioElement>;
   @ViewChild('audioPlayer2', { static: true }) audioPlayer2!: ElementRef<HTMLAudioElement>;
 
-  // URLs des fichiers audio
-  audioUrl1 = 'media/mp3/output_20240929_095201_0000.mp3';
-  audioUrl2 = 'media/mp3/output_20240929_095201_0001.mp3';
-  fadeDuration = 1000; // Durée du fondu en millisecondes
+  // Nombre maximum de fichiers audio
+  fadeDuration: number = 1000; // Durée du fondu en millisecondes
 
   setupAudioPlayers(): void {
     const audio1 = this.audioPlayer1.nativeElement;
     const audio2 = this.audioPlayer2.nativeElement;
 
-    // Initialiser les volumes
-    audio1.volume = 1;
-    audio2.volume = 0;
+    // Charger les fichiers audio pour les deux premiers joueurs
+    this.loadAudioFiles(audio1, audio2);
 
-    // Démarrer la première piste audio
-    this.playAudio(audio1);
-
-    // Ajout d'un écouteur pour détecter le temps restant et commencer le fondu enchaîné
+    // Ajouter un écouteur pour détecter le temps restant et commencer le fondu enchaîné
     audio1.addEventListener('timeupdate', () => {
       const timeLeft = audio1.duration - audio1.currentTime;
 
@@ -204,6 +199,22 @@ export class RadioPlayerComponent {
         this.crossfade(audio1, audio2);
       }
     });
+  }
+
+  loadAudioFiles(audio1: HTMLAudioElement, audio2: HTMLAudioElement): void {
+    const track1 = this.getTrackUrl(this.currentTrackIndex);
+    const track2 = this.getTrackUrl(this.currentTrackIndex + 1);
+
+    audio1.src = track1;
+    audio2.src = track2;
+
+    // Démarrer la première piste audio
+    this.playAudio(audio1);
+  }
+
+  getTrackUrl(index: number): string {
+    const formattedIndex = String(index).padStart(4, '0'); // Formatage de l'index avec des zéros
+    return `media/mp3/output_20240929_095201_${formattedIndex}.mp3`;
   }
 
   // Méthode pour jouer un fichier audio avec gestion de la promesse
@@ -219,10 +230,10 @@ export class RadioPlayerComponent {
   crossfade(audio1: HTMLAudioElement, audio2: HTMLAudioElement): void {
     const fadeStep = 0.05; // Pas de changement de volume
     const fadeInterval = 50; // Intervalle en millisecondes entre chaque changement de volume
-    const fadeSteps = this.fadeDuration / fadeInterval; // Nombre total d'étapes pour le fondu
 
     // Jouer le deuxième fichier audio
-    this.playAudio(audio2);
+    this.currentTrackIndex += 1; // Passer à la piste suivante
+    this.loadAudioFiles(audio1, audio2); // Charger les nouvelles pistes
 
     // Démarrer le fondu enchaîné
     const fadeAudio = setInterval(() => {
@@ -239,6 +250,86 @@ export class RadioPlayerComponent {
         audio1.pause(); // Mettre en pause le premier lecteur quand il est complètement fondu
       }
     }, fadeInterval);
-  }
+  }*/
+
+    baseUrl: string = '/media/mp3/output_';
+    currentSegment: number = 0; // initial segment, e.g. 0003
+    timestamp: string = '20240929_095201'; // example timestamp
+    currentSound: Howl | null = null;
+    nextSound: Howl | null = null;
+  
+    //constructor() {}
+  
+    ngOnInit(): void {
+      this.playSegment(this.currentSegment);
+    }
+
+    // Méthode appelée lors du clic sur "Play"
+    startAudio() {
+      // Reprendre l'AudioContext (correction pour les restrictions des navigateurs)
+      Howler.ctx.resume().then(() => {
+        console.log('AudioContext resumed');
+        this.playSegment(this.currentSegment);
+      }).catch((err) => {
+        console.error('Failed to resume AudioContext:', err);
+      });
+    }
+  
+    playSegment(segmentNumber: number) {
+      // Construct the URL for the current segment
+      const url = `${this.baseUrl}${this.timestamp}_${this.formatSegmentNumber(segmentNumber)}.mp3`;
+  
+      this.currentSound = new Howl({
+        src: [url],
+        html5: true,
+        volume: 1.0,
+        onplay: () => {
+          console.log('Playing segment: ', segmentNumber);
+          // Start preloading the next segment with fade-in
+          this.preloadNextSegment(segmentNumber + 1);
+        },
+        onend: () => {
+          // When the current segment ends, play the next one
+          this.playNextSegment();
+        },
+        onloaderror: (id, err) => {
+          console.error('Error loading segment:', err);
+        }
+      });
+  
+      this.currentSound.play();
+    }
+  
+    preloadNextSegment(nextSegmentNumber: number) {
+      const nextUrl = `${this.baseUrl}${this.timestamp}_${this.formatSegmentNumber(nextSegmentNumber)}.mp3`;
+  
+      this.nextSound = new Howl({
+        src: [nextUrl],
+        html5: true,
+        volume: 0.0,  // Preload with 0 volume
+        onload: () => {
+          console.log('Next segment loaded: ', nextSegmentNumber);
+        },
+        onloaderror: (id, err) => {
+          console.error('Error loading next segment:', err);
+        }
+      });
+    }
+  
+    playNextSegment() {
+      if (this.nextSound) {
+        // Start fading in the next segment
+        this.nextSound.volume(0.0); // Start at 0 volume
+        this.nextSound.play();
+        this.nextSound.fade(0.0, 1.0, 2000);  // Fade in over 2 seconds
+  
+        this.currentSegment++;
+        this.playSegment(this.currentSegment);
+      }
+    }
+
+    formatSegmentNumber(segmentNumber: number): string {
+      return segmentNumber.toString().padStart(4, '0');
+    }
 
 }
