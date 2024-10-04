@@ -58,23 +58,35 @@
   </div> -->
 
   <div class="audio-player">
-    <h2>Radio en direct à la carte</h2>
-    
-    <!-- Bouton Play/Pause -->
-    <button (click)="togglePlayPause()">{{ isPlaying ? 'Pause' : 'Play' }}</button>
+    <!-- Affichage du lecteur audio -->
+    <audio #audioPlayer (timeupdate)="onTimeUpdate()" (ended)="onEnded()"></audio>
   
-    <!-- Slider pour se déplacer dans l'audio -->
-    <input type="range" 
-           min="0" 
-           [max]="totalDuration" 
-           [value]="currentPosition" 
-           (input)="seekTo($event)" 
-           (change)="seekTo($event)" />
+    <!-- Bouton play/pause -->
+    <button (click)="playPause()">
+      <span *ngIf="!isPlaying">Play</span>
+      <span *ngIf="isPlaying">Pause</span>
+    </button>
   
-    <!-- Affichage du temps écoulé et total -->
-    <div>{{ formatTime(currentPosition) }} / {{ formatTime(totalDuration) }}</div>
+    <!-- Affichage du temps écoulé / total -->
+    <div class="time-info">
+      <span>{{ formatTime(currentTime) }}</span> / <span>{{ formatTime(totalDuration) }}</span>
+    </div>
   
-    <p>Lecture en cours du segment {{ currentSegment }}</p>
+    <!-- Barre de progression pour le seek -->
+    <input
+      type="range"
+      [max]="totalDuration"
+      [value]="currentTime"
+      (input)="seek($event)"
+      class="seek-bar"
+    />
+  
+    <!-- Bouton vitesse normale / x2 -->
+    <button (click)="toggleSpeed()">
+      <span *ngIf="isSpeedNormal">x2 Speed</span>
+      <span *ngIf="!isSpeedNormal">Normal Speed</span>
+    </button>
   </div>
+  
 
   

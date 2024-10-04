@@ -3,4 +3,18 @@ video {
     display: block;
     margin: 0 auto;
   }
+
+  button {
+    padding: 10px;
+    font-size: 16px;  /* Taille de police pour rendre le texte visible */
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background-color: #f0f0f0;
+  }
+  
+  button span {
+    display: inline;
+    color: #000;  /* Assurez-vous que la couleur du texte est visible */
+  }
+  
   

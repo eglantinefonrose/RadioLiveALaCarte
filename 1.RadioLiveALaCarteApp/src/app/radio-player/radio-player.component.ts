@@ -24,8 +24,6 @@ export class RadioPlayerComponent {
   //ngOnInit() {
     //this.setupAudioPlayer();
   //}
-
-  currentTrackIndex: number = 0; // Index de la piste audio en cours
   
   /*@ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
 
@@ -252,98 +250,161 @@ export class RadioPlayerComponent {
     }, fadeInterval);
   }*/
 
-    baseUrl: string = '/media/mp3/output_';
-    currentSegment: number = 0; // initial segment, e.g. 0003
-    timestamp: string = '20240929_095201'; // example timestamp
-    currentSound: Howl | null = null;
-    isPlaying: boolean = false;
-    totalDuration: number = 0; // Durée totale en secondes
-    currentPosition: number = 0; // Position actuelle en secondes
-    updateInterval: any;
-  
-    //constructor() {}
-  
-    ngOnInit(): void {
-      //this.playSegment(this.currentSegment);
-    }
+    @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
 
-    // Vérifier si Howler.ctx est initialisé avant de reprendre l'audio
-    // Méthode appelée lors du clic sur "Play"
-  togglePlayPause() {
-    if (this.currentSound) {
-      if (this.isPlaying) {
-        // Si le son est en cours de lecture, on met en pause
-        this.currentSound.pause();
-        this.isPlaying = false;
-        clearInterval(this.updateInterval); // Stopper la mise à jour du slider
-      } else {
-        // Si le son est en pause, on reprend la lecture
-        this.currentSound.play();
-        this.isPlaying = true;
-        this.updateSlider(); // Reprendre la mise à jour du slider
-      }
+    isPlaying = false;
+    currentTime = 0;  // Temps courant global
+    totalDuration = 20;  // Durée totale des deux pistes (10s + 10s)
+    segmentDurations = [10, 10];  // Durées individuelles des segments
+    fadeDuration = 2;  // Durée du fondu enchaîné en secondes
+    volumeStep = 0.05;  // Étape de diminution/augmentation du volume
+    currentTrackIndex = 0;  // L'index du segment actuel
+    duration = 0;
+    isSpeedNormal = true;
+  
+    mp3Urls: string[] = [
+      'media/mp3/output_20240929_095201_0000.mp3',
+      'media/mp3/output_20240929_095201_0001.mp3'
+    ];
+
+    // Vérifier si l'on est sur la première piste
+  isFirstTrack(): boolean {
+    return this.currentTrackIndex === 0;
+  }
+
+  // Vérifier si l'on est sur la dernière piste
+  isLastTrack(): boolean {
+    return this.currentTrackIndex === this.mp3Urls.length - 1;
+  }
+
+  // Basculer entre vitesse normale et x2
+  toggleSpeed() {
+    const audio = this.audioPlayer.nativeElement;
+    if (this.isSpeedNormal) {
+      audio.playbackRate = 2;  // Lecture en x2
     } else {
-      // Si c'est la première fois, on démarre l'audio
-      this.startAudio();
+      audio.playbackRate = 1;  // Vitesse normale
+    }
+    this.isSpeedNormal = !this.isSpeedNormal;
+  }
+  
+  // Récupérer l'URL de la piste actuelle
+  get mp3Url(): string {
+    return this.mp3Urls[this.currentTrackIndex];
+  }
+
+  // Fonction pour démarrer ou mettre en pause la lecture
+  playPause() {
+    const audio = this.audioPlayer.nativeElement;
+    if (audio.paused) {
+      this.isPlaying = true;
+      this.loadAndPlayCurrentTrack();
+    } else {
+      this.isPlaying = false;
+      audio.pause();
     }
   }
 
-  startAudio() {
-    this.playSegment(this.currentSegment);
-  }
-
-  playSegment(segmentNumber: number) {
-    const url = `${this.baseUrl}${this.timestamp}_${this.formatSegmentNumber(segmentNumber)}.mp3`;
-
-    this.currentSound = new Howl({
-      src: [url],
-      html5: true,
-      volume: 1.0,
-      onplay: () => {
-        this.isPlaying = true;
-        this.totalDuration = this.currentSound?.duration() || 0;
-        this.updateSlider();
-      },
-      onend: () => {
-        // Passer au segment suivant après la fin du segment courant
-        this.currentSegment++;
-        this.playSegment(this.currentSegment);
-      },
-      onloaderror: (id, err) => {
-        console.error('Error loading segment:', err);
-      }
-    });
-
-    this.currentSound.play();
-  }
-
-  // Méthode pour déplacer la position de lecture à partir du slider
-  seekTo(event: any) {
-    const newTime = event.target.value;
-    if (this.currentSound) {
-      this.currentSound.seek(newTime); // Déplace la position de lecture
-      this.currentPosition = newTime;
+  // Fonction qui se déclenche à la fin de la piste
+  onEnded() {
+    this.isPlaying = false;
+    this.audioPlayer.nativeElement.playbackRate = 1;
+    this.isSpeedNormal = true;
+    // Passer à la piste suivante automatiquement si ce n'est pas la dernière piste
+    if (!this.isLastTrack()) {
+      this.nextTrack();
+      this.loadAndPlayCurrentTrack();
     }
   }
 
-  // Mettre à jour le slider pendant que l'audio joue
-  updateSlider() {
-    this.updateInterval = setInterval(() => {
-      if (this.currentSound && this.isPlaying) {
-        this.currentPosition = this.currentSound.seek() as number;
+  // Charger et jouer la piste actuelle
+  loadAndPlayCurrentTrack() {
+    const audio = this.audioPlayer.nativeElement;
+    audio.src = this.mp3Url;
+    audio.load();
+    audio.volume = 1;
+    audio.play();
+
+    audio.onended = () => {
+      if (!this.isLastTrack()) {
+        this.crossfadeNextTrack();
+      } else {
+        this.isPlaying = false;
       }
-    }, 1000);
+    };
+  }
+  
+  // Gestion du fondu enchaîné lors du passage au prochain segment
+  crossfadeNextTrack() {
+    const audio = this.audioPlayer.nativeElement;
+    const fadeOutInterval = setInterval(() => {
+      if (audio.volume > 0) {
+        audio.volume = Math.max(0, audio.volume - this.volumeStep);
+      } else {
+        clearInterval(fadeOutInterval);
+        this.nextTrack();
+        this.crossfadeIn();
+      }
+    }, this.fadeDuration * 1000 * this.volumeStep);
   }
 
-  // Formater le temps en minutes:secondes
+  crossfadeIn() {
+    const audio = this.audioPlayer.nativeElement;
+    audio.volume = 0;
+    audio.play();
+
+    const fadeInInterval = setInterval(() => {
+      if (audio.volume < 1) {
+        audio.volume = Math.min(1, audio.volume + this.volumeStep);
+      } else {
+        clearInterval(fadeInInterval);
+      }
+    }, this.fadeDuration * 1000 * this.volumeStep);
+  }
+  
+  nextTrack() {
+    if (!this.isLastTrack()) {
+      this.currentTrackIndex++;
+      this.loadAndPlayCurrentTrack();
+      this.isPlaying = true;
+    }
+  }
+
+  // Synchronisation du temps global lors de la lecture
+  onTimeUpdate() {
+    const audio = this.audioPlayer.nativeElement;
+    
+    // Calculer le temps global actuel basé sur la piste courante
+    let timeInCurrentTrack = audio.currentTime;
+    this.currentTime = this.segmentDurations
+      .slice(0, this.currentTrackIndex) // Somme des pistes précédentes
+      .reduce((acc, duration) => acc + duration, 0) + timeInCurrentTrack; // Ajouter la durée de la piste actuelle
+  }
+
+  // Mettre à jour manuellement le temps dans la piste actuelle
+  seek(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const globalSeekTime = +input.value;
+
+    // Calculer sur quelle piste on se trouve en fonction du temps global
+    let cumulativeDuration = 0;
+    for (let i = 0; i < this.segmentDurations.length; i++) {
+      cumulativeDuration += this.segmentDurations[i];
+      if (globalSeekTime <= cumulativeDuration) {
+        this.currentTrackIndex = i;
+        const timeInTrack = globalSeekTime - (cumulativeDuration - this.segmentDurations[i]);
+        this.audioPlayer.nativeElement.currentTime = timeInTrack;
+        this.loadAndPlayCurrentTrack();
+        break;
+      }
+    }
+  }
+
+  // Afficher le temps au format minutes:secondes
   formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
-    return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+    return minutes + ':' + (secs < 10 ? '0' + secs : secs);
   }
-
-  formatSegmentNumber(segmentNumber: number): string {
-    return segmentNumber.toString().padStart(4, '0');
-  }
-
+  
 }
