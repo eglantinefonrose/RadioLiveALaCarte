@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild, Input } from '@angular/core';
 import { RadioplayerService } from '../../service/radioplayer.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Howl, Howler } from 'howler';
 import { NgIf } from '@angular/common';
@@ -18,26 +19,69 @@ import { NgIf } from '@angular/common';
 export class RadioPlayerComponent {
 
   // CONSTRUCTOR
-  constructor(private radioplayerService: RadioplayerService) {
-    
+  constructor(private radioplayerService: RadioplayerService, private http: HttpClient) {
+    this.loadMp3Urls();
   }
 
   @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
 
   isPlaying = false;
   currentTime = 0;  // Temps courant global
-  totalDuration = 20;  // Durée totale des deux pistes (10s + 10s)
-  segmentDurations = [10, 10];  // Durées individuelles des segments
+  totalDuration = 0;  // Durée totale des deux pistes (10s + 10s)
+  segmentDurations: number[] = [];  // Durées individuelles des segments
   fadeDuration = 2;  // Durée du fondu enchaîné en secondes
   volumeStep = 0.05;  // Étape de diminution/augmentation du volume
   currentTrackIndex = 0;  // L'index du segment actuel
   duration = 0;
   isSpeedNormal = true;
+  mp3Urls: string[] = [];
+  maxAttempts = 10;  // Nombre maximal de fichiers à tenter de charger
+  baseUrl = 'media/mp3/output_20240929_095201_';
 
-  mp3Urls: string[] = [
-    'media/mp3/output_20240929_095201_0000.mp3',
-    'media/mp3/output_20240929_095201_0001.mp3'
-  ];
+  // Charger les URLs dynamiquement
+  loadMp3Urls() {
+    let attempt = 0;
+    const promises: Promise<void>[] = [];
+
+    // Tenter de charger les fichiers MP3 en vérifiant leur existence
+    const loadNext = () => {
+        if (attempt >= this.maxAttempts) {
+            // Attendre que toutes les tentatives soient complètes avant de démarrer le lecteur
+            Promise.all(promises).then(() => {
+                if (this.mp3Urls.length > 0) {
+                    this.loadAndPlayCurrentTrack();  // Démarrer la lecture si des fichiers existent
+                } else {
+                    console.error("Aucun fichier MP3 trouvé.");
+                }
+            });
+            return; // Sortir de la fonction
+        }
+
+        const paddedIndex = String(attempt).padStart(4, '0');  // Générer un index avec padding 0000, 0001, etc.
+        const url = `${this.baseUrl}${paddedIndex}.mp3`;
+
+        // Vérification de l'existence du fichier
+        const promise = this.http.head(url, { observe: 'response' }).toPromise()
+            .then(response => {
+                if (response && response.status === 200) {
+                    this.totalDuration += 10;
+                    this.segmentDurations.push(10);
+                    this.mp3Urls.push(url);
+                    attempt++; // Passer à l'index suivant uniquement si le fichier existe
+                    loadNext(); // Appeler la fonction récursivement pour le prochain fichier
+                } else {
+                    // Si le fichier n'existe pas, arrêter la recherche
+                    console.log(`Fichier non trouvé: ${url}`);
+                    return; // Sortir de la fonction
+                }
+            });
+
+        promises.push(promise);
+    };
+
+    loadNext(); // Démarrer le chargement des fichiers
+}
+
 
     // Vérifier si l'on est sur la première piste
   isFirstTrack(): boolean {
