@@ -15,7 +15,7 @@ export class RadioplayerService {
 
   constructor(private http: HttpClient) {}
 
-  fetchRadioStream(url: string): Promise<any> {
+  /*fetchRadioStream(url: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.open('GET', url, true); // Ouvrir une requête HTTP GET asynchrone
@@ -38,10 +38,10 @@ export class RadioplayerService {
 
       xhr.send(); // Envoyer la requête
     });
-  }
+  }*/
 
   // Fonction pour faire une requête HTTP GET via XMLHttpRequest
-  fetchURL(url: string): Promise<any> {
+  /*fetchURL(url: string): Promise<any> {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
       xhr.open('GET', url, true);
@@ -63,7 +63,7 @@ export class RadioplayerService {
 
       xhr.send(); // Envoyer la requête
     });
-  }
+  }*/
 
   // Vérifie si un segment existe
   checkSegmentExists(segmentUrl: string): Observable<boolean> {
@@ -86,6 +86,32 @@ export class RadioplayerService {
     const paddedIndex = String(segmentIndex).padStart(4, '0');
     console.log(`Generated URL with paddedIndex: ${paddedIndex}`);
     return `${this.baseUrl}/output_20240929_095201_${paddedIndex}.mp3`;
+  }
+
+  // Fonction qui permet de lancer l'enregistrement en segments en utilisant l'API
+  launchRadioRecording(url: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true); // Ouvrir une requête HTTP GET asynchrone
+
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            // Requête réussie
+            resolve(xhr.responseText);
+          } else {
+            // Requête échouée
+            reject(`Erreur: ${xhr.status} - ${xhr.statusText}`);
+          }
+        }
+      };
+
+      xhr.onerror = () => {
+        reject('Erreur de connexion réseau.');
+      };
+
+      xhr.send(); // Envoyer la requête
+    });
   }
 
 
