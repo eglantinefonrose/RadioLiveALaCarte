@@ -15,56 +15,6 @@ export class RadioplayerService {
 
   constructor(private http: HttpClient) {}
 
-  /*fetchRadioStream(url: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true); // Ouvrir une requête HTTP GET asynchrone
-
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-          if (xhr.status === 200) {
-            // Requête réussie
-            resolve(xhr.responseText);
-          } else {
-            // Requête échouée
-            reject(`Erreur: ${xhr.status} - ${xhr.statusText}`);
-          }
-        }
-      };
-
-      xhr.onerror = () => {
-        reject('Erreur de connexion réseau.');
-      };
-
-      xhr.send(); // Envoyer la requête
-    });
-  }*/
-
-  // Fonction pour faire une requête HTTP GET via XMLHttpRequest
-  /*fetchURL(url: string): Promise<any> {
-    return new Promise((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true);
-      xhr.responseType = 'blob'; // On précise qu'on attend un fichier Blob (MP3)
-
-      xhr.onreadystatechange = () => {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-          if (xhr.status === 200) {
-            resolve(xhr.response); // Résoudre avec la réponse (le fichier MP3 en Blob)
-          } else {
-            reject(`Erreur: ${xhr.status} - ${xhr.statusText}`);
-          }
-        }
-      };
-
-      xhr.onerror = () => {
-        reject('Erreur de connexion réseau.');
-      };
-
-      xhr.send(); // Envoyer la requête
-    });
-  }*/
-
   // Vérifie si un segment existe
   checkSegmentExists(segmentUrl: string): Observable<boolean> {
     return this.http.head(segmentUrl, { observe: 'response' }).pipe(
@@ -85,14 +35,17 @@ export class RadioplayerService {
   
     const paddedIndex = String(segmentIndex).padStart(4, '0');
     console.log(`Generated URL with paddedIndex: ${paddedIndex}`);
-    return `${this.baseUrl}/output_20240929_095201_${paddedIndex}.mp3`;
+    //return `${this.baseUrl}/output_20241009_224900output_${paddedIndex}.mp3`;
+    return '${this.baseUrl}/output_0000.mp3'
   }
 
   // Fonction qui permet de lancer l'enregistrement en segments en utilisant l'API
-  launchRadioRecording(url: string): Promise<any> {
+  startRadioRecording(): Promise<any> {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true); // Ouvrir une requête HTTP GET asynchrone
+      const fullUrl: string =  "api/radio/program/startsAt/22/49/0/endsAt/22/50/0/?url=https%3A%2F%2Fstream.radiofrance.fr%2Ffranceinfo%2Ffranceinfo_hifi.m3u8%3Fid%3Dradiofrance"
+
+      xhr.open('POST', fullUrl, true); // Ouvrir une requête HTTP GET asynchrone
 
       xhr.onreadystatechange = () => {
         if (xhr.readyState === XMLHttpRequest.DONE) {

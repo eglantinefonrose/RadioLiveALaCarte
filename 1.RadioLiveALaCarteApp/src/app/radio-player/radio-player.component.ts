@@ -36,7 +36,7 @@ export class RadioPlayerComponent {
   isSpeedNormal = true;
   mp3Urls: string[] = [];
   maxAttempts = 10;  // Nombre maximal de fichiers à tenter de charger
-  baseUrl = 'media/mp3/output_20240929_095201_';
+  baseUrl = 'media/mp3/output_20241009_224900output_';
 
   // Charger les URLs dynamiquement
   loadMp3Urls() {
@@ -80,7 +80,7 @@ export class RadioPlayerComponent {
     };
 
     loadNext(); // Démarrer le chargement des fichiers
-}
+  }
 
 
     // Vérifier si l'on est sur la première piste
@@ -206,6 +206,7 @@ export class RadioPlayerComponent {
   
   nextTrack() {
     if (!this.isLastTrack()) {
+      //this.loadMp3Urls();
       this.currentTrackIndex++;
       this.loadAndPlayCurrentTrack();
       this.isPlaying = true;
@@ -248,5 +249,15 @@ export class RadioPlayerComponent {
     const secs = Math.floor(seconds % 60);
     return minutes + ':' + (secs < 10 ? '0' + secs : secs);
   }
+
+  //
+  //
+  // LANCER L'ENREGISTREMENT
+  //
+  //
   
+  startRadioRecording() {
+    this.radioplayerService.startRadioRecording()
+  }
+
 }
