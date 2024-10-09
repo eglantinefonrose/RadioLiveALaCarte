@@ -43,7 +43,7 @@ export class RadioplayerService {
   startRadioRecording(): Promise<any> {
     return new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      const fullUrl: string =  "api/radio/program/startsAt/22/49/0/endsAt/22/50/0/?url=https%3A%2F%2Fstream.radiofrance.fr%2Ffranceinfo%2Ffranceinfo_hifi.m3u8%3Fid%3Dradiofrance"
+      const fullUrl: string =  "api/radio/program/startsAt/23/43/0/endsAt/23/44/0/?url=https%3A%2F%2Fstream.radiofrance.fr%2Ffranceinfo%2Ffranceinfo_hifi.m3u8%3Fid%3Dradiofrance"
 
       xhr.open('POST', fullUrl, true); // Ouvrir une requête HTTP GET asynchrone
 
