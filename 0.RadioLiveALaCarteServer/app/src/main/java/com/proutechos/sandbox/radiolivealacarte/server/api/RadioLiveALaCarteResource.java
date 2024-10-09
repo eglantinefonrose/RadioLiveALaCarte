@@ -3,8 +3,10 @@ package com.proutechos.sandbox.radiolivealacarte.server.api;
 import com.proutechos.sandbox.radiolivealacarte.server.model.RadioStation;
 import com.proutechos.sandbox.radiolivealacarte.server.service.planning.RadioInformationAndPlanningService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RadioRecordingSchedulerService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.streaming.StreamingService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
@@ -146,5 +148,17 @@ public class RadioLiveALaCarteResource {
     public void program(@PathParam("startHour") int startHour, @PathParam("startMinute") int startMinute, @PathParam("startSeconds") int startSeconds, @PathParam("endHour") int endHour, @PathParam("endMinute") int endMinute, @PathParam("endSeconds") int endSeconds) throws SchedulerException {
         RadioRecordingSchedulerService.getInstance().programRecording(startHour, startMinute, startSeconds, endHour, endMinute, endSeconds);
     }
+
+    /**
+     * curl -s -X POST "http://localhost:8287/api/radio/recordWithSegments/https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance"
+     * @return
+     */
+    @POST
+    @Path("/recordWithSegments/{url}")
+    public void recordWithSegments(@PathParam("url") String url) {
+        StreamingService.getInstance().recordWithSegments(url);
+    }
+
+
 
 }
