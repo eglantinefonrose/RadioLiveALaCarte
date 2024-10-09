@@ -5,11 +5,7 @@ import com.proutechos.sandbox.radiolivealacarte.server.service.planning.RadioInf
 import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RadioRecordingSchedulerService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.streaming.StreamingService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
@@ -24,6 +20,9 @@ import java.net.URL;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 
 import static org.quartz.JobBuilder.newJob;
 
@@ -142,11 +141,22 @@ public class RadioLiveALaCarteResource {
                 .build();
     }
 
-    // startHour, startMinute, startSeconds, endHour, endMinute, endSeconds
-    @GET
+    /**
+     * curl -s -X POST "http://localhost:8287/api/radio/program/startsAt/22/3/0/endsAt/22/4/0/https%3A%2F%2Fstream.radiofrance.fr%2Ffranceinfo%2Ffranceinfo_hifi.m3u8%3Fid%3Dradiofrance"
+     * @return
+     */
+    @POST
     @Path("/program/startsAt/{startHour}/{startMinute}/{startSeconds}/endsAt/{endHour}/{endMinute}/{endSeconds}")
-    public void program(@PathParam("startHour") int startHour, @PathParam("startMinute") int startMinute, @PathParam("startSeconds") int startSeconds, @PathParam("endHour") int endHour, @PathParam("endMinute") int endMinute, @PathParam("endSeconds") int endSeconds) throws SchedulerException {
-        RadioRecordingSchedulerService.getInstance().programRecording(startHour, startMinute, startSeconds, endHour, endMinute, endSeconds, "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance");
+    public void program(@PathParam("startHour") int startHour, @PathParam("startMinute") int startMinute, @PathParam("startSeconds") int startSeconds, @PathParam("endHour") int endHour, @PathParam("endMinute") int endMinute, @PathParam("endSeconds") int endSeconds, @QueryParam("url") String encodedUrl) throws SchedulerException {
+        // Décoder l'URL encodée dans le chemin
+
+        try {
+            String url = URLDecoder.decode(encodedUrl, StandardCharsets.UTF_8.name());
+            RadioRecordingSchedulerService.getInstance().programRecording(startHour, startMinute, startSeconds, endHour, endMinute, endSeconds, url);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
