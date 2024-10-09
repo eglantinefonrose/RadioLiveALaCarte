@@ -146,17 +146,17 @@ public class RadioLiveALaCarteResource {
     @GET
     @Path("/program/startsAt/{startHour}/{startMinute}/{startSeconds}/endsAt/{endHour}/{endMinute}/{endSeconds}")
     public void program(@PathParam("startHour") int startHour, @PathParam("startMinute") int startMinute, @PathParam("startSeconds") int startSeconds, @PathParam("endHour") int endHour, @PathParam("endMinute") int endMinute, @PathParam("endSeconds") int endSeconds) throws SchedulerException {
-        RadioRecordingSchedulerService.getInstance().programRecording(startHour, startMinute, startSeconds, endHour, endMinute, endSeconds);
+        RadioRecordingSchedulerService.getInstance().programRecording(startHour, startMinute, startSeconds, endHour, endMinute, endSeconds, "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance");
     }
 
     /**
-     * curl -s -X POST "http://localhost:8287/api/radio/recordWithSegments/https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance"
+     * curl -s -X POST "http://localhost:8287/api/radio/recordWithSegments"
      * @return
      */
     @POST
-    @Path("/recordWithSegments/{url}")
-    public void recordWithSegments(@PathParam("url") String url) {
-        StreamingService.getInstance().recordWithSegments(url);
+    @Path("/recordWithSegments")
+    public void recordWithSegments() {
+        StreamingService.getInstance().recordWithSegments("https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance");
     }
 
 
