@@ -37,11 +37,11 @@ export class RadioPlayerComponent {
   isSpeedNormal = true;
   mp3Urls: string[] = [];
   maxAttempts = 10;  // Nombre maximal de fichiers à tenter de charger
-  baseUrl = 'media/mp3/output_20241009_234200_';
+  baseUrl = 'media/mp3/output_20241010_082400_';
 
-  // Charger les URLs dynamiquement
-  /*loadMp3Urls() {
+  loadMp3Urls() {
     let attempt = 0;
+    let lastSegmentLoadingAttempts = 0;
     const promises: Promise<void>[] = [];
 
     // Tenter de charger les fichiers MP3 en vérifiant leur existence
@@ -65,73 +65,29 @@ export class RadioPlayerComponent {
         const promise = this.http.head(url, { observe: 'response' }).toPromise()
             .then(response => {
                 if (response && response.status === 200) {
+                    // Le fichier existe, on l'ajoute et on passe au suivant
                     this.totalDuration += 10;
                     this.segmentDurations.push(10);
                     this.mp3Urls.push(url);
                     attempt++; // Passer à l'index suivant uniquement si le fichier existe
                     loadNext(); // Appeler la fonction récursivement pour le prochain fichier
-                } else {
-                    // Si le fichier n'existe pas, arrêter la recherche
-                    console.log(`Fichier non trouvé: ${url}`);
-                    return; // Sortir de la fonction
                 }
+            })
+            .catch(error => {
+                // Gestion des erreurs (erreur réseau ou autre)
+                console.error(`Erreur lors de la vérification du fichier: ${url}`, error);
+                setTimeout(() => {
+                  if (lastSegmentLoadingAttempts < 9) {
+                    loadNext(); // Réessayer après 2 secondes en cas d'erreur
+                    lastSegmentLoadingAttempts++;
+                  }
+                }, 2000);
             });
 
         promises.push(promise);
     };
 
     loadNext(); // Démarrer le chargement des fichiers
-  }*/
-    
-    loadMp3Urls() {
-      let attempt = 0;
-      let lastSegmentLoadingAttempts = 0;
-      const promises: Promise<void>[] = [];
-  
-      // Tenter de charger les fichiers MP3 en vérifiant leur existence
-      const loadNext = () => {
-          if (attempt >= this.maxAttempts) {
-              // Attendre que toutes les tentatives soient complètes avant de démarrer le lecteur
-              Promise.all(promises).then(() => {
-                  if (this.mp3Urls.length > 0) {
-                      this.loadAndPlayCurrentTrack();  // Démarrer la lecture si des fichiers existent
-                  } else {
-                      console.error("Aucun fichier MP3 trouvé.");
-                  }
-              });
-              return; // Sortir de la fonction
-          }
-  
-          const paddedIndex = String(attempt).padStart(4, '0');  // Générer un index avec padding 0000, 0001, etc.
-          const url = `${this.baseUrl}${paddedIndex}.mp3`;
-  
-          // Vérification de l'existence du fichier
-          const promise = this.http.head(url, { observe: 'response' }).toPromise()
-              .then(response => {
-                  if (response && response.status === 200) {
-                      // Le fichier existe, on l'ajoute et on passe au suivant
-                      this.totalDuration += 10;
-                      this.segmentDurations.push(10);
-                      this.mp3Urls.push(url);
-                      attempt++; // Passer à l'index suivant uniquement si le fichier existe
-                      loadNext(); // Appeler la fonction récursivement pour le prochain fichier
-                  }
-              })
-              .catch(error => {
-                  // Gestion des erreurs (erreur réseau ou autre)
-                  console.error(`Erreur lors de la vérification du fichier: ${url}`, error);
-                  setTimeout(() => {
-                    if (lastSegmentLoadingAttempts < 9) {
-                      loadNext(); // Réessayer après 2 secondes en cas d'erreur
-                      lastSegmentLoadingAttempts++;
-                    }
-                  }, 2000);
-              });
-  
-          promises.push(promise);
-      };
-  
-      loadNext(); // Démarrer le chargement des fichiers
   }
   
 
