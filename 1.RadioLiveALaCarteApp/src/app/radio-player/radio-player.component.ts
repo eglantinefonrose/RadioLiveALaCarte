@@ -108,6 +108,10 @@ export class RadioPlayerComponent {
       const audioFileName = audio.src.split('/').pop();
       const mp3FileName = this.mp3Url.split('/').pop();
   
+      if (this.currentAudioIndex > 0) {
+        this.isLivePlaying = true;
+      }
+
       // Recharger le fichier si ce n'est pas le bon ou si la lecture est terminée
       if (audio.currentTime === 0 || audioFileName !== mp3FileName) {
         this.loadAndPlayCurrentTrack();
@@ -159,6 +163,7 @@ export class RadioPlayerComponent {
   // Fonction pour charger la compilation après la première piste
   playCompilation() {
     this.isLivePlaying = true;  // Basculer à la compilation
+    this.currentAudioIndex = 1;
     this.currentTrackIndex = 0;  // Index à 1 car la première piste est déjà jouée
     this.totalDuration = this.segmentDurations.reduce((acc, duration) => acc + duration, 0); // Durée totale de la compilation
     this.loadAndPlayCurrentTrack();  // Charger et jouer la première piste de la compilation
@@ -167,8 +172,22 @@ export class RadioPlayerComponent {
   // Recharger la piste actuelle et démarrer la lecture
   loadAndPlayCurrentTrack() {
     const audio = this.audioPlayer.nativeElement;
+    
+    // Charger la source
     audio.src = this.mp3Url;
     audio.load();
+  
+    // Attendre que les métadonnées (incluant la durée) soient chargées
+   
+      audio.addEventListener('loadedmetadata', () => {
+        if (this.currentAudioIndex == 0) {
+           // La durée de l'audio est maintenant disponible
+            this.totalDuration = audio.duration;  // Obtenir la durée et la stocker
+        }
+       
+      });
+  
+    // Lancer la lecture
     audio.play();
     this.isPlaying = true;
   }
@@ -191,33 +210,31 @@ export class RadioPlayerComponent {
 
   // Basculer à la piste suivante manuellement
   nextTrackManual() {
+    this.currentAudioIndex++;
+    this.isLivePlaying = true;
     this.playCompilation();
-    //if (!this.isLivePlaying) {
-      //this.playCompilation();  // Si la première piste est jouée, passer à la compilation
-    //} else {
-      //this.nextTrack();
-    //}
   }
 
   nextTrack() {
+
+    if (this.currentAudioIndex == 0) {
+      this.currentAudioIndex++; // AUDIO est pour les pistes audios séparées les unes des autres
+      console.log(this.currentAudioIndex);
+    }
+
     if (!this.isLastTrack()) {
-      this.currentTrackIndex++;
+      this.isLivePlaying = true;
+      this.currentTrackIndex++; // TRACK est pour la compilation de segments
       this.loadAndPlayCurrentTrack();
     }
   }
 
   // Gestion de la fin d'une piste
   onEnded() {
-    
-    if (this.isLivePlaying) {
-      this.isLivePlaying = false;
-    }
-
     if (!this.isLivePlaying) {
       this.playCompilation();  // Passer à la compilation après la première piste
     } else if (!this.isLastTrack()) {
       this.nextTrack();
-      this.currentAudioIndex++;
     }
   }
 
