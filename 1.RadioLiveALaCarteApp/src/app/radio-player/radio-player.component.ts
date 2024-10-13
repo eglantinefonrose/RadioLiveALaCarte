@@ -21,7 +21,7 @@ export class RadioPlayerComponent {
 
   // CONSTRUCTOR
   constructor(private radioplayerService: RadioplayerService, private http: HttpClient) {
-    
+    this.loadMp3Urls();
   }
 
   @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
@@ -65,12 +65,22 @@ export class RadioPlayerComponent {
         const promise = this.http.head(url, { observe: 'response' }).toPromise()
             .then(response => {
                 if (response && response.status === 200) {
-                    // Le fichier existe, on l'ajoute et on passe au suivant
-                    this.totalDuration += 10;
-                    this.segmentDurations.push(10);
-                    this.mp3Urls.push(url);
-                    attempt++; // Passer à l'index suivant uniquement si le fichier existe
-                    loadNext(); // Appeler la fonction récursivement pour le prochain fichier
+                    // Le fichier existe, utiliser une balise Audio pour récupérer la durée
+                    const audio = new Audio(url);
+                    audio.addEventListener('loadedmetadata', () => {
+                        const duration = audio.duration; // Obtenir la durée en secondes
+                        
+                        this.totalDuration += duration;
+                        this.segmentDurations.push(duration);
+                        this.mp3Urls.push(url);
+                        
+                        attempt++; // Passer à l'index suivant uniquement si le fichier existe
+                        loadNext(); // Appeler la fonction récursivement pour le prochain fichier
+                    });
+
+                    audio.addEventListener('error', () => {
+                        console.error(`Erreur lors du chargement des métadonnées: ${url}`);
+                    });
                 }
             })
             .catch(error => {
@@ -117,7 +127,6 @@ export class RadioPlayerComponent {
     return this.mp3Urls[this.currentTrackIndex];
   }
 
-  // Fonction pour démarrer ou mettre en pause la lecture
   // Fonction pour démarrer ou mettre en pause la lecture
   playPause() {
     const audio = this.audioPlayer.nativeElement;
@@ -257,6 +266,7 @@ export class RadioPlayerComponent {
     const secs = Math.floor(seconds % 60);
     return minutes + ':' + (secs < 10 ? '0' + secs : secs);
   }
+  
 
   //
   //
