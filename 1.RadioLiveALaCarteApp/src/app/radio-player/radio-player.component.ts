@@ -30,11 +30,14 @@ export class RadioPlayerComponent {
   currentTrackIndex = 0;
   duration = 0;
   isSpeedNormal = true;
-  mp3Urls: string[] = [];
+
+  mp3Urls: string[] = ['media/mp3/output_0004.mp3'];
+  currentAudioIndex: number = 0;
+
+  isLivePlaying: boolean = false;
+  mp3UrlsCompilation: string[] = [];
   maxAttempts = 10;
   baseUrl = 'media/mp3/output_20241010_082400_';
-  
-  isFirstTrackPlaying = true;  // Nouvelle variable pour suivre l'état de la première piste
 
   // Initialisation du composant
   constructor(private radioplayerService: RadioplayerService, private http: HttpClient) {
@@ -42,7 +45,6 @@ export class RadioPlayerComponent {
   }
 
   loadMp3Urls() {
-    this.mp3Urls.push('media/mp3/output_0004.mp3'); // Ajouter la première piste manuellement
     
     // Charger les autres fichiers comme compilation
     let attempt = 0;
@@ -52,7 +54,7 @@ export class RadioPlayerComponent {
     const loadNext = () => {
       if (attempt >= this.maxAttempts) {
         Promise.all(promises).then(() => {
-          if (this.mp3Urls.length > 1) {
+          if (this.mp3UrlsCompilation.length > 1) {
             this.totalDuration = this.segmentDurations.reduce((acc, duration) => acc + duration, 0);
           }
         });
@@ -70,7 +72,7 @@ export class RadioPlayerComponent {
               const duration = audio.duration;
 
               this.segmentDurations.push(duration);
-              this.mp3Urls.push(url);
+              this.mp3UrlsCompilation.push(url);
 
               attempt++;
               loadNext();
@@ -96,8 +98,10 @@ export class RadioPlayerComponent {
     const audio = this.audioPlayer.nativeElement;
   
     if (this.isPlaying) {  
+
       this.isPlaying = false;
       audio.pause();
+
     } else {  
       this.isPlaying = true;
       
@@ -154,8 +158,8 @@ export class RadioPlayerComponent {
 
   // Fonction pour charger la compilation après la première piste
   playCompilation() {
-    this.isFirstTrackPlaying = false;  // Basculer à la compilation
-    this.currentTrackIndex = 1;  // Index à 1 car la première piste est déjà jouée
+    this.isLivePlaying = true;  // Basculer à la compilation
+    this.currentTrackIndex = 0;  // Index à 1 car la première piste est déjà jouée
     this.totalDuration = this.segmentDurations.reduce((acc, duration) => acc + duration, 0); // Durée totale de la compilation
     this.loadAndPlayCurrentTrack();  // Charger et jouer la première piste de la compilation
   }
@@ -171,21 +175,28 @@ export class RadioPlayerComponent {
 
   // Vérifier si c'est la dernière piste de la compilation
   isLastTrack(): boolean {
-    return this.currentTrackIndex === this.mp3Urls.length - 1;
+    return this.currentTrackIndex === this.mp3UrlsCompilation.length - 1;
   }
 
   // Récupérer l'URL de la piste actuelle
   get mp3Url(): string {
-    return this.mp3Urls[this.currentTrackIndex];
+
+    if (this.isLivePlaying) {
+      return this.mp3UrlsCompilation[this.currentTrackIndex];
+    } else {
+      return 'media/mp3/output_0004.mp3';
+    }
+
   }
 
   // Basculer à la piste suivante manuellement
   nextTrackManual() {
-    if (this.isFirstTrackPlaying) {
-      this.playCompilation();  // Si la première piste est jouée, passer à la compilation
-    } else {
-      this.nextTrack();
-    }
+    this.playCompilation();
+    //if (!this.isLivePlaying) {
+      //this.playCompilation();  // Si la première piste est jouée, passer à la compilation
+    //} else {
+      //this.nextTrack();
+    //}
   }
 
   nextTrack() {
@@ -197,11 +208,16 @@ export class RadioPlayerComponent {
 
   // Gestion de la fin d'une piste
   onEnded() {
-    this.isPlaying = false;
-    if (this.isFirstTrackPlaying) {
+    
+    if (this.isLivePlaying) {
+      this.isLivePlaying = false;
+    }
+
+    if (!this.isLivePlaying) {
       this.playCompilation();  // Passer à la compilation après la première piste
     } else if (!this.isLastTrack()) {
       this.nextTrack();
+      this.currentAudioIndex++;
     }
   }
 
