@@ -1,44 +1,7 @@
-  <div class="audio-player">
-    <!-- Affichage du lecteur audio -->
-    <audio #audioPlayer (timeupdate)="onTimeUpdate()" (ended)="onEnded()"></audio>
-  
-    <!-- Bouton play/pause -->
-    <button (click)="playPause()">
-      <span *ngIf="!isPlaying">Play</span>
-      <span *ngIf="isPlaying">Pause</span>
-    </button>
-  
-    <!-- Affichage du temps écoulé / total -->
-    <div class="time-info">
-      <span>{{ formatTime(currentTime) }}</span> / <span>{{ formatTime(totalDuration) }}</span>
-    </div>
-  
-    <!-- Barre de progression pour le seek -->
-    <input
-      type="range"
-      [max]="totalDuration"
-      [value]="currentTime"
-      (input)="seek($event)"
-      class="seek-bar"
-    />
-  
-    <!-- Bouton vitesse normale / x2 -->
-    <button (click)="toggleSpeed()">
-      <span *ngIf="isSpeedNormal">x2 Speed</span>
-      <span *ngIf="!isSpeedNormal">Normal Speed</span>
-    </button>
-
-    <button (click)="startRadioRecording()">
-      <a>Start Recording</a>
-    </button>
-
-    <!--
-    <button (click)="loadMp3Urls()">
-      <a>Load MP3</a>
-    </button>
-    -->
-
-  </div>
-  
-
-  
+<div>
+  <button (click)="playPause()">{{ isPlaying ? 'Pause' : 'Play' }}</button>
+  <button (click)="nextTrackManual()">Piste suivante</button>
+  <audio #audioPlayer (timeupdate)="onTimeUpdate()" (ended)="onEnded()"></audio>
+  <input type="range" [max]="totalDuration" [value]="currentTime" (input)="seek($event)">
+  <div>{{ formatTime(currentTime) }} / {{ formatTime(totalDuration) }}</div>
+</div>

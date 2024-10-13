@@ -19,226 +19,98 @@ import { find } from 'rxjs';
 
 export class RadioPlayerComponent {
 
-  // CONSTRUCTOR
-  constructor(private radioplayerService: RadioplayerService, private http: HttpClient) {
-    this.loadMp3Urls();
-  }
-
   @ViewChild('audioPlayer') audioPlayer!: ElementRef<HTMLAudioElement>;
 
   isPlaying = false;
   currentTime = 0;  // Temps courant global
-  totalDuration = 0;  // Durée totale des deux pistes (10s + 10s)
+  totalDuration = 0;  // Durée totale pour la compilation
   segmentDurations: number[] = [];  // Durées individuelles des segments
-  fadeDuration = 2;  // Durée du fondu enchaîné en secondes
-  volumeStep = 0.05;  // Étape de diminution/augmentation du volume
-  currentTrackIndex = 0;  // L'index du segment actuel
+  fadeDuration = 2;
+  volumeStep = 0.05;
+  currentTrackIndex = 0;
   duration = 0;
   isSpeedNormal = true;
   mp3Urls: string[] = [];
-  maxAttempts = 10;  // Nombre maximal de fichiers à tenter de charger
+  maxAttempts = 10;
   baseUrl = 'media/mp3/output_20241010_082400_';
+  
+  isFirstTrackPlaying = true;  // Nouvelle variable pour suivre l'état de la première piste
+
+  // Initialisation du composant
+  constructor(private radioplayerService: RadioplayerService, private http: HttpClient) {
+    this.loadMp3Urls();
+  }
 
   loadMp3Urls() {
+    this.mp3Urls.push('media/mp3/output_0004.mp3'); // Ajouter la première piste manuellement
+    
+    // Charger les autres fichiers comme compilation
     let attempt = 0;
     let lastSegmentLoadingAttempts = 0;
     const promises: Promise<void>[] = [];
 
-    // Tenter de charger les fichiers MP3 en vérifiant leur existence
     const loadNext = () => {
-        if (attempt >= this.maxAttempts) {
-            // Attendre que toutes les tentatives soient complètes avant de démarrer le lecteur
-            Promise.all(promises).then(() => {
-                if (this.mp3Urls.length > 0) {
-                    this.loadAndPlayCurrentTrack();  // Démarrer la lecture si des fichiers existent
-                } else {
-                    console.error("Aucun fichier MP3 trouvé.");
-                }
+      if (attempt >= this.maxAttempts) {
+        Promise.all(promises).then(() => {
+          if (this.mp3Urls.length > 1) {
+            this.totalDuration = this.segmentDurations.reduce((acc, duration) => acc + duration, 0);
+          }
+        });
+        return;
+      }
+
+      const paddedIndex = String(attempt).padStart(4, '0');
+      const url = `${this.baseUrl}${paddedIndex}.mp3`;
+
+      const promise = this.http.head(url, { observe: 'response' }).toPromise()
+        .then(response => {
+          if (response && response.status === 200) {
+            const audio = new Audio(url);
+            audio.addEventListener('loadedmetadata', () => {
+              const duration = audio.duration;
+
+              this.segmentDurations.push(duration);
+              this.mp3Urls.push(url);
+
+              attempt++;
+              loadNext();
             });
-            return; // Sortir de la fonction
-        }
+          }
+        })
+        .catch(error => {
+          setTimeout(() => {
+            if (lastSegmentLoadingAttempts < 9) {
+              loadNext();
+              lastSegmentLoadingAttempts++;
+            }
+          }, 2000);
+        });
 
-        const paddedIndex = String(attempt).padStart(4, '0');  // Générer un index avec padding 0000, 0001, etc.
-        const url = `${this.baseUrl}${paddedIndex}.mp3`;
-
-        // Vérification de l'existence du fichier
-        const promise = this.http.head(url, { observe: 'response' }).toPromise()
-            .then(response => {
-                if (response && response.status === 200) {
-                    // Le fichier existe, utiliser une balise Audio pour récupérer la durée
-                    const audio = new Audio(url);
-                    audio.addEventListener('loadedmetadata', () => {
-                        const duration = audio.duration; // Obtenir la durée en secondes
-                        
-                        this.totalDuration += duration;
-                        this.segmentDurations.push(duration);
-                        this.mp3Urls.push(url);
-                        
-                        attempt++; // Passer à l'index suivant uniquement si le fichier existe
-                        loadNext(); // Appeler la fonction récursivement pour le prochain fichier
-                    });
-
-                    audio.addEventListener('error', () => {
-                        console.error(`Erreur lors du chargement des métadonnées: ${url}`);
-                    });
-                }
-            })
-            .catch(error => {
-                // Gestion des erreurs (erreur réseau ou autre)
-                console.error(`Erreur lors de la vérification du fichier: ${url}`, error);
-                setTimeout(() => {
-                  if (lastSegmentLoadingAttempts < 9) {
-                    loadNext(); // Réessayer après 2 secondes en cas d'erreur
-                    lastSegmentLoadingAttempts++;
-                  }
-                }, 2000);
-            });
-
-        promises.push(promise);
+      promises.push(promise);
     };
 
-    loadNext(); // Démarrer le chargement des fichiers
-  }
-  
-
-    // Vérifier si l'on est sur la première piste
-  isFirstTrack(): boolean {
-    return this.currentTrackIndex === 0;
+    loadNext();
   }
 
-  // Vérifier si l'on est sur la dernière piste
-  isLastTrack(): boolean {
-    return this.currentTrackIndex === this.mp3Urls.length - 1;
-  }
-
-  // Basculer entre vitesse normale et x2
-  toggleSpeed() {
-    const audio = this.audioPlayer.nativeElement;
-    if (this.isSpeedNormal) {
-      audio.playbackRate = 2;  // Lecture en x2
-    } else {
-      audio.playbackRate = 1;  // Vitesse normale
-    }
-    this.isSpeedNormal = !this.isSpeedNormal;
-  }
-  
-  // Récupérer l'URL de la piste actuelle
-  get mp3Url(): string {
-    return this.mp3Urls[this.currentTrackIndex];
-  }
-
-  // Fonction pour démarrer ou mettre en pause la lecture
   playPause() {
     const audio = this.audioPlayer.nativeElement;
   
-    if (this.isPlaying) {  // Si la piste est en train d'être jouée
+    if (this.isPlaying) {  
       this.isPlaying = false;
       audio.pause();
-    } else {  // Si la piste est en pause
+    } else {  
       this.isPlaying = true;
       
-      // Comparer uniquement le nom du fichier à la fin de l'URL
       const audioFileName = audio.src.split('/').pop();
       const mp3FileName = this.mp3Url.split('/').pop();
   
+      // Recharger le fichier si ce n'est pas le bon ou si la lecture est terminée
       if (audio.currentTime === 0 || audioFileName !== mp3FileName) {
         this.loadAndPlayCurrentTrack();
       } else {
-        audio.play();  // Reprendre la lecture là où elle s'était arrêtée
+        audio.play(); 
       }
     }
-  }
-
-  // Fonction qui se déclenche à la fin de la piste
-  onEnded() {
-    this.isPlaying = false;
-    this.audioPlayer.nativeElement.playbackRate = 1;
-    this.isSpeedNormal = true;
-    // Passer à la piste suivante automatiquement si ce n'est pas la dernière piste
-    if (!this.isLastTrack()) {
-      this.nextTrack();
-      this.loadAndPlayCurrentTrack();
-    }
-  }
-
-  // Charger et jouer la piste actuelle avec fondu enchaîné
-  loadAndPlayCurrentTrack() {
-    const audio = this.audioPlayer.nativeElement;
-    
-    audio.src = this.mp3Url;  // Charger la source
-    audio.load();  // Forcer le rechargement
-    
-    audio.volume = 1;  // Réinitialiser le volume
-    audio.play();
-
-    audio.onended = () => {
-      if (!this.isLastTrack()) {
-        this.crossfadeNextTrack();
-      } else {
-        this.isPlaying = false;
-      }
-    };
-  }
-  
-  // Fonction qui retourne une promesse résolue lorsque 'loadedmetadata' est déclenché
-  waitForMetadata(audio: HTMLAudioElement): Promise<void> {
-    return new Promise<void>((resolve) => {
-      if (audio.readyState >= 1) {
-        // Si les métadonnées sont déjà disponibles
-        resolve();
-      } else {
-        // Si elles ne sont pas encore disponibles, on attend l'événement
-        audio.addEventListener('loadedmetadata', () => resolve());
-      }
-    });
-  }
-  
-  // Gestion du fondu enchaîné lors du passage au prochain segment
-  crossfadeNextTrack() {
-    const audio = this.audioPlayer.nativeElement;
-    const fadeOutInterval = setInterval(() => {
-      if (audio.volume > 0) {
-        audio.volume = Math.max(0, audio.volume - this.volumeStep);
-      } else {
-        clearInterval(fadeOutInterval);
-        this.nextTrack();
-        this.crossfadeIn();
-      }
-    }, this.fadeDuration * 1000 * this.volumeStep);
-  }
-
-  crossfadeIn() {
-    const audio = this.audioPlayer.nativeElement;
-    audio.volume = 0;
-    audio.play();
-
-    const fadeInInterval = setInterval(() => {
-      if (audio.volume < 1) {
-        audio.volume = Math.min(1, audio.volume + this.volumeStep);
-      } else {
-        clearInterval(fadeInInterval);
-      }
-    }, this.fadeDuration * 1000 * this.volumeStep);
-  }
-  
-  nextTrack() {
-    if (!this.isLastTrack()) {
-      //this.loadMp3Urls();
-      this.currentTrackIndex++;
-      this.loadAndPlayCurrentTrack();
-      this.isPlaying = true;
-    }
-  }
-
-  // Synchronisation du temps global lors de la lecture
-  onTimeUpdate() {
-    const audio = this.audioPlayer.nativeElement;
-    
-    // Calculer le temps global actuel basé sur la piste courante
-    let timeInCurrentTrack = audio.currentTime;
-    this.currentTime = this.segmentDurations
-      .slice(0, this.currentTrackIndex) // Somme des pistes précédentes
-      .reduce((acc, duration) => acc + duration, 0) + timeInCurrentTrack; // Ajouter la durée de la piste actuelle
   }
 
   // Mettre à jour manuellement le temps dans la piste actuelle
@@ -260,22 +132,83 @@ export class RadioPlayerComponent {
     }
   }
 
-  // Afficher le temps au format minutes:secondes
+  onTimeUpdate() {
+    const audio = this.audioPlayer.nativeElement;
+    
+    // Calculer le temps global actuel basé sur la piste courante
+    let timeInCurrentTrack = audio.currentTime;
+    this.currentTime = this.segmentDurations
+      .slice(0, this.currentTrackIndex) // Somme des pistes précédentes
+      .reduce((acc, duration) => acc + duration, 0) + timeInCurrentTrack; // Ajouter la durée de la piste actuelle
+  }
+
+  // Fonction qui joue la première piste et la gestion du timecode pour cette piste
+  playFirstTrack() {
+    const audio = this.audioPlayer.nativeElement;
+    audio.src = 'media/mp3/output_0004.mp3';
+    this.totalDuration = 3;  // Supposons que la durée de la première piste est de 3 secondes
+    audio.currentTime = 0;
+    audio.play();
+    this.isPlaying = true;
+  }
+
+  // Fonction pour charger la compilation après la première piste
+  playCompilation() {
+    this.isFirstTrackPlaying = false;  // Basculer à la compilation
+    this.currentTrackIndex = 1;  // Index à 1 car la première piste est déjà jouée
+    this.totalDuration = this.segmentDurations.reduce((acc, duration) => acc + duration, 0); // Durée totale de la compilation
+    this.loadAndPlayCurrentTrack();  // Charger et jouer la première piste de la compilation
+  }
+
+  // Recharger la piste actuelle et démarrer la lecture
+  loadAndPlayCurrentTrack() {
+    const audio = this.audioPlayer.nativeElement;
+    audio.src = this.mp3Url;
+    audio.load();
+    audio.play();
+    this.isPlaying = true;
+  }
+
+  // Vérifier si c'est la dernière piste de la compilation
+  isLastTrack(): boolean {
+    return this.currentTrackIndex === this.mp3Urls.length - 1;
+  }
+
+  // Récupérer l'URL de la piste actuelle
+  get mp3Url(): string {
+    return this.mp3Urls[this.currentTrackIndex];
+  }
+
+  // Basculer à la piste suivante manuellement
+  nextTrackManual() {
+    if (this.isFirstTrackPlaying) {
+      this.playCompilation();  // Si la première piste est jouée, passer à la compilation
+    } else {
+      this.nextTrack();
+    }
+  }
+
+  nextTrack() {
+    if (!this.isLastTrack()) {
+      this.currentTrackIndex++;
+      this.loadAndPlayCurrentTrack();
+    }
+  }
+
+  // Gestion de la fin d'une piste
+  onEnded() {
+    this.isPlaying = false;
+    if (this.isFirstTrackPlaying) {
+      this.playCompilation();  // Passer à la compilation après la première piste
+    } else if (!this.isLastTrack()) {
+      this.nextTrack();
+    }
+  }
+
+  // Affichage du temps en minutes:secondes
   formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return minutes + ':' + (secs < 10 ? '0' + secs : secs);
   }
-  
-
-  //
-  //
-  // LANCER L'ENREGISTREMENT
-  //
-  //
-  
-  startRadioRecording() {
-    this.radioplayerService.startRadioRecording()
-  }
-
 }
