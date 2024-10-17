@@ -31,7 +31,7 @@ export class RadioPlayerComponent {
   duration = 0;
   isSpeedNormal = true;
 
-  mp3Urls: string[] = ['media/mp3/output_0004.mp3'];
+  mp3Urls: string[] = ['media/mp3/output_0002.mp3', 'media/mp3/output_0004.mp3'];
   currentAudioIndex: number = 0;
 
   isLivePlaying: boolean = false;
@@ -41,10 +41,10 @@ export class RadioPlayerComponent {
 
   // Initialisation du composant
   constructor(private radioplayerService: RadioplayerService, private http: HttpClient) {
-    this.loadMp3Urls();
+    this.loadLiveMp3Urls();
   }
 
-  loadMp3Urls() {
+  loadLiveMp3Urls() {
     
     // Charger les autres fichiers comme compilation
     let attempt = 0;
@@ -108,7 +108,7 @@ export class RadioPlayerComponent {
       const audioFileName = audio.src.split('/').pop();
       const mp3FileName = this.mp3Url.split('/').pop();
   
-      if (this.currentAudioIndex > 0) {
+      if (this.currentAudioIndex > (this.mp3Urls.length)-1) {
         this.isLivePlaying = true;
       }
 
@@ -150,16 +150,6 @@ export class RadioPlayerComponent {
       .reduce((acc, duration) => acc + duration, 0) + timeInCurrentTrack; // Ajouter la durée de la piste actuelle
   }
 
-  // Fonction qui joue la première piste et la gestion du timecode pour cette piste
-  playFirstTrack() {
-    const audio = this.audioPlayer.nativeElement;
-    audio.src = 'media/mp3/output_0004.mp3';
-    this.totalDuration = 3;  // Supposons que la durée de la première piste est de 3 secondes
-    audio.currentTime = 0;
-    audio.play();
-    this.isPlaying = true;
-  }
-
   // Fonction pour charger la compilation après la première piste
   playCompilation() {
     this.isLivePlaying = true;  // Basculer à la compilation
@@ -180,10 +170,11 @@ export class RadioPlayerComponent {
     // Attendre que les métadonnées (incluant la durée) soient chargées
    
       audio.addEventListener('loadedmetadata', () => {
-        if (this.currentAudioIndex == 0) {
+        //if (this.currentAudioIndex  0) {
            // La durée de l'audio est maintenant disponible
             this.totalDuration = audio.duration;  // Obtenir la durée et la stocker
-        }
+            console.log(audio.duration);
+        //}
        
       });
   
@@ -203,7 +194,7 @@ export class RadioPlayerComponent {
     if (this.isLivePlaying) {
       return this.mp3UrlsCompilation[this.currentTrackIndex];
     } else {
-      return 'media/mp3/output_0004.mp3';
+      return this.mp3Urls[this.currentAudioIndex];
     }
 
   }
@@ -217,25 +208,27 @@ export class RadioPlayerComponent {
 
   nextTrack() {
 
-    if (this.currentAudioIndex == 0) {
+    console.log(this.currentAudioIndex);
+
+    if (this.currentAudioIndex < this.mp3Urls.length) {
       this.currentAudioIndex++; // AUDIO est pour les pistes audios séparées les unes des autres
-      console.log(this.currentAudioIndex);
+      this.loadAndPlayNextAudio('media/mp3/output_0004.mp3');
     }
 
-    if (!this.isLastTrack()) {
+    /*if (!this.isLastTrack()) {
       this.isLivePlaying = true;
       this.currentTrackIndex++; // TRACK est pour la compilation de segments
       this.loadAndPlayCurrentTrack();
-    }
+    }*/
   }
 
   // Gestion de la fin d'une piste
   onEnded() {
-    if (!this.isLivePlaying) {
-      this.playCompilation();  // Passer à la compilation après la première piste
-    } else if (!this.isLastTrack()) {
+    //if (!this.isLivePlaying) {
+      //this.playCompilation();  // Passer à la compilation après la première piste
+    //} else if (!this.isLastTrack()) {
       this.nextTrack();
-    }
+    //}
   }
 
   // Affichage du temps en minutes:secondes
