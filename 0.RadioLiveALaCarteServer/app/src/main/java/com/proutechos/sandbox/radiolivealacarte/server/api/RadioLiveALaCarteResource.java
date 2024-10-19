@@ -142,32 +142,33 @@ public class RadioLiveALaCarteResource {
     }
 
     /**
-     * curl -s -X POST "http://localhost:8287/api/radio/program/startsAt/22/3/0/endsAt/22/4/0/https%3A%2F%2Fstream.radiofrance.fr%2Ffranceinfo%2Ffranceinfo_hifi.m3u8%3Fid%3Dradiofrance"
+     * curl -X POST "http://localhost:8287/api/radio/program/startsAt/22/3/0/endsAt/22/4/0/withSegments/0/https%3A%2F%2Fstream.radiofrance.fr%2Ffranceinfo%2Ffranceinfo_hifi.m3u8%3Fid%3Dradiofrance"
      * @return
      */
     @POST
-    @Path("/program/startsAt/{startHour}/{startMinute}/{startSeconds}/endsAt/{endHour}/{endMinute}/{endSeconds}")
-    public void program(@PathParam("startHour") int startHour, @PathParam("startMinute") int startMinute, @PathParam("startSeconds") int startSeconds, @PathParam("endHour") int endHour, @PathParam("endMinute") int endMinute, @PathParam("endSeconds") int endSeconds, @QueryParam("url") String encodedUrl) throws SchedulerException {
+    @Path("/program/startsAt/{startHour}/{startMinute}/{startSeconds}/endsAt/{endHour}/{endMinute}/{endSeconds}/withSegments/{withSegments}")
+    public void program(@PathParam("startHour") int startHour, @PathParam("startMinute") int startMinute, @PathParam("startSeconds") int startSeconds, @PathParam("endHour") int endHour, @PathParam("endMinute") int endMinute, @PathParam("endSeconds") int endSeconds, @PathParam("withSegments") int withSegments, @QueryParam("url") String encodedUrl) throws SchedulerException {
         // Décoder l'URL encodée dans le chemin
-
         try {
             String url = URLDecoder.decode(encodedUrl, StandardCharsets.UTF_8.name());
-            RadioRecordingSchedulerService.getInstance().programRecording(startHour, startMinute, startSeconds, endHour, endMinute, endSeconds, url);
+            RadioRecordingSchedulerService.getInstance().programRecording(startHour, startMinute, startSeconds, endHour, endMinute, endSeconds, withSegments, url);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     /**
      * curl -s -X POST "http://localhost:8287/api/radio/recordWithSegments"
      * @return
      */
-    @POST
+
+    // Fonction qui marche, mais pas une bonne idée de l'appeler car la création de segments ne s'arrête pas :O
+
+    /*@POST
     @Path("/recordWithSegments")
     public void recordWithSegments() {
         StreamingService.getInstance().recordWithSegments("https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance");
-    }
+    }*/
 
 
 
