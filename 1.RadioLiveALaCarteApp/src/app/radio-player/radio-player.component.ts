@@ -96,6 +96,7 @@ export class RadioPlayerComponent {
 
   playPause() {
     const audio = this.audioPlayer.nativeElement;
+    const mp3Url = this.getMp3Url();
   
     if (this.isPlaying) {  
 
@@ -106,7 +107,7 @@ export class RadioPlayerComponent {
       this.isPlaying = true;
       
       const audioFileName = audio.src.split('/').pop();
-      const mp3FileName = this.mp3Url.split('/').pop();
+      const mp3FileName = this.getMp3Url().split('/').pop();
   
       if (this.currentAudioIndex > (this.mp3Urls.length)-1) {
         this.isLivePlaying = true;
@@ -153,25 +154,26 @@ export class RadioPlayerComponent {
   // Fonction pour charger la compilation après la première piste
   playCompilation() {
     this.isLivePlaying = true;  // Basculer à la compilation
-    this.currentAudioIndex = 1;
+    this.currentAudioIndex = 3331;
     this.currentTrackIndex = 0;  // Index à 1 car la première piste est déjà jouée
     this.totalDuration = this.segmentDurations.reduce((acc, duration) => acc + duration, 0); // Durée totale de la compilation
     this.loadAndPlayCurrentTrack();  // Charger et jouer la première piste de la compilation
   }
 
   // Recharger la piste actuelle et démarrer la lecture
+  // ATTENTION !!! La fonction joue les pistes audios et celles qui constituent le LiveStreaming
   loadAndPlayCurrentTrack() {
     const audio = this.audioPlayer.nativeElement;
     
     // Charger la source
-    audio.src = this.mp3Url;
+    audio.src = this.getMp3Url();
     audio.load();
   
     // Attendre que les métadonnées (incluant la durée) soient chargées
-   
       audio.addEventListener('loadedmetadata', () => {
-        if (this.currentAudioIndex === 0) {
+        if (this.currentAudioIndex == 0 || this.currentAudioIndex == 1) {
            // La durée de l'audio est maintenant disponible
+           console.log(audio.duration);
             this.totalDuration = audio.duration;  // Obtenir la durée et la stocker
             console.log(audio.duration);
         }
@@ -212,7 +214,7 @@ export class RadioPlayerComponent {
   }
 
   // Récupérer l'URL de la piste actuelle
-  get mp3Url(): string {
+  getMp3Url(): string {
 
     if (this.isLivePlaying) {
       return this.mp3UrlsCompilation[this.currentTrackIndex];
@@ -247,11 +249,17 @@ export class RadioPlayerComponent {
 
   // Gestion de la fin d'une piste
   onEnded() {
-    if (!this.isLivePlaying) {
+    if (this.currentAudioIndex >= (this.mp3Urls.length)-1) {
       this.playCompilation();  // Passer à la compilation après la première piste
-    } else if (!this.isLastTrack()) {
-      this.nextTrack();
+    } else {
+      this.currentAudioIndex++; // AUDIO est pour les pistes audios séparées les unes des autres
+      this.loadAndPlayCurrentTrack();
     }
+    
+    // Aucune idée de l'utilité de ce bout de code, la compilation est bien lue même sans
+    /* else if (!this.isLastTrack()) {
+      this.nextTrack();
+    }*/
   }
 
   // Affichage du temps en minutes:secondes
