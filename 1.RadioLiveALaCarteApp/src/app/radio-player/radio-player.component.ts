@@ -170,7 +170,30 @@ export class RadioPlayerComponent {
     // Attendre que les métadonnées (incluant la durée) soient chargées
    
       audio.addEventListener('loadedmetadata', () => {
-        //if (this.currentAudioIndex  0) {
+        if (this.currentAudioIndex === 0) {
+           // La durée de l'audio est maintenant disponible
+            this.totalDuration = audio.duration;  // Obtenir la durée et la stocker
+            console.log(audio.duration);
+        }
+       
+      });
+  
+    // Lancer la lecture
+    audio.play();
+    this.isPlaying = true;
+  }
+
+  loadAndPlayCurrentAudio(url: string) {
+    const audio = this.audioPlayer.nativeElement;
+    
+    // Charger la source
+    audio.src = url;
+    audio.load();
+  
+    // Attendre que les métadonnées (incluant la durée) soient chargées
+   
+      audio.addEventListener('loadedmetadata', () => {
+        //if (this.currentAudioIndex === 0) {
            // La durée de l'audio est maintenant disponible
             this.totalDuration = audio.duration;  // Obtenir la durée et la stocker
             console.log(audio.duration);
@@ -212,7 +235,7 @@ export class RadioPlayerComponent {
 
     if (this.currentAudioIndex < this.mp3Urls.length) {
       this.currentAudioIndex++; // AUDIO est pour les pistes audios séparées les unes des autres
-      this.loadAndPlayNextAudio('media/mp3/output_0004.mp3');
+      this.loadAndPlayCurrentAudio('media/mp3/output_0004.mp3');
     }
 
     /*if (!this.isLastTrack()) {
@@ -224,11 +247,11 @@ export class RadioPlayerComponent {
 
   // Gestion de la fin d'une piste
   onEnded() {
-    //if (!this.isLivePlaying) {
-      //this.playCompilation();  // Passer à la compilation après la première piste
-    //} else if (!this.isLastTrack()) {
+    if (!this.isLivePlaying) {
+      this.playCompilation();  // Passer à la compilation après la première piste
+    } else if (!this.isLastTrack()) {
       this.nextTrack();
-    //}
+    }
   }
 
   // Affichage du temps en minutes:secondes
