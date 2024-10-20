@@ -157,6 +157,8 @@ public class RadioLiveALaCarteResource {
         }
     }
 
+
+
     /**
      * curl -s -X POST "http://localhost:8287/api/radio/recordWithSegments"
      * @return
@@ -170,6 +172,15 @@ public class RadioLiveALaCarteResource {
         StreamingService.getInstance().recordWithSegments("https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance");
     }*/
 
-
+    /**
+     * curl -s -X GET "http://localhost:8287/api/radio/getAllCountries"
+     * @return
+     */
+    @GET
+    @Path("getDailyProgramsNames")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String[] getDailyProgramsNames() throws Exception {
+        return RadioInformationAndPlanningService.getInstance().getDailyProgramsNames();
+    }
 
 }

@@ -21,23 +21,6 @@ export class AppComponent {
     //this.getRadioStreamData();
   }
 
-  /*getRadioStreamData() {
-    const url = '/api/radio/searchByName/FranceInter';
-    this.radioService.fetchRadioStream(url).then(
-      (data) => {
-        this.radioData = data;
-        console.log('Données reçues:', data);
-      },
-      (error) => {
-        console.error('Erreur lors de la récupération du flux radio:', error);
-      }
-    );
-  }*/
-
-  getMockedRadioStation() {
-    this.radioService.getMockedStation();
-  }
-
   // mp3.service.ts
 
   fetchRadioStream(url: string): Promise<any> {

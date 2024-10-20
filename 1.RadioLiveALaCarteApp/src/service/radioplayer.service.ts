@@ -23,6 +23,10 @@ export class RadioplayerService {
     );
   }
 
+  public getDailyProgramsNames(): Observable<string[]> {
+    return this.http.get<string[]>('http://localhost:4200/api/radio/getDailyProgramsNames');
+  }
+
   // Génère l'URL du segment suivant à partir du timestamp et du numéro de segment
   getNextSegmentUrl(segmentIndex: number): string {
     // Assurez-vous que segmentIndex est compris dans une plage correcte

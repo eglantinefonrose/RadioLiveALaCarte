@@ -31,7 +31,7 @@ export class RadioPlayerComponent {
   duration = 0;
   isSpeedNormal = true;
 
-  mp3Urls: string[] = ['media/mp3/output_0002.mp3', 'media/mp3/output_0004.mp3'];
+  mp3Urls: string[] = [];
   currentAudioIndex: number = 0;
 
   isLivePlaying: boolean = false;
@@ -41,7 +41,19 @@ export class RadioPlayerComponent {
 
   // Initialisation du composant
   constructor(private radioplayerService: RadioplayerService, private http: HttpClient) {
+    this.getDailyProgramsNames();
     this.loadLiveMp3Urls();
+  }
+
+  private getDailyProgramsNames() {
+    this.radioplayerService.getDailyProgramsNames().subscribe({
+      next: (data: string[]) => {
+        this.mp3Urls = data;
+      },
+      error: (error) => {
+        console.error('Erreur lors de la récupération des données', error);
+      }
+    });
   }
 
   loadLiveMp3Urls() {
@@ -268,4 +280,6 @@ export class RadioPlayerComponent {
     const secs = Math.floor(seconds % 60);
     return minutes + ':' + (secs < 10 ? '0' + secs : secs);
   }
+
+
 }
