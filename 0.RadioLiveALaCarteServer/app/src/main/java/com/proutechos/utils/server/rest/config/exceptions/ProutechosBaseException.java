@@ -10,4 +10,7 @@ public class ProutechosBaseException extends Exception {
         super(message, rootException);
     }
 
+    public ProutechosBaseException() {
+
+    }
 }

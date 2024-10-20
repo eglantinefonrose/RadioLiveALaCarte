@@ -4,5 +4,4 @@
   <audio #audioPlayer (timeupdate)="onTimeUpdate()" (ended)="onEnded()"></audio>
   <input type="range" [max]="totalDuration" [value]="currentTime" (input)="seek($event)">
   <div>{{ formatTime(currentTime) }} / {{ formatTime(totalDuration) }}</div>
-
 </div>
