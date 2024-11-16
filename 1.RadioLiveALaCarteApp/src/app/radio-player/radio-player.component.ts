@@ -167,7 +167,7 @@ export class RadioPlayerComponent {
   playCompilation() {
     this.isLivePlaying = true;  // Basculer à la compilation
     this.currentAudioIndex = 3331;
-    this.currentTrackIndex = 0;  // Index à 1 car la première piste est déjà jouée
+    //this.currentTrackIndex = 0;  // Index à 1 car la première piste est déjà jouée
     this.totalDuration = this.segmentDurations.reduce((acc, duration) => acc + duration, 0); // Durée totale de la compilation
     this.loadAndPlayCurrentTrack();  // Charger et jouer la première piste de la compilation
   }
@@ -237,11 +237,18 @@ export class RadioPlayerComponent {
   }
 
   // Basculer à la piste suivante manuellement
-  nextTrackManual() {
-    this.currentAudioIndex++;
-    this.isLivePlaying = true;
-    this.playCompilation();
-  }
+  /*nextTrackManual() {
+    //this.currentAudioIndex++;
+    //this.isLivePlaying = true;
+    //this.playCompilation();
+    if (this.currentAudioIndex >= (this.mp3Urls.length)-1) {
+      this.playCompilation();  // Passer à la compilation après la première piste
+      this.currentTrackIndex++;
+    } else {
+      this.currentAudioIndex++; // AUDIO est pour les pistes audios séparées les unes des autres
+      this.loadAndPlayCurrentTrack();
+    }
+  }*/
 
   nextTrack() {
 
@@ -262,7 +269,14 @@ export class RadioPlayerComponent {
   // Gestion de la fin d'une piste
   onEnded() {
     if (this.currentAudioIndex >= (this.mp3Urls.length)-1) {
-      this.playCompilation();  // Passer à la compilation après la première piste
+      
+      if (this.currentTrackIndex <= this.mp3Urls.length) {
+        if (this.isLivePlaying) {
+          this.currentTrackIndex++;
+        }
+        this.playCompilation();  // Passer à la compilation après la première piste
+      }
+
     } else {
       this.currentAudioIndex++; // AUDIO est pour les pistes audios séparées les unes des autres
       this.loadAndPlayCurrentTrack();
