@@ -1,6 +1,7 @@
 <div>
   <button (click)="playPause()">{{ isPlaying ? 'Pause' : 'Play' }}</button>
   <button (click)="onEnded()">Piste suivante</button>
+  <button (click)="goToTime(2)">Go to 2 sec</button>
   <audio #audioPlayer (timeupdate)="onTimeUpdate()" (ended)="onEnded()"></audio>
   <input type="range" [max]="totalDuration" [value]="currentTime" (input)="seek($event)">
   <div>{{ formatTime(currentTime) }} / {{ formatTime(totalDuration) }}</div>

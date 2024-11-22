@@ -2,12 +2,13 @@ import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { RadioplayerService } from '../service/radioplayer.service';
 import { RadioPlayerComponent } from './radio-player/radio-player.component';
+import { SandboxAudioPlayerComponent } from './sandbox-audio-player/sandbox-audio-player.component';
 
 ////curl -s -X GET "http://localhost:8287/api/radio/searchByName/FranceInter"
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RadioPlayerComponent],
+  imports: [RouterOutlet, RadioPlayerComponent, SandboxAudioPlayerComponent],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })

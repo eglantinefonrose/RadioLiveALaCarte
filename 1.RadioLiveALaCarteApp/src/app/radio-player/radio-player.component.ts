@@ -6,6 +6,9 @@ import { Howl, Howler } from 'howler';
 import { NgIf } from '@angular/common';
 import { find } from 'rxjs';
 
+// NOTES POUR FUTUR DEBUG :
+// LE BUG POUR ALLER À UN ENDROIT PRÉCIS DANS L'AUDIO SE PRODUIT QUAND ON CHARGE LES PISTES AUDIO EN PASSANT PAR L'URL MEDIA/MP3 ETC (UTILISATION DU SERVEUR)
+
 @Component({
   selector: 'app-radio-player',
   standalone: true,
@@ -35,7 +38,7 @@ export class RadioPlayerComponent {
   currentAudioIndex: number = 0;
 
   isLivePlaying: boolean = false;
-  mp3UrlsCompilation: string[] = [];
+  mp3UrlsCompilation: string[] = ['assets/output_0000', 'assets/output_0001', 'assets/output_0002', 'assets/output_0003', 'assets/output_0004'];
   maxAttempts = 10;
   baseUrl = 'media/mp3/output_20241010_082400_';
 
@@ -48,7 +51,7 @@ export class RadioPlayerComponent {
   private getDailyProgramsNames() {
     this.radioplayerService.getDailyProgramsNames().subscribe({
       next: (data: string[]) => {
-        this.mp3Urls = data;
+        this.mp3Urls = ['assets/sortie.mp3'];
       },
       error: (error) => {
         console.error('Erreur lors de la récupération des données', error);
@@ -134,33 +137,51 @@ export class RadioPlayerComponent {
     }
   }
 
-  // Mettre à jour manuellement le temps dans la piste actuelle
   seek(event: Event) {
     const input = event.target as HTMLInputElement;
-    const globalSeekTime = +input.value;
+    const seekTime = parseFloat(input.value);
 
-    // Calculer sur quelle piste on se trouve en fonction du temps global
-    let cumulativeDuration = 0;
-    for (let i = 0; i < this.segmentDurations.length; i++) {
-      cumulativeDuration += this.segmentDurations[i];
-      if (globalSeekTime <= cumulativeDuration) {
-        this.currentTrackIndex = i;
-        const timeInTrack = globalSeekTime - (cumulativeDuration - this.segmentDurations[i]);
-        this.audioPlayer.nativeElement.currentTime = timeInTrack;
-        this.loadAndPlayCurrentTrack();
-        break;
-      }
+    const audio = this.audioPlayer.nativeElement;
+    audio.currentTime = seekTime;
+    this.currentTime = seekTime;
+  }
+
+  /*goToTime(): void {
+    const audio = this.audioPlayer.nativeElement;
+    if (audio.readyState >= 2) { // Vérifie si l'audio est prêt à être joué
+      console.log(audio.currentTime);
+      audio.currentTime = 5;
+      console.log(audio.currentTime);
+      this.currentTime = 5; // Met à jour l'état pour synchroniser l'affichage
+    } else {
+      console.warn('Audio not ready');
+    }
+  }*/
+  goToTime(time: number): void {
+    const audio = this.audioPlayer.nativeElement;
+    console.log(audio.duration);
+    if (time >= 0 && time <= audio.duration) {
+      audio.currentTime = time;
+      this.currentTime = time; // Met à jour l'état pour synchroniser l'affichage
+    } else {
+      console.warn('Le timecode spécifié est hors des limites de la durée audio.');
     }
   }
 
   onTimeUpdate() {
+
     const audio = this.audioPlayer.nativeElement;
     
     // Calculer le temps global actuel basé sur la piste courante
     let timeInCurrentTrack = audio.currentTime;
-    this.currentTime = this.segmentDurations
-      .slice(0, this.currentTrackIndex) // Somme des pistes précédentes
-      .reduce((acc, duration) => acc + duration, 0) + timeInCurrentTrack; // Ajouter la durée de la piste actuelle
+    
+    if (this.isLivePlaying) {
+      this.currentTime = this.segmentDurations
+        .slice(0, this.currentTrackIndex) // Somme des pistes précédentes
+        .reduce((acc, duration) => acc + duration, 0) + timeInCurrentTrack; // Ajouter la durée de la piste actuelle
+    } else {
+      this.currentTime = audio.currentTime;
+    }
   }
 
   // Fonction pour charger la compilation après la première piste
@@ -185,9 +206,7 @@ export class RadioPlayerComponent {
       audio.addEventListener('loadedmetadata', () => {
         if (this.currentAudioIndex == 0 || this.currentAudioIndex == 1) {
            // La durée de l'audio est maintenant disponible
-           console.log(audio.duration);
             this.totalDuration = audio.duration;  // Obtenir la durée et la stocker
-            console.log(audio.duration);
         }
        
       });
@@ -236,20 +255,6 @@ export class RadioPlayerComponent {
 
   }
 
-  // Basculer à la piste suivante manuellement
-  /*nextTrackManual() {
-    //this.currentAudioIndex++;
-    //this.isLivePlaying = true;
-    //this.playCompilation();
-    if (this.currentAudioIndex >= (this.mp3Urls.length)-1) {
-      this.playCompilation();  // Passer à la compilation après la première piste
-      this.currentTrackIndex++;
-    } else {
-      this.currentAudioIndex++; // AUDIO est pour les pistes audios séparées les unes des autres
-      this.loadAndPlayCurrentTrack();
-    }
-  }*/
-
   nextTrack() {
 
     console.log(this.currentAudioIndex);
@@ -258,12 +263,6 @@ export class RadioPlayerComponent {
       this.currentAudioIndex++; // AUDIO est pour les pistes audios séparées les unes des autres
       this.loadAndPlayCurrentAudio('media/mp3/output_0004.mp3');
     }
-
-    /*if (!this.isLastTrack()) {
-      this.isLivePlaying = true;
-      this.currentTrackIndex++; // TRACK est pour la compilation de segments
-      this.loadAndPlayCurrentTrack();
-    }*/
   }
 
   // Gestion de la fin d'une piste
@@ -281,11 +280,6 @@ export class RadioPlayerComponent {
       this.currentAudioIndex++; // AUDIO est pour les pistes audios séparées les unes des autres
       this.loadAndPlayCurrentTrack();
     }
-    
-    // Aucune idée de l'utilité de ce bout de code, la compilation est bien lue même sans
-    /* else if (!this.isLastTrack()) {
-      this.nextTrack();
-    }*/
   }
 
   // Affichage du temps en minutes:secondes

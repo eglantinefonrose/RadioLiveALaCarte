@@ -1,0 +1,36 @@
+<div class="audio-player">
+    <audio #audio (timeupdate)="updateProgress(audio)" (loadedmetadata)="initializeAudio(audio)">
+      <source src="assets/sortie.mp3" type="audio/mpeg" />
+      Votre navigateur ne supporte pas la lecture audio.
+    </audio>
+  
+    <div class="controls">
+      <button (click)="playAudio(audio)">Play</button>
+      <button (click)="pauseAudio(audio)">Pause</button>
+      <button (click)="goToTime(audio, 3)">Go to 3 sec</button>
+      <input
+        type="range"
+        min="0"
+        [max]="audio.duration || 0"
+        [value]="currentTime"
+        (input)="seekAudio($event, audio)"
+      />
+    </div>
+  
+    <div>
+      <label>Progression : {{ currentTime }} / {{ duration }} sec</label>
+    </div>
+  
+    <div>
+      <label>Volume :</label>
+      <input
+        type="range"
+        min="0"
+        max="1"
+        step="0.1"
+        [value]="volume"
+        (input)="changeVolume($event, audio)"
+      />
+    </div>
+  </div>
+  
