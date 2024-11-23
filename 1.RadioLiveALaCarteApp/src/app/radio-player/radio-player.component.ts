@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild, Input } from '@angular/core';
-import { RadioplayerService } from '../../service/radioplayer.service';
+import { RadioplayerService } from '../service/radioplayer.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Howl, Howler } from 'howler';

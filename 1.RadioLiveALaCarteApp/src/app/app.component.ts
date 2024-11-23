@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { RadioplayerService } from '../service/radioplayer.service';
+import { RadioplayerService } from './service/radioplayer.service';
 import { RadioPlayerComponent } from './radio-player/radio-player.component';
 import { SandboxAudioPlayerComponent } from './sandbox-audio-player/sandbox-audio-player.component';
 import { RouterModule } from '@angular/router';

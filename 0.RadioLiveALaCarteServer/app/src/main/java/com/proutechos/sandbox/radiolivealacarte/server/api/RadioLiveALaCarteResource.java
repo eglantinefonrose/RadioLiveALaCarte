@@ -201,6 +201,17 @@ public class RadioLiveALaCarteResource {
     }
 
     @GET
+    @Path("/getUserByID/userID/{userID}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public UserModel getUserByID(@PathParam("userID") String userId) throws ProutechosBaseException {
+        try {
+            return RadioLiveALaCarteUserService.getInstance().getUserByID(userId);
+        } catch (ProutechosBaseException e) {
+            throw e;
+        }
+    }
+
+    @GET
     @Path("/doesUserExists/userId/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     public Boolean doesUserExists(@PathParam("userId") String userId) throws ProutechosBaseException {

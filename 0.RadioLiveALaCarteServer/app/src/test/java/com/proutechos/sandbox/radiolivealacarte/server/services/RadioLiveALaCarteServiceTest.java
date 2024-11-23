@@ -32,6 +32,14 @@ public class RadioLiveALaCarteServiceTest {
 
     }
 
+    @Test public void getUserByID() {
+        try {
+            System.out.println(RadioLiveALaCarteUserService.getInstance().getUserByID("userID"));
+        } catch (ProutechosBaseException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Test public void addUserProgram() {
 
         try {

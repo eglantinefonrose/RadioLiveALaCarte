@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import { HttpClientModule } from '@angular/common/http';
+import { User } from './Model/User';
 
 @Injectable({
   providedIn: 'root',
@@ -71,6 +72,16 @@ export class RadioplayerService {
     });
   }
 
+  //
+  //
+  // USERS
+  //
+  //
+
+  private currentUser: User | undefined;
+  public setCurrentUser(user: User): void {
+    this.currentUser = user;
+  }
 
   //
   //
