@@ -44,6 +44,18 @@ public class RadioLiveALaCarteServiceTest {
 
     }
 
+    @Test public void doesUserExists() {
+
+        try {
+
+            System.out.println(RadioLiveALaCarteUserService.getInstance().doesUserExists("aa768288-7621-49c8-99bd-c33c6fc02cc5"));
+
+        } catch (ProutechosBaseException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     @Test public void fullCreateProgram() {
         Program program = new Program("430934", "Radio XYZ", 8, 30, 0, 10, 0, 0);
         UserModel user = new UserModel("1", "John", "Doe");

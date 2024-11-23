@@ -1,9 +1,12 @@
 package com.proutechos.sandbox.radiolivealacarte.server.api;
 
 import com.proutechos.sandbox.radiolivealacarte.server.model.RadioStation;
+import com.proutechos.sandbox.radiolivealacarte.server.model.UserModel;
+import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteUserService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.planning.RadioInformationAndPlanningService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RadioRecordingSchedulerService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.streaming.StreamingService;
+import com.proutechos.utils.server.rest.config.exceptions.ProutechosBaseException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
@@ -181,6 +184,57 @@ public class RadioLiveALaCarteResource {
     @Produces(MediaType.APPLICATION_JSON)
     public String[] getDailyProgramsNames() throws Exception {
         return RadioInformationAndPlanningService.getInstance().getDailyProgramsNames();
+    }
+
+    @GET
+    @Path("/createUser/firstName/{firstName}/lastName/{lastName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String createUser(@PathParam("firstName") String firstName, @PathParam("lastName") String lastName) throws ProutechosBaseException {
+
+        try {
+            UserModel user = new UserModel("1", firstName, lastName);
+            return RadioLiveALaCarteUserService.getInstance().createAccount(user);
+        } catch (ProutechosBaseException e) {
+            throw e;
+        }
+
+    }
+
+    @GET
+    @Path("/doesUserExists/userId/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Boolean doesUserExists(@PathParam("userId") String userId) throws ProutechosBaseException {
+
+        try {
+            return RadioLiveALaCarteUserService.getInstance().doesUserExists(userId);
+        } catch (ProutechosBaseException e) {
+            throw e;
+        }
+
+    }
+
+    @POST
+    @Path("/addUserProgram/userId/{userId}/programId/{programId}")
+    public void addUserProgram(@PathParam("userId") String userId, @PathParam("programId") String programId) throws ProutechosBaseException {
+
+        try {
+            RadioLiveALaCarteUserService.getInstance().addUserProgram(userId, programId);
+        } catch (ProutechosBaseException e) {
+            throw e;
+        }
+
+    }
+
+    @POST
+    @Path("/getProgramsByUser/userId/{userId}")
+    public void getProgramsByUser(@PathParam("userId") String userId) throws ProutechosBaseException {
+
+        try {
+            System.out.println(RadioLiveALaCarteUserService.getInstance().getProgramsByUserId(userId));
+        } catch (ProutechosBaseException e) {
+            throw e;
+        }
+
     }
 
 }
