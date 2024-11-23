@@ -53,7 +53,9 @@ dependencies {
     // Database
     implementation 'org.xerial:sqlite-jdbc:3.45.3.0' // Dépendance pour SQLite JDBC
 
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    //testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation('junit:junit:4.13')
+
 
     // This dependency is used by the application.
     implementation libs.guava
