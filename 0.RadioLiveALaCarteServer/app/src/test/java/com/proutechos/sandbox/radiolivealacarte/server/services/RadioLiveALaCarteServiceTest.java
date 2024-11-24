@@ -122,10 +122,11 @@ public class RadioLiveALaCarteServiceTest {
 
     @Test public void avancedTryToRecord()  {
 
-        Program program = new Program("430934", "France Inter", 21, 12, 0, 21, 13, 0);
+        Program program = new Program("430934", "France Inter", 21, 42, 0, 21, 43, 0);
 
         // Attendez que l'utilisateur appuie sur Entrée pour arrêter l'enregistrement
         try {
+
             RadioRecordingSchedulerService.getInstance().recordProgram(program);
 
             System.in.read();
