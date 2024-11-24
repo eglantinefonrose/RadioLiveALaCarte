@@ -11,9 +11,6 @@ import org.junit.Test;
 import org.quartz.SchedulerException;
 
 import java.io.IOException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 public class RadioLiveALaCarteServiceTest {
 
@@ -111,14 +108,29 @@ public class RadioLiveALaCarteServiceTest {
 
         // Attendez que l'utilisateur appuie sur Entrée pour arrêter l'enregistrement
         try {
-            RadioRecordingSchedulerService.getInstance().programRecording(17, 5, 0, 17, 6, 0, 0, "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance");
-            RadioRecordingSchedulerService.getInstance().programRecording(17, 5, 0, 17, 6, 0, 1, "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance");
+            RadioRecordingSchedulerService.getInstance().recordFromHourly(17, 5, 0, 17, 6, 0, 0, "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance");
+            RadioRecordingSchedulerService.getInstance().recordFromHourly(17, 5, 0, 17, 6, 0, 1, "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance");
 
             System.in.read();
         } catch (IOException e) {
             throw new RuntimeException(e);
         } catch (SchedulerException e) {
             e.printStackTrace();
+        }
+
+    }
+
+    @Test public void avancedTryToRecord()  {
+
+        Program program = new Program("430934", "France Inter", 21, 12, 0, 21, 13, 0);
+
+        // Attendez que l'utilisateur appuie sur Entrée pour arrêter l'enregistrement
+        try {
+            RadioRecordingSchedulerService.getInstance().recordProgram(program);
+
+            System.in.read();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
 
     }

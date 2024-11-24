@@ -5,7 +5,6 @@ import com.proutechos.sandbox.radiolivealacarte.server.model.UserModel;
 import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteUserService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.planning.RadioInformationAndPlanningService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RadioRecordingSchedulerService;
-import com.proutechos.sandbox.radiolivealacarte.server.service.streaming.StreamingService;
 import com.proutechos.utils.server.rest.config.exceptions.ProutechosBaseException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
@@ -154,7 +153,7 @@ public class RadioLiveALaCarteResource {
         // Décoder l'URL encodée dans le chemin
         try {
             String url = URLDecoder.decode(encodedUrl, StandardCharsets.UTF_8.name());
-            RadioRecordingSchedulerService.getInstance().programRecording(startHour, startMinute, startSeconds, endHour, endMinute, endSeconds, withSegments, url);
+            RadioRecordingSchedulerService.getInstance().recordFromHourly(startHour, startMinute, startSeconds, endHour, endMinute, endSeconds, withSegments, url);
         } catch (Exception e) {
             e.printStackTrace();
         }
