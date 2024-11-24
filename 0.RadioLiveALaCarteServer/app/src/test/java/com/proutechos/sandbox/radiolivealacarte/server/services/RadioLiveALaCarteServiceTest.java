@@ -25,7 +25,7 @@ public class RadioLiveALaCarteServiceTest {
     }
 
     @Test public void createProgram() {
-        Program program = new Program("123", "Radio XYZ", 8, 30, 0, 10, 0, 0);
+        Program program = new Program("123", "France Inter", 8, 30, 0, 10, 0, 0);
 
         try {
             System.out.println(RadioLiveALaCarteUserService.getInstance().createProgram(program));
@@ -122,7 +122,7 @@ public class RadioLiveALaCarteServiceTest {
 
     @Test public void avancedTryToRecord()  {
 
-        Program program = new Program("430934", "France Inter", 21, 42, 0, 21, 43, 0);
+        Program program = new Program("4934", "France Inter", 22, 10, 0, 22, 11, 0);
 
         // Attendez que l'utilisateur appuie sur Entrée pour arrêter l'enregistrement
         try {
@@ -131,6 +131,16 @@ public class RadioLiveALaCarteServiceTest {
 
             System.in.read();
         } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Test public void getSuitableFileNameByProgramIdTest() {
+
+        try {
+            System.out.println(RadioLiveALaCarteUserService.getInstance().getSuitableFileNameByProgramId("4934"));
+        } catch (ProutechosBaseException e) {
             throw new RuntimeException(e);
         }
 
