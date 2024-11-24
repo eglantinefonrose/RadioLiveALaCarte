@@ -1,0 +1,1 @@
+package com.proutechos.sandbox.radiolivealacarte.server.service.recording;public class RecordName {    int withSegments;    String output_name;}

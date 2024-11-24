@@ -4,9 +4,15 @@ import com.proutechos.sandbox.radiolivealacarte.server.model.Program;
 import com.proutechos.sandbox.radiolivealacarte.server.model.UserModel;
 import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteDataStorage;
 import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteUserService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RadioRecordingSchedulerService;
 import com.proutechos.utils.server.rest.config.exceptions.ProutechosBaseException;
 
 import org.junit.Test;
+import org.quartz.SchedulerException;
+
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class RadioLiveALaCarteServiceTest {
@@ -99,6 +105,22 @@ public class RadioLiveALaCarteServiceTest {
         } catch (ProutechosBaseException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test public void tryToRecord()  {
+
+        // Attendez que l'utilisateur appuie sur Entrée pour arrêter l'enregistrement
+        try {
+            RadioRecordingSchedulerService.getInstance().programRecording(17, 5, 0, 17, 6, 0, 0, "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance");
+            RadioRecordingSchedulerService.getInstance().programRecording(17, 5, 0, 17, 6, 0, 1, "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance");
+
+            System.in.read();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
