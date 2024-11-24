@@ -1,10 +1,12 @@
+import { Component } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { RadioStation } from './RadioStationModel';
 import { Observable, of } from 'rxjs';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
 import { HttpClientModule } from '@angular/common/http';
-import { User } from './Model/User';
+import { User } from './Model/User/User';
+import { Program } from './Model/Program/Program';
 
 @Injectable({
   providedIn: 'root',
@@ -81,6 +83,19 @@ export class RadioplayerService {
   private currentUser: User | undefined;
   public setCurrentUser(user: User): void {
     this.currentUser = user;
+  }
+  public getCurrentUser() {
+    return this.currentUser;
+  }
+
+  private currentUserPrograms: Program[] = [];
+
+  public setCurrentUserPrograms(programs: Program[]) {
+    this.currentUserPrograms = programs;
+  }
+
+  public getCurrentUserPrograms(): Program[] {
+    return this.currentUserPrograms;
   }
 
   //

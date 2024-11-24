@@ -5,6 +5,9 @@ import { Injectable } from '@angular/core';
 import { Howl, Howler } from 'howler';
 import { NgIf } from '@angular/common';
 import { find } from 'rxjs';
+import { Program } from '../service/Model/Program/Program';
+import { CommonModule}  from '@angular/common';
+import { User } from '../service/Model/User/User';
 
 // NOTES POUR FUTUR DEBUG :
 // LE BUG POUR ALLER À UN ENDROIT PRÉCIS DANS L'AUDIO SE PRODUIT QUAND ON CHARGE LES PISTES AUDIO EN PASSANT PAR L'URL MEDIA/MP3 ETC (UTILISATION DU SERVEUR)
@@ -12,7 +15,7 @@ import { find } from 'rxjs';
 @Component({
   selector: 'app-radio-player',
   standalone: true,
-  imports: [ NgIf ],
+  imports: [ NgIf, CommonModule ],
   templateUrl: './radio-player.component.html',
   styleUrls: ['./radio-player.component.css']
 })
@@ -41,11 +44,16 @@ export class RadioPlayerComponent {
   mp3UrlsCompilation: string[] = ['assets/output_0000', 'assets/output_0001', 'assets/output_0002', 'assets/output_0003', 'assets/output_0004'];
   maxAttempts = 10;
   baseUrl = 'media/mp3/output_20241010_082400_';
+  programs: Program[] = [];
+  currentUser: User | undefined;
 
   // Initialisation du composant
   constructor(private radioplayerService: RadioplayerService, private http: HttpClient) {
     this.getDailyProgramsNames();
     this.loadLiveMp3Urls();
+    this.programs = this.radioplayerService.getCurrentUserPrograms();
+    console.log(this.radioplayerService.getCurrentUserPrograms());
+    this.currentUser = this.radioplayerService.getCurrentUser();
   }
 
   private getDailyProgramsNames() {
