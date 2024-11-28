@@ -37,7 +37,7 @@ public class RadioLiveALaCarteServiceTest {
 
     @Test public void getUserByID() {
         try {
-            System.out.println(RadioLiveALaCarteUserService.getInstance().getUserByID("userID"));
+            System.out.println(RadioLiveALaCarteUserService.getInstance().getUserByID("aa768288-7621-49c8-99bd-"));
         } catch (ProutechosBaseException e) {
             e.printStackTrace();
         }
@@ -47,8 +47,18 @@ public class RadioLiveALaCarteServiceTest {
 
         try {
 
-            RadioLiveALaCarteUserService.getInstance().addUserProgram("aa768288-7621-49c8-99bd-c33c6fc02cc5", "e8d96a9e-d0cf-48de-a06b-809ecc95305c");
+            RadioLiveALaCarteUserService.getInstance().addUserProgram("aa768288-7621-49d-c33c6fc02cc5", "e8d96a9e-d0cf-48de-a06b-809ecc95305c");
 
+        } catch (ProutechosBaseException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test public void getProgramsByRadioName() {
+
+        try {
+            System.out.println(RadioLiveALaCarteDataStorage.getInstance().getProgramsByRadioName("France Inter"));
         } catch (ProutechosBaseException e) {
             e.printStackTrace();
         }
@@ -83,14 +93,14 @@ public class RadioLiveALaCarteServiceTest {
 
     }
 
-    @Test public void getProgramsByUser() {
+    @Test public void getProgramsByUserId() {
 
         try {
 
-            System.out.println(RadioLiveALaCarteUserService.getInstance().getProgramsByUserId("aa768288-7621-49c8-99bd-c33c6fc02cc5"));
+            System.out.println(RadioLiveALaCarteUserService.getInstance().getProgramsByUserId("aa76828621-49c8-99bd-c33c6fc02cc5"));
 
         } catch (ProutechosBaseException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
     }
@@ -114,7 +124,7 @@ public class RadioLiveALaCarteServiceTest {
             System.in.read();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        } catch (SchedulerException e) {
+        } catch (ProutechosBaseException e) {
             e.printStackTrace();
         }
 
@@ -127,7 +137,11 @@ public class RadioLiveALaCarteServiceTest {
         // Attendez que l'utilisateur appuie sur Entrée pour arrêter l'enregistrement
         try {
 
-            RadioRecordingSchedulerService.getInstance().recordProgram(program);
+            try {
+                RadioRecordingSchedulerService.getInstance().recordProgram(program);
+            }  catch (ProutechosBaseException e) {
+                e.printStackTrace();
+            }
 
             System.in.read();
         } catch (IOException e) {
@@ -140,6 +154,27 @@ public class RadioLiveALaCarteServiceTest {
 
         try {
             System.out.println(RadioLiveALaCarteUserService.getInstance().getSuitableFileNameByProgramId("4934"));
+        } catch (ProutechosBaseException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Test public void getFileWithoutSegmentBaseURL() {
+
+        try {
+            String[] programs = RadioLiveALaCarteUserService.getInstance().getFilesWithoutSegmentNamesList("aa768288-7621-49c8-99bd-c33c6fc02cc5");
+            System.out.println(programs.length);
+        } catch (ProutechosBaseException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Test public void getFileWithSegmentBaseURL() {
+
+        try {
+            System.out.println(RadioLiveALaCarteUserService.getInstance().getFileWithSegmentBaseURL("aa768288-7621-49c8-99bd-c33c6fc02cc5"));
         } catch (ProutechosBaseException e) {
             throw new RuntimeException(e);
         }

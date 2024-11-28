@@ -1,10 +1,13 @@
 package com.proutechos.sandbox.radiolivealacarte.server.api;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
+import com.proutechos.sandbox.radiolivealacarte.server.model.Program;
 import com.proutechos.sandbox.radiolivealacarte.server.model.RadioStation;
 import com.proutechos.sandbox.radiolivealacarte.server.model.UserModel;
 import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteUserService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.planning.RadioInformationAndPlanningService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RadioRecordingSchedulerService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RecordName;
 import com.proutechos.utils.server.rest.config.exceptions.ProutechosBaseException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
@@ -235,12 +238,68 @@ public class RadioLiveALaCarteResource {
 
     }
 
-    @POST
+    @GET
     @Path("/getProgramsByUser/userId/{userId}")
-    public void getProgramsByUser(@PathParam("userId") String userId) throws ProutechosBaseException {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Program[] getProgramsByUser(@PathParam("userId") String userId) throws ProutechosBaseException {
 
         try {
-            System.out.println(RadioLiveALaCarteUserService.getInstance().getProgramsByUserId(userId));
+            return RadioLiveALaCarteUserService.getInstance().getProgramsByUserId(userId);
+        } catch (ProutechosBaseException e) {
+            throw e;
+        }
+
+    }
+
+    @POST
+    @Path("/recordProgram/programId/{programId}/radioName/{radioName}/startTimeHour/{startTimeHour}/startTimeMinute/{startTimeMinute}/startTimeSeconds/{startTimeSeconds}/endTimeHour/{endTimeHour}/endTimeMinute/{endTimeMinute}/endTimeSeconds/{endTimeSeconds}")
+    public void recordProgram(@PathParam("programId") String programId, @PathParam("radioName") String radioName, @PathParam("startTimeHour") int startTimeHour, @PathParam("startTimeMinute") int startTimeMinute, @PathParam("startTimeSeconds") int startTimeSeconds, @PathParam("endTimeHour") int endTimeHour, @PathParam("endTimeMinute") int endTimeMinute, @PathParam("endTimeSeconds") int endTimeSeconds) throws ProutechosBaseException {
+
+        try {
+            Program program = new Program(programId, radioName, startTimeHour, startTimeMinute, startTimeSeconds, endTimeHour, endTimeMinute, endTimeSeconds);
+            RadioRecordingSchedulerService.getInstance().recordProgram(program);
+        } catch (ProutechosBaseException e) {
+            throw e;
+        }
+
+    }
+
+    @GET
+    @Path("/getSuitableFileNameByProgramId/programId/{programId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public RecordName getSuitableFileNameByProgramId(@PathParam("programId") String programId) throws ProutechosBaseException {
+
+        try {
+            return RadioLiveALaCarteUserService.getInstance().getSuitableFileNameByProgramId(programId);
+        } catch (ProutechosBaseException e) {
+            throw e;
+        }
+
+    }
+
+    @GET
+    @Path("/getFilesWithoutSegmentNamesList/userId/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String[] getFilesWithoutSegmentNamesList(@PathParam("userId") String userId) throws ProutechosBaseException {
+
+        try {
+            return RadioLiveALaCarteUserService.getInstance().getFilesWithoutSegmentNamesList(userId);
+        } catch (ProutechosBaseException e) {
+            throw e;
+        }
+
+    }
+
+    @GET
+    @Path("/getFileWithSegmentBaseURL/userId/{userId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public BaseURLName getFileWithSegmentNamesList(@PathParam("userId") String userId) throws ProutechosBaseException {
+
+        try {
+
+            String name = RadioLiveALaCarteUserService.getInstance().getFileWithSegmentBaseURL(userId);
+            return new BaseURLName(name);
+
         } catch (ProutechosBaseException e) {
             throw e;
         }

@@ -1,0 +1,1 @@
+package com.proutechos.sandbox.radiolivealacarte.server.api;public class BaseURLName {    String name;    public BaseURLName(String name) {        this.name = name;    }    public String getName() {        return name;    }    public void setName(String name) {        this.name = name;    }}

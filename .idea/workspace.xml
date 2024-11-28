@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="8d9a23df-94c9-4003-9abd-3f3dede78b3c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/0.RadioLiveALaCarteServer/app/src/main/java/com/proutechos/sandbox/radiolivealacarte/server/api/RadioLiveALaCarteResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/0.RadioLiveALaCarteServer/app/src/main/java/com/proutechos/sandbox/radiolivealacarte/server/api/RadioLiveALaCarteResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/0.RadioLiveALaCarteServer/app/src/main/java/com/proutechos/sandbox/radiolivealacarte/server/service/recording/RadioRecordingSchedulerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/0.RadioLiveALaCarteServer/app/src/main/java/com/proutechos/sandbox/radiolivealacarte/server/service/recording/RadioRecordingSchedulerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/0.RadioLiveALaCarteServer/app/src/test/java/com/proutechos/sandbox/radiolivealacarte/server/services/RadioLiveALaCarteServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/0.RadioLiveALaCarteServer/app/src/test/java/com/proutechos/sandbox/radiolivealacarte/server/services/RadioLiveALaCarteServiceTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1.RadioLiveALaCarteApp/src/app/service/radioplayer.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/1.RadioLiveALaCarteApp/src/app/service/radioplayer.service.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
+  <component name="ProjectId" id="2pK6eYDO3IVZtqMq4qny41PaMmC" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "FEATURE__BRANCH__PermetAuxUtilisateursDeDefinirLeurProgrammeALaCarte",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-WS-243.21565.180" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8d9a23df-94c9-4003-9abd-3f3dede78b3c" name="Changes" comment="" />
+      <created>1732502516049</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1732502516049</updated>
+      <workItem from="1732502517493" duration="34000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

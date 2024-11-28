@@ -41,34 +41,44 @@ export class RadioPlayerComponent {
   currentAudioIndex: number = 0;
 
   isLivePlaying: boolean = false;
-  mp3UrlsCompilation: string[] = ['assets/output_0000', 'assets/output_0001', 'assets/output_0002', 'assets/output_0003', 'assets/output_0004'];
+  mp3UrlsCompilation: string[] = [];
   maxAttempts = 10;
-  baseUrl = 'media/mp3/output_20241010_082400_';
+  baseUrl: string = "";
   programs: Program[] = [];
   currentUser: User | undefined;
 
   // Initialisation du composant
   constructor(private radioplayerService: RadioplayerService, private http: HttpClient) {
-    this.getDailyProgramsNames();
-    this.loadLiveMp3Urls();
-    this.programs = this.radioplayerService.getCurrentUserPrograms();
-    console.log(this.radioplayerService.getCurrentUserPrograms());
+
     this.currentUser = this.radioplayerService.getCurrentUser();
+
+    this.programs = this.radioplayerService.getCurrentUserPrograms();
+    this.mp3Urls = this.radioplayerService.getProgramUrlList();
+
+    this.baseUrl = this.radioplayerService.getFilesWithSegmentsBaseName();
+
+    // si jamais pas de live
+    if (this.baseUrl != "") {
+      this.loadLiveMp3Urls();
+    }
+
   }
 
-  private getDailyProgramsNames() {
+  /*private getDailyProgramsNames() {
     this.radioplayerService.getDailyProgramsNames().subscribe({
       next: (data: string[]) => {
-        this.mp3Urls = ['assets/sortie.mp3'];
+        this.mp3Urls = data.map(url => 'media/mp3/' + url);
+        console.log(this.mp3Urls);
       },
       error: (error) => {
         console.error('Erreur lors de la récupération des données', error);
       }
     });
-  }
+  }*/
 
+  // Pour le LIVE !!!!!!!!!
   loadLiveMp3Urls() {
-    
+
     // Charger les autres fichiers comme compilation
     let attempt = 0;
     let lastSegmentLoadingAttempts = 0;
@@ -85,7 +95,7 @@ export class RadioPlayerComponent {
       }
 
       const paddedIndex = String(attempt).padStart(4, '0');
-      const url = `${this.baseUrl}${paddedIndex}.mp3`;
+      const url = `/media/mp3/${this.baseUrl}output_${paddedIndex}.mp3`;
 
       const promise = this.http.head(url, { observe: 'response' }).toPromise()
         .then(response => {
@@ -120,27 +130,26 @@ export class RadioPlayerComponent {
   playPause() {
     const audio = this.audioPlayer.nativeElement;
     const mp3Url = this.getMp3Url();
-  
-    if (this.isPlaying) {  
+
+    if (this.isPlaying) {
 
       this.isPlaying = false;
       audio.pause();
 
-    } else {  
+    } else {
       this.isPlaying = true;
-      
+
       const audioFileName = audio.src.split('/').pop();
-      const mp3FileName = this.getMp3Url().split('/').pop();
-  
+
       if (this.currentAudioIndex > (this.mp3Urls.length)-1) {
         this.isLivePlaying = true;
       }
 
       // Recharger le fichier si ce n'est pas le bon ou si la lecture est terminée
-      if (audio.currentTime === 0 || audioFileName !== mp3FileName) {
+      if (audio.currentTime === 0 || audioFileName !== mp3Url) {
         this.loadAndPlayCurrentTrack();
       } else {
-        audio.play(); 
+        audio.play();
       }
     }
   }
@@ -179,10 +188,10 @@ export class RadioPlayerComponent {
   onTimeUpdate() {
 
     const audio = this.audioPlayer.nativeElement;
-    
+
     // Calculer le temps global actuel basé sur la piste courante
     let timeInCurrentTrack = audio.currentTime;
-    
+
     if (this.isLivePlaying) {
       this.currentTime = this.segmentDurations
         .slice(0, this.currentTrackIndex) // Somme des pistes précédentes
@@ -205,47 +214,47 @@ export class RadioPlayerComponent {
   // ATTENTION !!! La fonction joue les pistes audios et celles qui constituent le LiveStreaming
   loadAndPlayCurrentTrack() {
     const audio = this.audioPlayer.nativeElement;
-    
+
     // Charger la source
     audio.src = this.getMp3Url();
     audio.load();
-  
+
     // Attendre que les métadonnées (incluant la durée) soient chargées
       audio.addEventListener('loadedmetadata', () => {
         if (this.currentAudioIndex == 0 || this.currentAudioIndex == 1) {
            // La durée de l'audio est maintenant disponible
             this.totalDuration = audio.duration;  // Obtenir la durée et la stocker
+            console.log(`audio.src = ${audio.src}`);
         }
-       
       });
-  
+
     // Lancer la lecture
     audio.play();
     this.isPlaying = true;
   }
 
-  loadAndPlayCurrentAudio(url: string) {
+  /*loadAndPlayCurrentAudio(url: string) {
     const audio = this.audioPlayer.nativeElement;
-    
+
     // Charger la source
     audio.src = url;
     audio.load();
-  
+
     // Attendre que les métadonnées (incluant la durée) soient chargées
-   
+
       audio.addEventListener('loadedmetadata', () => {
         //if (this.currentAudioIndex === 0) {
            // La durée de l'audio est maintenant disponible
             this.totalDuration = audio.duration;  // Obtenir la durée et la stocker
             console.log(audio.duration);
         //}
-       
+
       });
-  
+
     // Lancer la lecture
     audio.play();
     this.isPlaying = true;
-  }
+  }*/
 
   // Vérifier si c'est la dernière piste de la compilation
   isLastTrack(): boolean {
@@ -256,9 +265,11 @@ export class RadioPlayerComponent {
   getMp3Url(): string {
 
     if (this.isLivePlaying) {
+      console.log(this.mp3UrlsCompilation[this.currentTrackIndex]);
       return this.mp3UrlsCompilation[this.currentTrackIndex];
     } else {
-      return this.mp3Urls[this.currentAudioIndex];
+      console.log(this.mp3Urls[this.currentAudioIndex]);
+      return "media/mp3/" + this.mp3Urls[this.currentAudioIndex];
     }
 
   }
@@ -269,22 +280,27 @@ export class RadioPlayerComponent {
 
     if (this.currentAudioIndex < this.mp3Urls.length) {
       this.currentAudioIndex++; // AUDIO est pour les pistes audios séparées les unes des autres
-      this.loadAndPlayCurrentAudio('media/mp3/output_0004.mp3');
+      this.loadAndPlayCurrentTrack;
     }
   }
 
   // Gestion de la fin d'une piste
   onEnded() {
+
+    // Cas du Live
     if (this.currentAudioIndex >= (this.mp3Urls.length)-1) {
-      
+
       if (this.currentTrackIndex <= this.mp3Urls.length) {
-        if (this.isLivePlaying) {
+        if (this.isLivePlaying && this.currentTrackIndex != 0) {
           this.currentTrackIndex++;
         }
         this.playCompilation();  // Passer à la compilation après la première piste
       }
 
     } else {
+
+      // Plus dans le live
+
       this.currentAudioIndex++; // AUDIO est pour les pistes audios séparées les unes des autres
       this.loadAndPlayCurrentTrack();
     }

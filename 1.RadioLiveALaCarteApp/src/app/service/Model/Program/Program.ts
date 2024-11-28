@@ -1,4 +1,5 @@
 export interface Program {
+
     id: string;
     radioName: string;
     startTimeHour: number;
@@ -7,4 +8,5 @@ export interface Program {
     endTimeHour: number;
     endTimeMinute: number;
     endTimeSeconds: number;
+
 }
