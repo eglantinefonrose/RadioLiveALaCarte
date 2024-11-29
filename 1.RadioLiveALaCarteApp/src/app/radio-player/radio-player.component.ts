@@ -47,6 +47,8 @@ export class RadioPlayerComponent {
   programs: Program[] = [];
   currentUser: User | undefined;
 
+  isFirstTimePlaying: boolean = true;
+
   // Initialisation du composant
   constructor(private radioplayerService: RadioplayerService, private http: HttpClient) {
 
@@ -56,6 +58,10 @@ export class RadioPlayerComponent {
     this.mp3Urls = this.radioplayerService.getProgramUrlList();
 
     this.baseUrl = this.radioplayerService.getFilesWithSegmentsBaseName();
+
+    if (this.mp3Urls.length == 0) {
+      this.isLivePlaying = true;
+    }
 
     // si jamais pas de live
     if (this.baseUrl != "") {
@@ -137,20 +143,31 @@ export class RadioPlayerComponent {
       audio.pause();
 
     } else {
-      this.isPlaying = true;
 
-      const audioFileName = audio.src.split('/').pop();
+      if (this.isLivePlaying && this.isFirstTimePlaying) {
 
-      if (this.currentAudioIndex > (this.mp3Urls.length)-1) {
-        this.isLivePlaying = true;
-      }
+        this.playCompilation();
+        this.isFirstTimePlaying = false;
 
-      // Recharger le fichier si ce n'est pas le bon ou si la lecture est terminée
-      if (audio.currentTime === 0 || audioFileName !== mp3Url) {
-        this.loadAndPlayCurrentTrack();
       } else {
-        audio.play();
+
+        this.isPlaying = true;
+
+        const audioFileName = audio.src.split('/').pop();
+
+        if ( this.currentAudioIndex > (this.mp3Urls.length)-1 || this.mp3Urls.length == 0 ) {
+          this.isLivePlaying = true;
+        }
+
+        // Recharger le fichier si ce n'est pas le bon ou si la lecture est terminée
+        if (audio.currentTime === 0 || audioFileName !== mp3Url) {
+          this.loadAndPlayCurrentTrack();
+        } else {
+          audio.play();
+        }
+
       }
+
     }
   }
 
