@@ -10,6 +10,7 @@ import {Router} from '@angular/router';
 import {RadioLiveError} from '../service/Model/error/RadioLiveError';
 import {RecordName} from "./Model/RecordName/RecordName";
 import {BaseURLName} from "./Model/BaseURLName/BaseURLName";
+import {RadioNameType} from "./Model/RadioNameModel/RadioNameType";
 
 @Injectable({
   providedIn: 'root',
@@ -212,6 +213,31 @@ export class RadioplayerService {
           }
         }
       );
+
+  }
+
+  private async searchByName(radioName: string): Promise<RadioStation[]> {
+
+    let resultObservable: Observable<RadioStation[]> = this.http.get<RadioStation[]>(`http://localhost:4200/api/radio/searchByName/${radioName}`);
+    return await firstValueFrom(resultObservable);
+
+  }
+
+  private allNamesFromSearch: string[] = [];
+
+  getAllNamesFromSearch(): string[] {
+    return this.allNamesFromSearch;
+  }
+
+  public returnAllNamesFromSearch(radioName: string): void {
+
+    this.searchByName(radioName).then(
+      async (data) => {
+        console.log(data);
+        const names: string[] = data.map(radio => radio.name);
+        this.allNamesFromSearch = names;
+      }
+    )
 
   }
 

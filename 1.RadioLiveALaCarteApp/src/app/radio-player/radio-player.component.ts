@@ -8,6 +8,7 @@ import { find } from 'rxjs';
 import { Program } from '../service/Model/Program/Program';
 import { CommonModule}  from '@angular/common';
 import { User } from '../service/Model/User/User';
+import { RadioSearchComponent } from "../radio-search/radio-search.component";
 
 // NOTES POUR FUTUR DEBUG :
 // LE BUG POUR ALLER À UN ENDROIT PRÉCIS DANS L'AUDIO SE PRODUIT QUAND ON CHARGE LES PISTES AUDIO EN PASSANT PAR L'URL MEDIA/MP3 ETC (UTILISATION DU SERVEUR)
@@ -15,7 +16,7 @@ import { User } from '../service/Model/User/User';
 @Component({
   selector: 'app-radio-player',
   standalone: true,
-  imports: [ NgIf, CommonModule ],
+  imports: [ NgIf, CommonModule, RadioSearchComponent ],
   templateUrl: './radio-player.component.html',
   styleUrls: ['./radio-player.component.css']
 })

@@ -1,0 +1,18 @@
+.search-container {
+  max-width: 400px;
+  margin: 20px auto;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  padding: 5px 0;
+  border-bottom: 1px solid #ddd;
+}
