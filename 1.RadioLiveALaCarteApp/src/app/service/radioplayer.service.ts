@@ -216,7 +216,7 @@ export class RadioplayerService {
 
   }
 
-  private async searchByName(radioName: string): Promise<RadioStation[]> {
+  public async searchByName(radioName: string): Promise<RadioStation[]> {
 
     let resultObservable: Observable<RadioStation[]> = this.http.get<RadioStation[]>(`http://localhost:4200/api/radio/searchByName/${radioName}`);
     return await firstValueFrom(resultObservable);
@@ -233,7 +233,6 @@ export class RadioplayerService {
 
     this.searchByName(radioName).then(
       async (data) => {
-        console.log(data);
         const names: string[] = data.map(radio => radio.name);
         this.allNamesFromSearch = names;
       }

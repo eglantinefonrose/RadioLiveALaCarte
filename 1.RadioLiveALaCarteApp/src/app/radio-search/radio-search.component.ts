@@ -20,9 +20,20 @@ export class RadioSearchComponent {
   }
 
   searchByName(radioName: string): void {
+
     const transformedRadioName = radioName.replace(/\s+/g, '').toLowerCase();
-    this.radioplayerService.returnAllNamesFromSearch(transformedRadioName);
-    this.response = this.radioplayerService.getAllNamesFromSearch();
+
+    this.radioplayerService.searchByName(transformedRadioName).then(
+      async (data) => {
+        const names: string[] = data.map(radio => radio.name);
+        this.response = names;
+      }
+    )
+
+  }
+
+  afficherRadios(): void {
+    console.log(`afficher ${this.radioplayerService.getAllNamesFromSearch()}`);
   }
 
 }
