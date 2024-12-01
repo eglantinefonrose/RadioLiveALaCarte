@@ -32,8 +32,15 @@ export class RadioSearchComponent {
 
   }
 
-  afficherRadios(): void {
-    console.log(`afficher ${this.radioplayerService.getAllNamesFromSearch()}`);
+  setToZero() {
+    console.log('Champ vide, réinitialisation');
+    this.response = [];
+  }
+
+  onInputChange(value: string) {
+    if (value.trim() === '') {
+      this.setToZero();
+    }
   }
 
 }
