@@ -6,13 +6,23 @@
   <input type="range" [max]="totalDuration" [value]="currentTime" (input)="seek($event)">
   <div>{{ formatTime(currentTime) }} / {{ formatTime(totalDuration) }}</div>
 
-  <div> User firstName : {{ currentUser?.firstName }}</div>
-  <div>
-    <h3>Liste des Program IDs:</h3>
-    <ul>
-      <li *ngFor="let program of programs">{{ program.id }}</li>
-    </ul>
-  </div>
+  <span> </span>
+
+  <hr>
+
+  <h1>Daily programs</h1>
+
+  <div>{{ programs[currentProgramIndex]?.radioName || '' }}</div>
+  <span>
+    {{ programs[currentProgramIndex]?.startTimeHour || '' }}:{{ programs[currentProgramIndex]?.startTimeMinute || '' }}:{{ programs[currentProgramIndex]?.startTimeSeconds || '' }}
+  </span>
+
+  <span> </span>
+
+  <hr>
+
+  <h1>Create Program</h1>
+
   <app-radio-search></app-radio-search>
 
 </div>

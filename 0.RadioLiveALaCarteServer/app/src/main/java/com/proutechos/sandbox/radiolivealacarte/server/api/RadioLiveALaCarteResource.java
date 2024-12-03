@@ -28,6 +28,7 @@ import java.io.InputStream;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 import static org.quartz.JobBuilder.newJob;
 
@@ -150,7 +151,7 @@ public class RadioLiveALaCarteResource {
      * curl -X POST "http://localhost:8287/api/radio/program/startsAt/22/3/0/endsAt/22/4/0/withSegments/0/https%3A%2F%2Fstream.radiofrance.fr%2Ffranceinfo%2Ffranceinfo_hifi.m3u8%3Fid%3Dradiofrance"
      * @return
      */
-    @POST
+    /*@POST
     @Path("/program/startsAt/{startHour}/{startMinute}/{startSeconds}/endsAt/{endHour}/{endMinute}/{endSeconds}/withSegments/{withSegments}")
     public void program(@PathParam("startHour") int startHour, @PathParam("startMinute") int startMinute, @PathParam("startSeconds") int startSeconds, @PathParam("endHour") int endHour, @PathParam("endMinute") int endMinute, @PathParam("endSeconds") int endSeconds, @PathParam("withSegments") int withSegments, @QueryParam("url") String encodedUrl) throws SchedulerException {
         // Décoder l'URL encodée dans le chemin
@@ -160,7 +161,7 @@ public class RadioLiveALaCarteResource {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 
 
@@ -299,6 +300,44 @@ public class RadioLiveALaCarteResource {
 
             String name = RadioLiveALaCarteUserService.getInstance().getFileWithSegmentBaseURL(userId);
             return new BaseURLName(name);
+
+        } catch (ProutechosBaseException e) {
+            throw e;
+        }
+    }
+
+    /*Program program = new Program("430934", "Radio XYZ", 8, 30, 0, 10, 0, 0);
+        UserModel user = new UserModel("1", "John", "Doe");
+
+        try {
+
+            String userId = RadioLiveALaCarteUserService.getInstance().createAccount(user);
+            String programID = RadioLiveALaCarteUserService.getInstance().createProgram(program);
+            RadioLiveALaCarteUserService.getInstance().addUserProgram(userId, programID);
+
+        } catch (ProutechosBaseException e) {
+            e.printStackTrace();
+        }*/
+
+    // http://localhost:4200/api/radio/createAndRecordProgram/radioName/${radioName}/startTimeHour/${startTimeHour}/startTimeMinute/${startTimeMinute}/startTimeSeconds/${startTimeSeconds}/endTimeHour/${endTimeHour}/endTimeMinute/${endTimeMinute}/endTimeSeconds/${endTimeSeconds}/userID/${userID}`
+
+    /**
+     * curl -s -X POST "http://localhost:4200/api/radio/createAndRecordProgram/radioName/BBC/startTimeHour/8/startTimeMinute/0/startTimeSeconds/0/endTimeHour/9/endTimeMinute/0/endTimeSeconds/0/userID/aa768288-7621-49c8-99bd-c33c6fc02cc5"
+     * @return
+     */
+    @POST
+    @Path("/createAndRecordProgram/radioName/{radioName}/startTimeHour/{startTimeHour}/startTimeMinute/{startTimeMinute}/startTimeSeconds/{startTimeSeconds}/endTimeHour/{endTimeHour}/endTimeMinute/{endTimeMinute}/endTimeSeconds/{endTimeSeconds}/userID/{userID}")
+    public void recordProgram(@PathParam("radioName") String radioName, @PathParam("startTimeHour") int startTimeHour, @PathParam("startTimeMinute") int startTimeMinute, @PathParam("startTimeSeconds") int startTimeSeconds, @PathParam("endTimeHour") int endTimeHour, @PathParam("endTimeMinute") int endTimeMinute, @PathParam("endTimeSeconds") int endTimeSeconds, @PathParam("userID") String userID) throws ProutechosBaseException {
+
+        try {
+
+            Program program = new Program("programId", radioName, startTimeHour, startTimeMinute, startTimeSeconds, endTimeHour, endTimeMinute, endTimeSeconds);
+
+            String programID = RadioLiveALaCarteUserService.getInstance().createProgram(program);
+            RadioLiveALaCarteUserService.getInstance().addUserProgram(userID, programID);
+
+            Program justCreatedProgram = RadioLiveALaCarteUserService.getInstance().getProgramByID(programID);
+            RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram);
 
         } catch (ProutechosBaseException e) {
             throw e;

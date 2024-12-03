@@ -21,6 +21,7 @@ export class RadioplayerService {
   private baseUrl = '/media/mp3';
   errorMessage: string = "";
   inputID: string = "";
+  connectedUserID: string = "";
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -80,12 +81,6 @@ export class RadioplayerService {
     });
   }*/
 
-  public async createProgram(accountId: String): Promise<String> {
-    // Make the HTTP call and get an Observable (immediately)
-    let resultObservable: Observable<String> = this.http.get<String>(`http://localhost:4200/api/radio/getProgramsByUser/userId/${this.inputID}`);
-    return await firstValueFrom(resultObservable);
-  }
-
   // Fonction qui permet de lancer l'enregistrement en segments en utilisant l'API
   public recordProgram(program: Program): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -135,12 +130,6 @@ export class RadioplayerService {
     return await firstValueFrom(resultObservable);
   }
 
-  public async fetchProgramsFromProgramId(accountId: String): Promise<Program[]> {
-    // Make the HTTP call and get an Observable (immediately)
-    let resultObservable: Observable<Program[]> = this.http.get<Program[]>(`http://localhost:4200/api/radio/getProgramsByUser/userId/${accountId}`);
-    return await firstValueFrom(resultObservable);
-  }
-
   public async getSuitableFileNameByProgramId(programId: String): Promise<RecordName> {
     // Make the HTTP call and get an Observable (immediately)
     let resultObservable: Observable<RecordName> = this.http.get<RecordName>(`http://localhost:4200/api/radio/getSuitableFileNameByProgramId/programId/${programId}`);
@@ -169,7 +158,7 @@ export class RadioplayerService {
 
           this.fetchProgramsFromId(id).then(
             async (data) => {
-              //console.log('Données reçues :', data);
+              console.log('Données reçues :', data);
 
               this.setCurrentUserPrograms(data);
 
@@ -182,6 +171,7 @@ export class RadioplayerService {
                       const baseUrlNameValue: string = data.name;
                       this.filesWithSegmentsBaseName = baseUrlNameValue;
                       console.log(`this.filesWithSegmentsBaseName : ${this.filesWithSegmentsBaseName}`);
+                      this.connectedUserID = id;
                       this.router.navigate(['/radioPlayer']);
                     }
                   )
@@ -225,20 +215,6 @@ export class RadioplayerService {
 
   private allNamesFromSearch: string[] = [];
 
-  getAllNamesFromSearch(): string[] {
-    return this.allNamesFromSearch;
-  }
-
-  public returnAllNamesFromSearch(radioName: string): void {
-
-    this.searchByName(radioName).then(
-      async (data) => {
-        const names: string[] = data.map(radio => radio.name);
-        this.allNamesFromSearch = names;
-      }
-    )
-
-  }
 
   //
   //
@@ -281,6 +257,43 @@ export class RadioplayerService {
 
   public getProgramUrlList(): string[] {
     return this.programUrlList;
+  }
+
+  //
+  //
+  // CREATE PROGRAM
+  //
+  //
+
+  public async createProgramAndRecord(radioName: string, startTimeHour: string, startTimeMinute: string, startTimeSeconds: string, endTimeHour: string, endTimeMinute: string, endTimeSeconds: string, userID: string) {
+    // Make the HTTP call and get an Observable (immediately)
+
+    let fullUrl = `http://localhost:4200/api/radio/createAndRecordProgram/radioName/${radioName}/startTimeHour/${startTimeHour}/startTimeMinute/${startTimeMinute}/startTimeSeconds/${startTimeSeconds}/endTimeHour/${endTimeHour}/endTimeMinute/${endTimeMinute}/endTimeSeconds/${endTimeSeconds}/userID/aa768288-7621-49c8-99bd-c33c6fc02cc5`;
+
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+
+      xhr.open('POST', fullUrl, true); // Ouvrir une requête HTTP GET asynchrone
+
+      xhr.onreadystatechange = () => {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            // Requête réussie
+            resolve(xhr.responseText);
+          } else {
+            // Requête échouée
+            reject(`Erreur: ${xhr.status} - ${xhr.statusText}`);
+          }
+        }
+      };
+
+      xhr.onerror = () => {
+        reject('Erreur de connexion réseau.');
+      };
+
+      xhr.send(); // Envoyer la requête
+    });
+
   }
 
   //

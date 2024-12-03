@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class RadioLiveALaCarteServiceTest {
 
-    @Test public void createUser() {
+    /*@Test public void createUser() {
         UserModel user = new UserModel("1", "John", "Doe");
 
         try {
@@ -175,6 +175,24 @@ public class RadioLiveALaCarteServiceTest {
 
         try {
             System.out.println(RadioLiveALaCarteUserService.getInstance().getFileWithSegmentBaseURL("aa768288-7621-49c8-99bd-c33c6fc02cc5"));
+        } catch (ProutechosBaseException e) {
+            throw new RuntimeException(e);
+        }
+
+    }*/
+
+    @Test public void full() {
+
+        try {
+
+            Program program = new Program("programId", "WDR Sportschau - 2. Fussball Bundesliga-Konferenz LIVE", 8, 0, 0, 9, 0, 0);
+
+            String programID = RadioLiveALaCarteUserService.getInstance().createProgram(program);
+            RadioLiveALaCarteUserService.getInstance().addUserProgram("aa768288-7621-49c8-99bd-c33c6fc02cc5", programID);
+
+            Program justCreatedProgram = RadioLiveALaCarteUserService.getInstance().getProgramByID(programID);
+            RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram);
+
         } catch (ProutechosBaseException e) {
             throw new RuntimeException(e);
         }

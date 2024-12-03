@@ -46,6 +46,8 @@ export class RadioPlayerComponent {
   maxAttempts = 10;
   baseUrl: string = "";
   programs: Program[] = [];
+  currentProgramIndex: number = 0;
+
   currentUser: User | undefined;
 
   isFirstTimePlaying: boolean = true;
@@ -305,6 +307,7 @@ export class RadioPlayerComponent {
   // Gestion de la fin d'une piste
   onEnded() {
 
+    this.currentProgramIndex++;
     // Cas du Live
     if (this.currentAudioIndex >= (this.mp3Urls.length)-1) {
 
