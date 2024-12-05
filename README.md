@@ -8,9 +8,24 @@
 - Savoir à quelle heure commence réellement la chronique
 - Permettre à l'utilisateur d'écouter la radio en live
 
-## Premier player
+## Player
 
-- Le player permet de naviguer entre les émissions sélectionnées au préalable par l'utilisateur.
-- Si jamais une émission est en cours de diffusion, il est possible de l'écouter et de naviguer dans le temps, cependant l'émission aura un retard de 10sec dû à l'utilisation de segments de 10 secondes chacuns.
+- Le player permet de <strong>naviguer</strong> entre les <strong>programmes</strong> sélectionnées au préalable par l'utilisateur.
+- Les <strong>programmes</strong> correspondent à une <strong>plage horaire</strong> d'une <strong>radio spécifique</strong>, informations qui sont toutes les deux <strong>choisies par l'utilisateur</strong>.
+- Si jamais une émission est en <strong>cours de diffusion</strong>, il est possible de <strong>l'écouter</strong>, cependant l'émission aura un <strong>retard de 10 sec</strong> dû à l'utilisation de <strong>segments</strong> de 10 secondes chacuns.
 
-[RadioLiveALaCarte-Demo001.mov](@docs/assets/RadioLiveALaCarte-Demo001.mov)
+## Généralités sur l'interface
+
+- À la manière d'une <strong>playlist</strong> sur une application de musique, l'utilisateur a une vision sur les <strong>programmes disponibles à l'écoute</strong> et voit le programme qu'il est entrain d'écouter s'afficher en <strong>gras</strong>.
+
+[Demo_1_InterfaceGlobale_RadioLiveALaCarte.mov](@docs/assets/Demo_1_RadioLiveALaCarte.mov)
+
+## Création de programme pour l'utilisateur
+
+- À ce stade de la création de l'application, l'utilisateur a le monopole sur les décisions sur les plages horaires des programmes qu'il souhaite écouter. L'interface lui permet donc de sélectionner la radio qu'il souhaite écouter aux horaires (voir vidéo).
+
+[Demo_2_CreationDeProgramme_RadioLiveALaCarte.mov](@docs/assets/RadioLiveALaCarte-Demo-ProgramCreation.mov)
+
+- NB : Dans l'idéal, l'utilisateur souhaiterait également pouvoir accéder au programme réel des émissions des radios qu'il souhaiterait écouter.
+
+

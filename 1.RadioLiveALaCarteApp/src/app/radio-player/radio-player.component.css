@@ -3,5 +3,5 @@ body {
 }
 
 button:active {
-  background-color: gray; /* Couleur pendant le clic */
+  background-color: darkgray; /* Couleur pendant le clic */
 }

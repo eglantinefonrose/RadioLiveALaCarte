@@ -18,5 +18,5 @@ li {
 }
 
 button:active {
-  background-color: gray; /* Couleur pendant le clic */
+  background-color: darkgrey; /* Couleur pendant le clic */
 }
