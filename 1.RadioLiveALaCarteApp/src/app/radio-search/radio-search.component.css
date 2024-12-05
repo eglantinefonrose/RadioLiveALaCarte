@@ -16,3 +16,7 @@ li {
   padding: 5px 0;
   border-bottom: 1px solid #ddd;
 }
+
+button:active {
+  background-color: gray; /* Couleur pendant le clic */
+}

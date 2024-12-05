@@ -307,12 +307,15 @@ export class RadioPlayerComponent {
   // Gestion de la fin d'une piste
   onEnded() {
 
-    this.currentProgramIndex++;
+    if (!this.isLivePlaying) {
+      this.currentProgramIndex++;
+    }
+
     // Cas du Live
     if (this.currentAudioIndex >= (this.mp3Urls.length)-1) {
 
       if (this.currentTrackIndex <= this.mp3Urls.length) {
-        if (this.isLivePlaying && this.currentTrackIndex != 0) {
+        if (this.isLivePlaying/* && this.currentTrackIndex != 0*/) {
           this.currentTrackIndex++;
         }
         this.playCompilation();  // Passer à la compilation après la première piste

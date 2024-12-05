@@ -236,6 +236,10 @@ export class RadioplayerService {
 
   public setCurrentUserPrograms(programs: Program[]) {
     this.currentUserPrograms = programs;
+
+    programs.forEach(program => {
+      console.log(`${program.startTimeHour}, ${program.startTimeMinute}, ${program.startTimeSeconds}`);
+    });
   }
 
   public getCurrentUserPrograms(): Program[] {
