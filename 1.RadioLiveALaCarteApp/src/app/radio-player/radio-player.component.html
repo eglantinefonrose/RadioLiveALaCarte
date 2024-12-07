@@ -1,8 +1,57 @@
+<body>
+
 <div>
+
+  <h1>Currently listening to</h1>
+
+  <div>{{ programs[currentProgramIndex]?.radioName || '' }}</div>
+  <span>
+    <a>(</a>
+    {{ programs[currentProgramIndex]?.startTimeHour ?? '' }}:
+    {{ programs[currentProgramIndex]?.startTimeMinute ?? '' }}:
+    {{ programs[currentProgramIndex]?.startTimeSeconds ?? '' }}
+    <a> - </a>
+    {{ programs[currentProgramIndex]?.endTimeHour ?? '' }}:
+    {{ programs[currentProgramIndex]?.endTimeMinute ?? '' }}:
+    {{ programs[currentProgramIndex]?.endTimeSeconds ?? '' }}
+    <a>)</a>
+  </span>
+
   <button (click)="playPause()">{{ isPlaying ? 'Pause' : 'Play' }}</button>
   <button (click)="onEnded()">Piste suivante</button>
   <button (click)="goToTime(2)">Go to 2 sec</button>
   <audio #audioPlayer (timeupdate)="onTimeUpdate()" (ended)="onEnded()"></audio>
   <input type="range" [max]="totalDuration" [value]="currentTime" (input)="seek($event)">
   <div>{{ formatTime(currentTime) }} / {{ formatTime(totalDuration) }}</div>
+
+  <span> </span>
+
+  <hr>
+
+  <h1>Daily programs</h1>
+
+  <ul>
+    <li *ngFor="let program of programs; let i = index" [ngStyle]="{ 'font-weight': (i === currentProgramIndex || (isLivePlaying && i>programs.length) ) ? 'bold' : 'normal' }">
+      {{ program.radioName }}
+      {{ program.startTimeHour ?? '' }}:
+      {{ program.startTimeMinute ?? '' }}:
+      {{ program.startTimeSeconds ?? '' }}
+      <a> - </a>
+      {{ program.endTimeHour ?? '' }}:
+      {{ program.endTimeMinute ?? '' }}:
+      {{ program.endTimeSeconds ?? '' }}
+    </li>
+  </ul>
+
+  <span> </span>
+
+  <hr>
+
+  <h1>Create Program</h1>
+
+  <app-radio-search></app-radio-search>
+
 </div>
+
+
+</body>

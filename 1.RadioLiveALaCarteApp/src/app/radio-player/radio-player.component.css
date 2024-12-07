@@ -1,3 +1,7 @@
+body {
+  padding: 50px; /* Ajustez la valeur selon vos besoins */
+}
 
-  
-  
+button:active {
+  background-color: darkgray; /* Couleur pendant le clic */
+}

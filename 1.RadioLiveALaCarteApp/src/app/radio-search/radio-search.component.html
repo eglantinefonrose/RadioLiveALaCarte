@@ -1,0 +1,51 @@
+<body>
+<div style="display: flex; align-items: flex-start; gap: 10px;">
+  <input
+    #searchInput
+    type="text"
+    placeholder="Nom de radio"
+    style="padding: 8px; font-size: 14px;"
+    (input)="onInputChange(searchInput.value)"
+  />
+  <button (click)="searchByName(searchInput.value)" style="padding: 8px 16px; font-size: 14px;">
+    Rechercher
+  </button>
+  <!-- Liste des noms affichée verticalement et scrolable -->
+  <div>
+    <h3>Liste des noms :</h3>
+    <div style="max-height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 5px;">
+      <ul style="list-style: none; padding: 0; margin: 0;">
+        <li
+          *ngFor="let name of response"
+          (click)="onNameClick(name)"
+          [style.backgroundColor]="selectedRadioName === name ? 'skyblue' : 'white'"
+          style="padding: 5px; border-bottom: 1px solid #ccc; cursor: pointer; color: black;"
+        >
+          {{ name }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div>
+  <h1>Choisir une Heure de début de programme</h1>
+  <div class="time-picker-container">
+    <label for="timeStartPicker">Sélectionnez une heure de début :</label>
+    <input type="time" id="timeStartPicker" step="1" (change)="onStartTimeChange($event)">
+  </div>
+  <h1>Choisir une Heure de fin de programme</h1>
+  <div class="time-picker-container">
+    <label for="timeEndPicker">Sélectionnez une heure de fin :</label>
+    <input type="time" id="timeEndPicker" step="1" (change)="onEndTimeChange($event)">
+  </div>
+  <button (click)="createProgramAndRecord()">Confirmer l'enregistrement du programme</button>
+
+  <p *ngIf="selectedStartTime">
+    Vous avez sélectionné : {{ selectedStartTime.hours }}h {{ selectedStartTime.minutes }}m {{ selectedStartTime.seconds }}s
+  </p>
+  <p *ngIf="selectedEndTime">
+    Vous avez sélectionné : {{ selectedEndTime.hours }}h {{ selectedEndTime.minutes }}m {{ selectedEndTime.seconds }}s
+  </p>
+
+</div>
+</body>
