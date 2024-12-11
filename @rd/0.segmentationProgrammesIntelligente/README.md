@@ -32,26 +32,36 @@ Pour détecter l'*horaire réelle dans les enregistrements*, je vais utiliser un
 >
 > - Avec cette approche *en parallèle*, le temps *d'enregistrement + crop* est réduit et si jamais les time-stamps donnés par l'IA semblent *absurdes*, il reste un *enregistrement complet de l'emission* (avec des bouts en trop, dus à la marge et/ou le décalage temporel imprevu).
 
-### Solutions techniques utilisées
+## Solutions techniques
+
+### Utilisation du modèle d'IA VGGISH pour détecter les transitions
+
+Dans cette *première tentative* de détection des débuts et fins d'émissions radios, j’utilise le modèle d’IA **VVGISH** comme un **outil** dans la **détection des transitions** entre les programmes.
+
+https://github.com/tensorflow/models/blob/master/research/audioset/vggish/README.md
+
+#### 1. Traiter le signal
+
+Cette IA **découpe** l'audio entrant en très courtes **segments** (synonyme : **fenêtre temporelle**) pour transformer par la suite chaque segment en un objet mathématique, un **embedding**.
+
+>
+> Un **embedding** est une *représentation numérique* d'un objet (comme un mot, une phrase ou un segment d'audio) en un *vecteur* (objet mathématique) avec un *nombre de dimensions élevé* (par exemple, 256, 512, ou 1024 dimensions), contenant une **multitude d’informations** compressées sur les **propriétés des objets**.  
+*Exemple* : Dans notre cas, l’objet est un **signal vidéo**, les propriétés compressées peuvent donc être les *propriétés perceptuelles du son*, des informations sur les *hauteurs des notes*…).
+
+#### 2. Trouver les transitions
+
+Une fois l'**audio** transformé en une multitude d'**embeddings** (vecteurs), on calcule les **distances** entre les vecteurs pour en déduire si s'agit d'une **transition** ou non.
+> Nb : Pour identifier si il y a une **transition** entre dans l'audio, on  compare deux **embeddings consécutifs**. En calculant la **distance** entre ces deux objets, on peut savoir si ils sont **très différents** ou non (donc si les **propriétés** de deux **segments audios** sont très différentes). Dans le cas où la **distance** entre deux objets est **très grande**, on considère qu'il y a une **transition** entre les **deux segments consécutifs**.  
+
+*Commnent évaluer à partir de quand la distance est jugée **suffisament grande** pour marquer une **transition** ?*  
+> Pour évaluer la *distance minimale* pour marquer une *transition*, on établit un **seuil** (*threshold*) que la distance doit **dépasser**.
+
+Compte-tenu de la **faible longueur** des segments (**0.96 sec**) (définie dans les paramètres du modèle dans le fichier *'vggish_pca_params.npz'*), on considère la détection d'une **transition entre deux segments** comme un **point temporel**.
+
+On ne considère donc pas de **points temporels** de *début* ou de *fin*, mais uniquement des **points de transitions entre deux programmes** (un point temporel correspond à la *fin* du programme précédent le point temporel, et au *début* du programme suivant le point temporel).
+
+![Timeline] (assets/schema-explicatif-transition.png)
+> En bref, l'utilisation de la transformation en objets permettant la comparaison de segments audios entre eux et leur comparaison permet de détecter les points de transition entre les programmes, et donc de trouver le début et la fin de chacuns.**
 
 
-
-## Experimentations en Python
-
-### Projet pythontest001
-
-#### VirtualEnv Python
-```bash
-# Activation du VirtualEnv
-source ./env/bin/activate
-# Instalation des dependences (si besoin)
-pip install -r requirements.txt
-# Mise à jour du fichier requirements.txt
-pip freeze > requirements.txt
-```
-
-#### Execution du code
-```bash
-python ./src/main.py
-```
 
