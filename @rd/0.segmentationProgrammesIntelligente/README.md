@@ -60,7 +60,8 @@ Compte-tenu de la **faible longueur** des segments (**0.96 sec**) (définie dans
 
 On ne considère donc pas de **points temporels** de *début* ou de *fin*, mais uniquement des **points de transitions entre deux programmes** (un point temporel correspond à la *fin* du programme précédent le point temporel, et au *début* du programme suivant le point temporel).
 
-![Timeline] (assets/schema-explicatif-transition.png)
+<br/><img src='assets/schema-explicatif-transition.png'/><br/>
+
 > En bref, l'utilisation de la transformation en objets permettant la comparaison de segments audios entre eux et leur comparaison permet de détecter les points de transition entre les programmes, et donc de trouver le début et la fin de chacuns.**
 
 
