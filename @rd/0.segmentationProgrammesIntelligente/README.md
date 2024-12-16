@@ -23,12 +23,12 @@ Dans une première approche, je vais tenter d'utiliser un modèle d'**IA** pour 
 
 Pour détecter l'*horaire réelle dans les enregistrements*, je vais utiliser une approche **hybride**.
 
-> Prenons l'exemple d'un programme qui **est annoncé** (par la radio) commencer à **7h** et se terminer à **8h**.
+> Prenons l'exemple d'un programme qui **est annoncé** (par la radio) commencer à **7h05** et se terminer à **7h15**.
 >
 > *Nb : Pour cet exemple, nous allons nous concentrer sur le cas d'un enregistrement **non-live**.*
-> - L'enregistrement par *ffmpeg* d'un **fichier MP3** de **7h** à **8h10** (on prend une *marge de 10min* afin d'anticiper les possibles *décalages temporels* et prendre l'intégralité de l'émission).
+> - L'enregistrement par *ffmpeg* d'un **fichier MP3** de **7h05** à **7h25** (on prend une *marge de 10min* afin d'anticiper les possibles *décalages temporels* et prendre l'intégralité de l'émission).
 > - Pendant l'enregistrement, le modèle d'IA **analyse le flux audio en parallèle** pour détecter le **début** et la **fin** et stocker les **timestamps correspondants**.
-> - À la **fin de l'enregistrement**, le **fichier MP3** enregistré par ffmpeg (enregistrement du flux de *7h* à *8h10*) est **cropé par l'IA** en utilisant les **timestamps** stockés précédement.
+> - À la **fin de l'enregistrement**, le **fichier MP3** enregistré par ffmpeg (enregistrement du flux de *7h05* à *7h25*) est **cropé par l'IA** en utilisant les **timestamps** stockés précédement.
 >
 > - Avec cette approche *en parallèle*, le temps *d'enregistrement + crop* est réduit et si jamais les time-stamps donnés par l'IA semblent *absurdes*, il reste un *enregistrement complet de l'emission* (avec des bouts en trop, dus à la marge et/ou le décalage temporel imprevu).
 
