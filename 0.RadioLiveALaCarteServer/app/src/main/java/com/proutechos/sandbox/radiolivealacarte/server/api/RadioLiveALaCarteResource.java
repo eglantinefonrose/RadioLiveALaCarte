@@ -1,6 +1,5 @@
 package com.proutechos.sandbox.radiolivealacarte.server.api;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.proutechos.sandbox.radiolivealacarte.server.model.Program;
 import com.proutechos.sandbox.radiolivealacarte.server.model.RadioStation;
 import com.proutechos.sandbox.radiolivealacarte.server.model.UserModel;
@@ -16,7 +15,6 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.quartz.*;
 
 import java.io.IOException;
 import javax.ws.rs.core.*;
@@ -26,10 +24,6 @@ import java.net.URL;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.UUID;
 
 import static org.quartz.JobBuilder.newJob;
 
