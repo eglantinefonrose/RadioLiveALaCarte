@@ -28,4 +28,11 @@
 
 - NB : Dans l'idéal, l'utilisateur souhaiterait également pouvoir accéder au programme réel des émissions des radios qu'il souhaiterait écouter.
 
+## Détails techniques
+
+- Dans un cas *réaliste*, les programmes radios sont souvent **décalés dans le temps** à cause des **imprévus possibles** (accumulation de retards des émissions précédentes d'une taille variable par exemple).
+Afin de régler ce soucis, j'ai commencé une phase de *Recherche et Développement* qui utilise des **modèles d'IA** pour détecter le début et la fin *réelle* d'un programme radio.  
+Cette partie est disponible dans la branche [RD_BRANCH_IdentificationIntelligenteTransitionsEntreProgrammesRadio](https://github.com/eglantinefonrose/RadioLiveALaCarte/tree/RD_BRANCH_IdentificationIntelligenteTransitionsEntreProgrammesRadio) :)
+
+
 
