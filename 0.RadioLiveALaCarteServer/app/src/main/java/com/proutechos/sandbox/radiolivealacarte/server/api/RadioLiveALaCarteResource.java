@@ -8,6 +8,7 @@ import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarte
 import com.proutechos.sandbox.radiolivealacarte.server.service.planning.RadioInformationAndPlanningService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RadioRecordingSchedulerService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RecordName;
+import com.proutechos.sandbox.radiolivealacarte.server.service.streaming.StreamingService;
 import com.proutechos.utils.server.rest.config.exceptions.ProutechosBaseException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
@@ -322,7 +323,7 @@ public class RadioLiveALaCarteResource {
     // http://localhost:4200/api/radio/createAndRecordProgram/radioName/${radioName}/startTimeHour/${startTimeHour}/startTimeMinute/${startTimeMinute}/startTimeSeconds/${startTimeSeconds}/endTimeHour/${endTimeHour}/endTimeMinute/${endTimeMinute}/endTimeSeconds/${endTimeSeconds}/userID/${userID}`
 
     /**
-     * curl -s -X POST "http://localhost:4200/api/radio/createAndRecordProgram/radioName/BBC/startTimeHour/8/startTimeMinute/0/startTimeSeconds/0/endTimeHour/9/endTimeMinute/0/endTimeSeconds/0/userID/aa768288-7621-49c8-99bd-c33c6fc02cc5"
+     * curl -s -X POST "http://localhost:8287/api/radio/createAndRecordProgram/radioName/FranceInter/startTimeHour/15/startTimeMinute/31/startTimeSeconds/0/endTimeHour/15/endTimeMinute/33/endTimeSeconds/0/userID/aa768288-7621-49c8-99bd-c33c6fc02cc5"
      * @return
      */
     @POST
@@ -342,6 +343,15 @@ public class RadioLiveALaCarteResource {
         } catch (ProutechosBaseException e) {
             throw e;
         }
+
+    }
+
+    @GET
+    @Path("/concateneFile/baseName/{baseName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Integer getConcatenedFile(@PathParam("baseName") String baseName)  throws IOException, InterruptedException {
+
+        return StreamingService.getInstance().concatene(baseName);
 
     }
 
