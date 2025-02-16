@@ -23,12 +23,12 @@ Dans une première approche, je vais tenter d'utiliser un modèle d'**IA** pour 
 
 Pour détecter l'*horaire réelle dans les enregistrements*, je vais utiliser une approche **hybride**.
 
-> Prenons l'exemple d'un programme qui **est annoncé** (par la radio) commencer à **7h** et se terminer à **8h**.
+> Prenons l'exemple d'un programme qui **est annoncé** (par la radio) commencer à **7h05** et se terminer à **7h15**.
 >
 > *Nb : Pour cet exemple, nous allons nous concentrer sur le cas d'un enregistrement **non-live**.*
-> - L'enregistrement par *ffmpeg* d'un **fichier MP3** de **7h** à **8h10** (on prend une *marge de 10min* afin d'anticiper les possibles *décalages temporels* et prendre l'intégralité de l'émission).
+> - L'enregistrement par *ffmpeg* d'un **fichier MP3** de **7h05** à **7h25** (on prend une *marge de 10min* afin d'anticiper les possibles *décalages temporels* et prendre l'intégralité de l'émission).
 > - Pendant l'enregistrement, le modèle d'IA **analyse le flux audio en parallèle** pour détecter le **début** et la **fin** et stocker les **timestamps correspondants**.
-> - À la **fin de l'enregistrement**, le **fichier MP3** enregistré par ffmpeg (enregistrement du flux de *7h* à *8h10*) est **cropé par l'IA** en utilisant les **timestamps** stockés précédement.
+> - À la **fin de l'enregistrement**, le **fichier MP3** enregistré par ffmpeg (enregistrement du flux de *7h05* à *7h25*) est **cropé par l'IA** en utilisant les **timestamps** stockés précédement.
 >
 > - Avec cette approche *en parallèle*, le temps *d'enregistrement + crop* est réduit et si jamais les time-stamps donnés par l'IA semblent *absurdes*, il reste un *enregistrement complet de l'emission* (avec des bouts en trop, dus à la marge et/ou le décalage temporel imprevu).
 
@@ -62,7 +62,73 @@ On ne considère donc pas de **points temporels** de *début* ou de *fin*, mais 
 
 <br/><img src='assets/schema-explicatif-transition.png'/><br/>
 
-> En bref, l'utilisation de la transformation en objets permettant la comparaison de segments audios entre eux et leur comparaison permet de détecter les points de transition entre les programmes, et donc de trouver le début et la fin de chacuns.**
+> En bref, l'utilisation de la **transformation en objets** permettant la **comparaison de segments audios** entre eux et leur comparaison permet de **détecter les points de transition** entre les programmes, et donc de **trouver le début et la fin** de chacuns.   
+
+
+### Détecter les bonnes transitions
+
+Cette première solution permet de *détecter les transitions*, mais il ne semble pas exister de **seuil universel** (seuil de distance entre deux embeddings) qui détecte les bonnes transitions **pour toutes les pistes audios**.  
+
+Pour un seuil **trop bas**, **plus de 2 transitions** sont detectés.
+
+À contrario, si on **augmente le seuil** pour qu'il ne détecte que 2 transtions, il n'est pas dit que le programme **détecte les bonnes transitions**, à cause de facteurs comme un **silence trop long dans une prise de parole**, qui peut **s'apparenter à une transition**.
+
+> Le soucis est donc de réussir à détecter les **transitions réelles** entre les programmes, avec comme impératif de ne **pas raccourcir le programme radio**.
+
+#### 1. Ne pas raccourcir le programme radio
+
+Afin de ne jamais raccourcir le programme radio, il faut que si la **différence temporelle** entre deux transitions est **inférieure à la durée suposée du programme**, l'enregistrement audio d'entrée **n'est pas raccourci**.
+
+#### 2. Détecter les bonnes transitions
+
+Pour réaliser cela, plusieurs solutions sont appliquables :
+- **Trouver la différence de temps entre deux transitions la plus proche de la durée présumée du programme** 
+
+Cela consiste à **parcourir le tableau** contenant tous les **timecodes des transitions**, afin de trouver la **différence temporelle la plus proche** (et supérieure) à la **durée présumée** du programme.
+
+> **Exemple d'enregistrement d'un programme A qui dure 3min30**
+> 
+> *Tableau de transitions detectés*  
+> ```python
+> [0:10; 0:12; 0:25; 1:33; 1:34; 1:35; 3:45; 3:55; 4:10]
+> ```
+> Dans ce tableau, l'écart entre les transitions à **0:25 et 3:55 correspond parfaitement à 3min30**.  
+> Le soucis, c'est que ce ne sont pas les **réelles transitions** de ce programme qui sont à **0:10** et **3:55**.
+
+Dans ce cas de figure, le programme serait alors **raccourci** et il serait **impossible de savoir que ce ne sont pas les bonnes transitions**. 
+
+*Sécurité pour palier à ce problème :*  
+Afin d'**éviter de raccourcir le programme visé**, une solution peut-être de considérer la transition **précédent la transition de début** et la transition **suivant la transition de fin**. Bien que cette sécurité ne soit pas **fiable à 100%**, elle peut permettre déjà d'éviter de raccourcir la **majorité des programmes**.
+
+- **Transitions succéssives**
+
+En observant les **transitions detectées selon différentes émissions**, on constate que au moment des **jingles**, il y a souvent **des transitions successives**.
+
+> Exemple des transitions avec un jingle
+> - Premier jingle de **0:25 à 0:29**
+> - Second jingle de **3:30 à 3:39**
+> 
+> Voilà les time-codes transitions détectées par le programme :
+> ```python
+> [00:00:23, 00:00:24, 00:00:24, 00:00:30, 00:01:05, 00:01:06, 00:02:26, 00:03:17, 00:03:18, 00:03:29, 00:03:30, 00:03:49, 00:04:13]
+> ```
+> 
 
 
 
+```java
+
+class RealStartAndEndForProgram {
+    public int startTimecode;
+    public int endTimecode;
+} 
+
+class RealStartAndEndForProgramFinder {
+    
+    public RealStartAndEndForProgram findRealStartAndEndForProgram(int[] timeCodesFoundByAIModel, int theoriticalProgramDurationInSec) {
+        ...
+    }
+    
+}
+
+```
