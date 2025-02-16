@@ -1,0 +1,676 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		700764022D4ACFD900411F53 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700764012D4ACFD900411F53 /* APIService.swift */; };
+		700764042D4AD12D00411F53 /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700764032D4AD12D00411F53 /* Program.swift */; };
+		700764062D4AD5B500411F53 /* ProgramScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 700764052D4AD5B500411F53 /* ProgramScreen.swift */; };
+		7019FEE22D4F907C005081AC /* output_373f8ae9-b0d3-4ff2-bf22-f053497e5d75_17500.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7019FEE12D4F907C005081AC /* output_373f8ae9-b0d3-4ff2-bf22-f053497e5d75_17500.mp3 */; };
+		7019FEE42D4F90B2005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7019FEE32D4F90B2005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3 */; };
+		7019FEE62D4F90D9005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7019FEE52D4F90D9005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3 */; };
+		7074574F2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7074574E2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift */; };
+		707457512D4AB236000DC5EC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707457502D4AB236000DC5EC /* ContentView.swift */; };
+		707457532D4AB237000DC5EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 707457522D4AB237000DC5EC /* Assets.xcassets */; };
+		707457562D4AB237000DC5EC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 707457552D4AB237000DC5EC /* Preview Assets.xcassets */; };
+		707457612D4AB237000DC5EC /* GroovyMorningFM_MobileAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707457602D4AB237000DC5EC /* GroovyMorningFM_MobileAppTests.swift */; };
+		7074576B2D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7074576A2D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITests.swift */; };
+		7074576D2D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7074576C2D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITestsLaunchTests.swift */; };
+		708366022D57AB8200DF1AB6 /* Sandbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 708366012D57AB8200DF1AB6 /* Sandbox.swift */; };
+		70D3B9472D5BB71B00BFF6F7 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D3B9462D5BB71B00BFF6F7 /* AudioPlayerManager.swift */; };
+		70D3B9492D5FE73600BFF6F7 /* RecordName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D3B9482D5FE73600BFF6F7 /* RecordName.swift */; };
+		70D3B94B2D5FF35C00BFF6F7 /* ProgramSandbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D3B94A2D5FF35C00BFF6F7 /* ProgramSandbox.swift */; };
+		70EDBC152D54EE57003F7B63 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70EDBC142D54EE57003F7B63 /* AudioPlayer.swift */; };
+		70EDBC172D54F00F003F7B63 /* AudioPlayerView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70EDBC162D54F00F003F7B63 /* AudioPlayerView2.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7074575D2D4AB237000DC5EC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 707457432D4AB236000DC5EC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7074574A2D4AB236000DC5EC;
+			remoteInfo = GroovyMorningFM_MobileApp;
+		};
+		707457672D4AB237000DC5EC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 707457432D4AB236000DC5EC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7074574A2D4AB236000DC5EC;
+			remoteInfo = GroovyMorningFM_MobileApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		700764012D4ACFD900411F53 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		700764032D4AD12D00411F53 /* Program.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
+		700764052D4AD5B500411F53 /* ProgramScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramScreen.swift; sourceTree = "<group>"; };
+		7019FEE12D4F907C005081AC /* output_373f8ae9-b0d3-4ff2-bf22-f053497e5d75_17500.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "output_373f8ae9-b0d3-4ff2-bf22-f053497e5d75_17500.mp3"; sourceTree = "<group>"; };
+		7019FEE32D4F90B2005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3"; sourceTree = "<group>"; };
+		7019FEE52D4F90D9005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3"; sourceTree = "<group>"; };
+		7074574B2D4AB236000DC5EC /* GroovyMorningFM_MobileApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GroovyMorningFM_MobileApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7074574E2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroovyMorningFM_MobileAppApp.swift; sourceTree = "<group>"; };
+		707457502D4AB236000DC5EC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		707457522D4AB237000DC5EC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		707457552D4AB237000DC5EC /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		707457572D4AB237000DC5EC /* GroovyMorningFM_MobileApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = GroovyMorningFM_MobileApp.entitlements; sourceTree = "<group>"; };
+		7074575C2D4AB237000DC5EC /* GroovyMorningFM_MobileAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GroovyMorningFM_MobileAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		707457602D4AB237000DC5EC /* GroovyMorningFM_MobileAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroovyMorningFM_MobileAppTests.swift; sourceTree = "<group>"; };
+		707457662D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GroovyMorningFM_MobileAppUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7074576A2D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroovyMorningFM_MobileAppUITests.swift; sourceTree = "<group>"; };
+		7074576C2D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroovyMorningFM_MobileAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		708366012D57AB8200DF1AB6 /* Sandbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sandbox.swift; sourceTree = "<group>"; };
+		70D3B9462D5BB71B00BFF6F7 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
+		70D3B9482D5FE73600BFF6F7 /* RecordName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordName.swift; sourceTree = "<group>"; };
+		70D3B94A2D5FF35C00BFF6F7 /* ProgramSandbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramSandbox.swift; sourceTree = "<group>"; };
+		70EDBC142D54EE57003F7B63 /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
+		70EDBC162D54F00F003F7B63 /* AudioPlayerView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerView2.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		707457482D4AB236000DC5EC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		707457592D4AB237000DC5EC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		707457632D4AB237000DC5EC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7007640B2D4B5D4200411F53 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				708366012D57AB8200DF1AB6 /* Sandbox.swift */,
+				70D3B94A2D5FF35C00BFF6F7 /* ProgramSandbox.swift */,
+				7074574E2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift */,
+				70EDBC162D54F00F003F7B63 /* AudioPlayerView2.swift */,
+				707457502D4AB236000DC5EC /* ContentView.swift */,
+				700764052D4AD5B500411F53 /* ProgramScreen.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		7007640D2D4BEEAE00411F53 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				70EDBC142D54EE57003F7B63 /* AudioPlayer.swift */,
+				700764012D4ACFD900411F53 /* APIService.swift */,
+				70D3B9462D5BB71B00BFF6F7 /* AudioPlayerManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		7007640E2D4BEEBE00411F53 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				700764032D4AD12D00411F53 /* Program.swift */,
+				70D3B9482D5FE73600BFF6F7 /* RecordName.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		707457422D4AB236000DC5EC = {
+			isa = PBXGroup;
+			children = (
+				7074574D2D4AB236000DC5EC /* GroovyMorningFM_MobileApp */,
+				7074575F2D4AB237000DC5EC /* GroovyMorningFM_MobileAppTests */,
+				707457692D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITests */,
+				7074574C2D4AB236000DC5EC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7074574C2D4AB236000DC5EC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7074574B2D4AB236000DC5EC /* GroovyMorningFM_MobileApp.app */,
+				7074575C2D4AB237000DC5EC /* GroovyMorningFM_MobileAppTests.xctest */,
+				707457662D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7074574D2D4AB236000DC5EC /* GroovyMorningFM_MobileApp */ = {
+			isa = PBXGroup;
+			children = (
+				7007640D2D4BEEAE00411F53 /* Services */,
+				7007640E2D4BEEBE00411F53 /* Models */,
+				7007640B2D4B5D4200411F53 /* Views */,
+				707457522D4AB237000DC5EC /* Assets.xcassets */,
+				707457572D4AB237000DC5EC /* GroovyMorningFM_MobileApp.entitlements */,
+				707457542D4AB237000DC5EC /* Preview Content */,
+			);
+			path = GroovyMorningFM_MobileApp;
+			sourceTree = "<group>";
+		};
+		707457542D4AB237000DC5EC /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				707457552D4AB237000DC5EC /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		7074575F2D4AB237000DC5EC /* GroovyMorningFM_MobileAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				707457602D4AB237000DC5EC /* GroovyMorningFM_MobileAppTests.swift */,
+			);
+			path = GroovyMorningFM_MobileAppTests;
+			sourceTree = "<group>";
+		};
+		707457692D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITests */ = {
+			isa = PBXGroup;
+			children = (
+				7019FEE52D4F90D9005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3 */,
+				7019FEE32D4F90B2005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3 */,
+				7019FEE12D4F907C005081AC /* output_373f8ae9-b0d3-4ff2-bf22-f053497e5d75_17500.mp3 */,
+				7074576A2D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITests.swift */,
+				7074576C2D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITestsLaunchTests.swift */,
+			);
+			path = GroovyMorningFM_MobileAppUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7074574A2D4AB236000DC5EC /* GroovyMorningFM_MobileApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 707457702D4AB237000DC5EC /* Build configuration list for PBXNativeTarget "GroovyMorningFM_MobileApp" */;
+			buildPhases = (
+				707457472D4AB236000DC5EC /* Sources */,
+				707457482D4AB236000DC5EC /* Frameworks */,
+				707457492D4AB236000DC5EC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GroovyMorningFM_MobileApp;
+			productName = GroovyMorningFM_MobileApp;
+			productReference = 7074574B2D4AB236000DC5EC /* GroovyMorningFM_MobileApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7074575B2D4AB237000DC5EC /* GroovyMorningFM_MobileAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 707457732D4AB237000DC5EC /* Build configuration list for PBXNativeTarget "GroovyMorningFM_MobileAppTests" */;
+			buildPhases = (
+				707457582D4AB237000DC5EC /* Sources */,
+				707457592D4AB237000DC5EC /* Frameworks */,
+				7074575A2D4AB237000DC5EC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7074575E2D4AB237000DC5EC /* PBXTargetDependency */,
+			);
+			name = GroovyMorningFM_MobileAppTests;
+			productName = GroovyMorningFM_MobileAppTests;
+			productReference = 7074575C2D4AB237000DC5EC /* GroovyMorningFM_MobileAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		707457652D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 707457762D4AB237000DC5EC /* Build configuration list for PBXNativeTarget "GroovyMorningFM_MobileAppUITests" */;
+			buildPhases = (
+				707457622D4AB237000DC5EC /* Sources */,
+				707457632D4AB237000DC5EC /* Frameworks */,
+				707457642D4AB237000DC5EC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				707457682D4AB237000DC5EC /* PBXTargetDependency */,
+			);
+			name = GroovyMorningFM_MobileAppUITests;
+			productName = GroovyMorningFM_MobileAppUITests;
+			productReference = 707457662D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		707457432D4AB236000DC5EC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1530;
+				LastUpgradeCheck = 1530;
+				TargetAttributes = {
+					7074574A2D4AB236000DC5EC = {
+						CreatedOnToolsVersion = 15.3;
+					};
+					7074575B2D4AB237000DC5EC = {
+						CreatedOnToolsVersion = 15.3;
+						TestTargetID = 7074574A2D4AB236000DC5EC;
+					};
+					707457652D4AB237000DC5EC = {
+						CreatedOnToolsVersion = 15.3;
+						TestTargetID = 7074574A2D4AB236000DC5EC;
+					};
+				};
+			};
+			buildConfigurationList = 707457462D4AB236000DC5EC /* Build configuration list for PBXProject "GroovyMorningFM_MobileApp" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 707457422D4AB236000DC5EC;
+			productRefGroup = 7074574C2D4AB236000DC5EC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7074574A2D4AB236000DC5EC /* GroovyMorningFM_MobileApp */,
+				7074575B2D4AB237000DC5EC /* GroovyMorningFM_MobileAppTests */,
+				707457652D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		707457492D4AB236000DC5EC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				707457562D4AB237000DC5EC /* Preview Assets.xcassets in Resources */,
+				707457532D4AB237000DC5EC /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7074575A2D4AB237000DC5EC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		707457642D4AB237000DC5EC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7019FEE62D4F90D9005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3 in Resources */,
+				7019FEE42D4F90B2005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3 in Resources */,
+				7019FEE22D4F907C005081AC /* output_373f8ae9-b0d3-4ff2-bf22-f053497e5d75_17500.mp3 in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		707457472D4AB236000DC5EC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70EDBC152D54EE57003F7B63 /* AudioPlayer.swift in Sources */,
+				700764062D4AD5B500411F53 /* ProgramScreen.swift in Sources */,
+				700764042D4AD12D00411F53 /* Program.swift in Sources */,
+				707457512D4AB236000DC5EC /* ContentView.swift in Sources */,
+				700764022D4ACFD900411F53 /* APIService.swift in Sources */,
+				7074574F2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift in Sources */,
+				70EDBC172D54F00F003F7B63 /* AudioPlayerView2.swift in Sources */,
+				70D3B94B2D5FF35C00BFF6F7 /* ProgramSandbox.swift in Sources */,
+				70D3B9472D5BB71B00BFF6F7 /* AudioPlayerManager.swift in Sources */,
+				70D3B9492D5FE73600BFF6F7 /* RecordName.swift in Sources */,
+				708366022D57AB8200DF1AB6 /* Sandbox.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		707457582D4AB237000DC5EC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				707457612D4AB237000DC5EC /* GroovyMorningFM_MobileAppTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		707457622D4AB237000DC5EC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7074576D2D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITestsLaunchTests.swift in Sources */,
+				7074576B2D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7074575E2D4AB237000DC5EC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7074574A2D4AB236000DC5EC /* GroovyMorningFM_MobileApp */;
+			targetProxy = 7074575D2D4AB237000DC5EC /* PBXContainerItemProxy */;
+		};
+		707457682D4AB237000DC5EC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7074574A2D4AB236000DC5EC /* GroovyMorningFM_MobileApp */;
+			targetProxy = 707457672D4AB237000DC5EC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		7074576E2D4AB237000DC5EC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		7074576F2D4AB237000DC5EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		707457712D4AB237000DC5EC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GroovyMorningFM_MobileApp/GroovyMorningFM_MobileApp.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"GroovyMorningFM_MobileApp/Preview Content\"";
+				DEVELOPMENT_TEAM = 27DU3FB9N5;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.proutechos.sandbox.screentimeapis.GroovyMorningFM-MobileApp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		707457722D4AB237000DC5EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = GroovyMorningFM_MobileApp/GroovyMorningFM_MobileApp.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"GroovyMorningFM_MobileApp/Preview Content\"";
+				DEVELOPMENT_TEAM = 27DU3FB9N5;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.proutechos.sandbox.screentimeapis.GroovyMorningFM-MobileApp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		707457742D4AB237000DC5EC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 27DU3FB9N5;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.proutechos.sandbox.screentimeapis.GroovyMorningFM-MobileAppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GroovyMorningFM_MobileApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GroovyMorningFM_MobileApp";
+			};
+			name = Debug;
+		};
+		707457752D4AB237000DC5EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 27DU3FB9N5;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.proutechos.sandbox.screentimeapis.GroovyMorningFM-MobileAppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GroovyMorningFM_MobileApp.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/GroovyMorningFM_MobileApp";
+			};
+			name = Release;
+		};
+		707457772D4AB237000DC5EC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 27DU3FB9N5;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.proutechos.sandbox.screentimeapis.GroovyMorningFM-MobileAppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = GroovyMorningFM_MobileApp;
+			};
+			name = Debug;
+		};
+		707457782D4AB237000DC5EC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 27DU3FB9N5;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.proutechos.sandbox.screentimeapis.GroovyMorningFM-MobileAppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = GroovyMorningFM_MobileApp;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		707457462D4AB236000DC5EC /* Build configuration list for PBXProject "GroovyMorningFM_MobileApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7074576E2D4AB237000DC5EC /* Debug */,
+				7074576F2D4AB237000DC5EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		707457702D4AB237000DC5EC /* Build configuration list for PBXNativeTarget "GroovyMorningFM_MobileApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				707457712D4AB237000DC5EC /* Debug */,
+				707457722D4AB237000DC5EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		707457732D4AB237000DC5EC /* Build configuration list for PBXNativeTarget "GroovyMorningFM_MobileAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				707457742D4AB237000DC5EC /* Debug */,
+				707457752D4AB237000DC5EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		707457762D4AB237000DC5EC /* Build configuration list for PBXNativeTarget "GroovyMorningFM_MobileAppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				707457772D4AB237000DC5EC /* Debug */,
+				707457782D4AB237000DC5EC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 707457432D4AB236000DC5EC /* Project object */;
+}
