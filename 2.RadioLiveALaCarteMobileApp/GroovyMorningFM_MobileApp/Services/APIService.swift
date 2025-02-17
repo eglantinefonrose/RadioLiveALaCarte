@@ -10,8 +10,6 @@ import Foundation
 class APIService: ObservableObject {
     
     static let shared = APIService()
-    @Published var currentView: GroovyView = .ProgramScreen
-    @Published var currentProgram: Program = Program(id: "", radioName: "", startTimeHour: 0, startTimeMinute: 0, startTimeSeconds: 0, endTimeHour: 0, endTimeMinute: 0, endTimeSeconds: 0)
     
     func validerHoraire(debut: Int, fin: Int) {
         let urlString = "http://creeProgram/\(debut)/\(fin)"

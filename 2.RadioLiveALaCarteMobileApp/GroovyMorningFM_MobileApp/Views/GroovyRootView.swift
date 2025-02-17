@@ -9,14 +9,14 @@ import SwiftUI
 
 struct GroovyRootView: View {
     
-    @ObservedObject var apiService: APIService
+    @ObservedObject var bigModel: BigModel
     
     var body: some View {
         
-        if (APIService.shared.currentView == .ProgramScreen) {
+        if (BigModel.shared.currentView == .ProgramScreen) {
             ProgramScreen()
         }
-        if (APIService.shared.currentView == .AudioPlayerView) {
+        if (BigModel.shared.currentView == .AudioPlayerView) {
             Sandbox()
         }
         

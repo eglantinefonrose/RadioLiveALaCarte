@@ -15,6 +15,7 @@ struct ProgramScreen: View {
     @State private var programs: [Program] = []
     private let userId = "user001"
     @ObservedObject var apiService: APIService = APIService.shared
+    @ObservedObject var bigModel: BigModel = BigModel.shared
     
     var body: some View {
         NavigationView {
@@ -26,8 +27,8 @@ struct ProgramScreen: View {
                         .font(.subheadline)
                         .foregroundColor(.gray)
                 }.onTapGesture {
-                    APIService.shared.currentView = .AudioPlayerView
-                    apiService.currentProgram = program
+                    BigModel.shared.currentView = .AudioPlayerView
+                    bigModel.currentProgram = program
                 }
             }
             .navigationTitle("Programmes")

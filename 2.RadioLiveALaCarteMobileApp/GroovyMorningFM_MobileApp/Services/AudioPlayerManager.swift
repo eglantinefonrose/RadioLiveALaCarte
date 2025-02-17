@@ -27,6 +27,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     var username: String = ""
     
     var apiService: APIService = APIService.shared
+    var bigModel: BigModel = BigModel.shared
     
     private var audioURLs: [URL] = [
         /*URL(string: "http://localhost:8287/media/mp3/concatenated_outputoutput_1b448102-9b82-4936-bced-8dc7b00ef5f6_16360output_5.mp3")!,
@@ -43,7 +44,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
 
     override init() {
         
-        let programName = apiService.currentProgram.id
+        let programName = bigModel.currentProgram.id
         print("programName = \(programName)")
         recordName = RecordName.fetchRecordName(for: programName)
         baseName = RecordName.fetchRecordName(for: programName).output_name
