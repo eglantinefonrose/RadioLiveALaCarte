@@ -33,25 +33,28 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         super.init()
         
         if (recordName.withSegments == 0) {
-            setupTimers()
+            setupTimers(repet: false)
             fetchNonLiveAudio()
         } else {
-            setupTimers()
+            setupTimers(repet: true)
             fetchAndReplaceAudio()
         }
         
     }
 
-    private func setupTimers() {
+    private func setupTimers(repet: Bool) {
         // Timer pour mettre à jour currentTime chaque seconde
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             self?.updateCurrentTime()
         }
 
-        // Timer pour récupérer un nouvel audio toutes les 5 secondes
-        fetchTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
-            self?.fetchAndReplaceAudio()
+        if (repet) {
+            // Timer pour récupérer un nouvel audio toutes les 5 secondes
+            fetchTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
+                self?.fetchAndReplaceAudio()
+            }
         }
+        
     }
     
     func fetchBaseName() {
