@@ -11,7 +11,7 @@ import SwiftUI
 struct GroovyMorningFM_MobileAppApp: App {
     var body: some Scene {
         WindowGroup {
-            Sandbox()
+            GroovyRootView(apiService: APIService.shared)
         }
     }
 }

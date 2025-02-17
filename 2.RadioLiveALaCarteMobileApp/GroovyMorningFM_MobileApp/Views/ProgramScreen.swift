@@ -11,8 +11,10 @@ import Foundation
 import SwiftUI
 
 struct ProgramScreen: View {
+    
     @State private var programs: [Program] = []
-    private let userId = "12345" // Remplace par l'ID utilisateur réel
+    private let userId = "user001"
+    @ObservedObject var apiService: APIService = APIService.shared
     
     var body: some View {
         NavigationView {
@@ -23,6 +25,9 @@ struct ProgramScreen: View {
                     Text("\(program.startTimeHour):\(program.startTimeMinute):\(program.startTimeSeconds) - \(program.endTimeHour):\(program.endTimeMinute):\(program.endTimeSeconds)")
                         .font(.subheadline)
                         .foregroundColor(.gray)
+                }.onTapGesture {
+                    APIService.shared.currentView = .AudioPlayerView
+                    apiService.currentProgram = program
                 }
             }
             .navigationTitle("Programmes")

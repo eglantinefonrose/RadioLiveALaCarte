@@ -24,24 +24,43 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     var isFirstAudioPlayed: Bool = false
     @Published var currentIndex: Int = 0
     @Published var isLivePlaying: Bool = false
+    var username: String = ""
     
-    private let audioURLs = [
-        URL(string: "http://localhost:8287/media/mp3/concatenated_outputoutput_1b448102-9b82-4936-bced-8dc7b00ef5f6_16360output_5.mp3")!,
-        URL(string: "http://localhost:8287/media/mp3/concatenated_outputoutput_78aacd7a-6239-49c2-9e73-007ef6c7f8c9_16480output_6.mp3")!
+    var apiService: APIService = APIService.shared
+    
+    private var audioURLs: [URL] = [
+        /*URL(string: "http://localhost:8287/media/mp3/concatenated_outputoutput_1b448102-9b82-4936-bced-8dc7b00ef5f6_16360output_5.mp3")!,
+        URL(string: "http://localhost:8287/media/mp3/concatenated_outputoutput_78aacd7a-6239-49c2-9e73-007ef6c7f8c9_16480output_6.mp3")!*/
     ]
+    
+    public func setAudioURLs(urls: [URL]) {
+        audioURLs = urls
+    }
+    
+    public func setUserName(username: String) {
+        self.username = username
+    }
 
     override init() {
         
-        let programName = APIService.getFirstProgram(for: "user001").id
-        print(programName)
+        let programName = apiService.currentProgram.id
+        print("programName = \(programName)")
+        recordName = RecordName.fetchRecordName(for: programName)
         baseName = RecordName.fetchRecordName(for: programName).output_name
-        recordName = RecordName(withSegments: 0, output_name: "")
-        print(baseName)
+        print("baseName = \(baseName)")
         
         super.init()
         setupTimers(repet: false)
-        loadAudio(at: currentIndex)
         
+        isLivePlaying = true
+        if (recordName.withSegments == 0) {
+            setupTimers(repet: false)
+            fetchNonLiveAudio()
+        } else {
+            setupTimers(repet: true)
+            fetchAndReplaceAudio()
+        }
+                
     }
     
     private func loadAudio(at index: Int) {
@@ -113,50 +132,6 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         }
         
     }
-    
-    private func playFirstAudio() {
-            let firstAudioURL = "http://localhost:8287/media/mp3/concatenated_outputoutput_1b448102-9b82-4936-bced-8dc7b00ef5f6_16360output_5.mp3"
-            guard let url = URL(string: firstAudioURL) else { return }
-            
-            let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-                if let error = error {
-                    print("Erreur lors du téléchargement du premier audio: \(error)")
-                    return
-                }
-                guard let data = data else {
-                    print("Données invalides pour le premier audio")
-                    return
-                }
-                
-                DispatchQueue.main.async {
-                    do {
-                        let newAudioPlayer = try AVAudioPlayer(data: data)
-                        newAudioPlayer.delegate = self
-                        newAudioPlayer.prepareToPlay()
-                        
-                        self?.audioPlayer = newAudioPlayer
-                        self?.duration = newAudioPlayer.duration
-                        self?.currentTime = 0
-                        self?.isPlaying = true
-                        
-                        newAudioPlayer.play()
-                        self?.isFirstAudioPlayed = true
-                    } catch {
-                        print("Erreur lors de la lecture du premier audio: \(error)")
-                    }
-                }
-            }
-            task.resume()
-        }
-        
-    /*func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        if flag {
-            if isFirstAudioPlayed {
-                setupTimers(repet: true)
-                fetchAndReplaceAudio()
-            }
-        }
-    }*/
 
     private func setupTimers(repet: Bool) {
         // Timer pour mettre à jour currentTime chaque seconde
