@@ -14,7 +14,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     var audioPlayer: AVAudioPlayer?
     private var fetchTimer: Timer?
     
-    @Published var isPlaying: Bool = false
+    @Published var isPlaying: Bool = true
     var wasPaused: Bool = false
     @Published var index: Int = 0
     @Published var currentTime: TimeInterval = 0
@@ -40,42 +40,40 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         
         super.init()
         setupTimers(repet: false)
-        //playFirstAudio()
         loadAudio(at: currentIndex)
         
     }
     
     private func loadAudio(at index: Int) {
-            guard index >= 0, index < audioURLs.count else { return }
-            let url = audioURLs[index]
+        guard index >= 0, index < audioURLs.count else { return }
+        let url = audioURLs[index]
+        
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            guard let self = self, let data = data, error == nil else {
+                print("Erreur de chargement de l'audio: \(error?.localizedDescription ?? "Inconnue")")
+                return
+            }
             
-            URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-                guard let self = self, let data = data, error == nil else {
-                    print("Erreur de chargement de l'audio: \(error?.localizedDescription ?? "Inconnue")")
-                    return
-                }
-                
-                DispatchQueue.main.async {
-                    self.prepareAudio(data: data)
-                }
-            }.resume()
-        }
+            DispatchQueue.main.async {
+                self.prepareAudio(data: data)
+            }
+        }.resume()
+    }
     
     private func prepareAudio(data: Data) {
-            do {
-                audioPlayer = try AVAudioPlayer(data: data)
-                audioPlayer?.delegate = self
-                audioPlayer?.prepareToPlay()
-                duration = audioPlayer?.duration ?? 1
-                currentTime = 0
-                
-                if isPlaying {
-                    audioPlayer?.play()
-                }
-            } catch {
-                print("Erreur lors de la préparation de l'audio: \(error)")
+        do {
+            audioPlayer = try AVAudioPlayer(data: data)
+            audioPlayer?.delegate = self
+            audioPlayer?.prepareToPlay()
+            duration = audioPlayer?.duration ?? 1
+            currentTime = 0
+            if isPlaying {
+                audioPlayer?.play()
             }
+        } catch {
+            print("Erreur lors de la préparation de l'audio: \(error)")
         }
+    }
         
     func nextTrack() {
         
@@ -208,6 +206,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
                     newAudioPlayer.currentTime = min(TimeInterval(previousTime), newAudioPlayer.duration)  // Assurer la continuité
                     
                     self?.audioPlayer = newAudioPlayer  // Remplacer par le nouveau
+                    self?.audioPlayer?.play()
                     
                     self?.duration = newAudioPlayer.duration  // Mettre à jour la durée
                     self?.currentTime = newAudioPlayer.currentTime  // Mettre à jour le temps actuel
@@ -239,6 +238,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             DispatchQueue.main.async {
                 print(urlString)
                 self?.index = index
+                self?.audioPlayer?.play()
                 self?.loadNewAudio(baseName: self!.baseName)
             }
         }
