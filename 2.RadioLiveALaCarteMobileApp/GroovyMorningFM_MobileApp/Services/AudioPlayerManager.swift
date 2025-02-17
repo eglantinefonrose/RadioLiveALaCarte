@@ -21,6 +21,13 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     @Published var duration: TimeInterval = 1
     var recordName: RecordName
     var baseName: String
+    var isFirstAudioPlayed: Bool = false
+    @Published var currentIndex: Int = 0
+    
+    private let audioURLs = [
+        URL(string: "http://localhost:8287/media/mp3/concatenated_outputoutput_1b448102-9b82-4936-bced-8dc7b00ef5f6_16360output_5.mp3")!,
+        URL(string: "http://localhost:8287/media/mp3/concatenated_outputoutput_78aacd7a-6239-49c2-9e73-007ef6c7f8c9_16480output_6.mp3")!
+    ]
 
     override init() {
         
@@ -31,16 +38,101 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         print(baseName)
         
         super.init()
-        
-        if (recordName.withSegments == 0) {
-            setupTimers(repet: false)
-            fetchNonLiveAudio()
-        } else {
-            setupTimers(repet: true)
-            fetchAndReplaceAudio()
-        }
+        setupTimers(repet: false)
+        //playFirstAudio()
+        loadAudio(at: currentIndex)
         
     }
+    
+    private func loadAudio(at index: Int) {
+            guard index >= 0, index < audioURLs.count else { return }
+            let url = audioURLs[index]
+            
+            URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+                guard let self = self, let data = data, error == nil else {
+                    print("Erreur de chargement de l'audio: \(error?.localizedDescription ?? "Inconnue")")
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    self.prepareAudio(data: data)
+                }
+            }.resume()
+        }
+    
+    private func prepareAudio(data: Data) {
+            do {
+                audioPlayer = try AVAudioPlayer(data: data)
+                audioPlayer?.delegate = self
+                audioPlayer?.prepareToPlay()
+                duration = audioPlayer?.duration ?? 1
+                currentTime = 0
+                
+                if isPlaying {
+                    audioPlayer?.play()
+                }
+            } catch {
+                print("Erreur lors de la préparation de l'audio: \(error)")
+            }
+        }
+        
+    func nextTrack() {
+        if currentIndex < audioURLs.count - 1 {
+            currentIndex += 1
+            loadAudio(at: currentIndex)
+        }
+    }
+    
+    func previousTrack() {
+        if currentIndex > 0 {
+            currentIndex -= 1
+            loadAudio(at: currentIndex)
+        }
+    }
+    
+    private func playFirstAudio() {
+            let firstAudioURL = "http://localhost:8287/media/mp3/concatenated_outputoutput_1b448102-9b82-4936-bced-8dc7b00ef5f6_16360output_5.mp3"
+            guard let url = URL(string: firstAudioURL) else { return }
+            
+            let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+                if let error = error {
+                    print("Erreur lors du téléchargement du premier audio: \(error)")
+                    return
+                }
+                guard let data = data else {
+                    print("Données invalides pour le premier audio")
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    do {
+                        let newAudioPlayer = try AVAudioPlayer(data: data)
+                        newAudioPlayer.delegate = self
+                        newAudioPlayer.prepareToPlay()
+                        
+                        self?.audioPlayer = newAudioPlayer
+                        self?.duration = newAudioPlayer.duration
+                        self?.currentTime = 0
+                        self?.isPlaying = true
+                        
+                        newAudioPlayer.play()
+                        self?.isFirstAudioPlayed = true
+                    } catch {
+                        print("Erreur lors de la lecture du premier audio: \(error)")
+                    }
+                }
+            }
+            task.resume()
+        }
+        
+    /*func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        if flag {
+            if isFirstAudioPlayed {
+                setupTimers(repet: true)
+                fetchAndReplaceAudio()
+            }
+        }
+    }*/
 
     private func setupTimers(repet: Bool) {
         // Timer pour mettre à jour currentTime chaque seconde
@@ -199,7 +291,23 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
 
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         if flag {
-            fetchAndReplaceAudio()
+            
+            if (currentIndex+1 < audioURLs.count) {
+                
+                nextTrack()
+                
+            } else {
+                
+                if (recordName.withSegments == 0) {
+                    setupTimers(repet: false)
+                    fetchNonLiveAudio()
+                } else {
+                    setupTimers(repet: true)
+                    fetchAndReplaceAudio()
+                }
+                
+            }
+            
         }
     }
 }
