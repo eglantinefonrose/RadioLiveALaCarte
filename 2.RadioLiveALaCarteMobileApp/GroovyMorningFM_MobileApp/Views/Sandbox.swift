@@ -46,6 +46,11 @@ struct Sandbox: View {
                     Image(systemName: "gobackward.10")
                         .font(.title)
                 }
+                
+                Image(systemName: "backward.fill")
+                    .onTapGesture {
+                        audioManager.previousTrack()
+                    }
 
                 Button(action: {
                     audioManager.playPause()
@@ -53,6 +58,11 @@ struct Sandbox: View {
                     Image(systemName: audioManager.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                         .font(.largeTitle)
                 }
+                
+                Image(systemName: "forward.fill")
+                    .onTapGesture {
+                        audioManager.nextTrack()
+                    }
 
                 Button(action: {
                     audioManager.seek(to: min(audioManager.currentTime + 10, audioManager.duration)) // Avance de 10 secondes

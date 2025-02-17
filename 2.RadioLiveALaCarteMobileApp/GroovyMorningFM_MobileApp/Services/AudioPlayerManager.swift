@@ -23,6 +23,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     var baseName: String
     var isFirstAudioPlayed: Bool = false
     @Published var currentIndex: Int = 0
+    @Published var isLivePlaying: Bool = false
     
     private let audioURLs = [
         URL(string: "http://localhost:8287/media/mp3/concatenated_outputoutput_1b448102-9b82-4936-bced-8dc7b00ef5f6_16360output_5.mp3")!,
@@ -77,17 +78,42 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         }
         
     func nextTrack() {
-        if currentIndex < audioURLs.count - 1 {
+        
+        if (currentIndex+1 < audioURLs.count) {
+            
             currentIndex += 1
             loadAudio(at: currentIndex)
+            print(currentIndex)
+            
+        } else {
+            
+            isLivePlaying = true
+            if (recordName.withSegments == 0) {
+                setupTimers(repet: false)
+                fetchNonLiveAudio()
+            } else {
+                setupTimers(repet: true)
+                fetchAndReplaceAudio()
+            }
+            
         }
+        
     }
     
     func previousTrack() {
+        
         if currentIndex > 0 {
-            currentIndex -= 1
-            loadAudio(at: currentIndex)
+            if isLivePlaying {
+                loadAudio(at: currentIndex)
+                print(currentIndex)
+                isLivePlaying = false
+            } else {
+                currentIndex -= 1
+                loadAudio(at: currentIndex)
+                print(currentIndex)
+            }
         }
+        
     }
     
     private func playFirstAudio() {
@@ -291,23 +317,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
 
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         if flag {
-            
-            if (currentIndex+1 < audioURLs.count) {
-                
-                nextTrack()
-                
-            } else {
-                
-                if (recordName.withSegments == 0) {
-                    setupTimers(repet: false)
-                    fetchNonLiveAudio()
-                } else {
-                    setupTimers(repet: true)
-                    fetchAndReplaceAudio()
-                }
-                
-            }
-            
+            nextTrack()
         }
     }
 }
