@@ -155,7 +155,7 @@ public class RadioLiveALaCarteServiceTest {
     @Test public void getSuitableFileNameByProgramIdTest() {
 
         try {
-            System.out.println(RadioLiveALaCarteUserService.getInstance().getSuitableFileNameByProgramId("4934"));
+            System.out.println(RadioLiveALaCarteUserService.getInstance().getSuitableFileNameByProgramId("afc93a0f-d575-47d3-9047-9345b3305fcd"));
         } catch (ProutechosBaseException e) {
             throw new RuntimeException(e);
         }
@@ -187,10 +187,10 @@ public class RadioLiveALaCarteServiceTest {
 
         try {
 
-            Program program = new Program("programId", "France Inter", 19, 14, 0, 19, 16, 0);
+            Program program = new Program("programId", "France Inter", 17, 32, 0, 17, 33, 0);
 
             String programID = RadioLiveALaCarteUserService.getInstance().createProgram(program);
-            RadioLiveALaCarteUserService.getInstance().addUserProgram("aa768288-7621-49c8-99bd-c33c6fc02cc5", programID);
+            RadioLiveALaCarteUserService.getInstance().addUserProgram("user001", programID);
 
             Program justCreatedProgram = RadioLiveALaCarteUserService.getInstance().getProgramByID(programID);
             RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram);

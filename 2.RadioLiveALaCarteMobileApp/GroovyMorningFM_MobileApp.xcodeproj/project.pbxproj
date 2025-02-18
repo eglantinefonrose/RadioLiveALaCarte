@@ -21,11 +21,10 @@
 		7074576B2D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7074576A2D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITests.swift */; };
 		7074576D2D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7074576C2D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITestsLaunchTests.swift */; };
 		708366022D57AB8200DF1AB6 /* Sandbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 708366012D57AB8200DF1AB6 /* Sandbox.swift */; };
+		7091436E2D6394C100D3C3A9 /* GroovyRootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7091436D2D6394C100D3C3A9 /* GroovyRootView.swift */; };
+		709143702D639DB200D3C3A9 /* BigModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7091436F2D639DB200D3C3A9 /* BigModel.swift */; };
 		70D3B9472D5BB71B00BFF6F7 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D3B9462D5BB71B00BFF6F7 /* AudioPlayerManager.swift */; };
 		70D3B9492D5FE73600BFF6F7 /* RecordName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D3B9482D5FE73600BFF6F7 /* RecordName.swift */; };
-		70D3B94B2D5FF35C00BFF6F7 /* ProgramSandbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D3B94A2D5FF35C00BFF6F7 /* ProgramSandbox.swift */; };
-		70EDBC152D54EE57003F7B63 /* AudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70EDBC142D54EE57003F7B63 /* AudioPlayer.swift */; };
-		70EDBC172D54F00F003F7B63 /* AudioPlayerView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70EDBC162D54F00F003F7B63 /* AudioPlayerView2.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,11 +63,10 @@
 		7074576A2D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroovyMorningFM_MobileAppUITests.swift; sourceTree = "<group>"; };
 		7074576C2D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroovyMorningFM_MobileAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		708366012D57AB8200DF1AB6 /* Sandbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sandbox.swift; sourceTree = "<group>"; };
+		7091436D2D6394C100D3C3A9 /* GroovyRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroovyRootView.swift; sourceTree = "<group>"; };
+		7091436F2D639DB200D3C3A9 /* BigModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigModel.swift; sourceTree = "<group>"; };
 		70D3B9462D5BB71B00BFF6F7 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
 		70D3B9482D5FE73600BFF6F7 /* RecordName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordName.swift; sourceTree = "<group>"; };
-		70D3B94A2D5FF35C00BFF6F7 /* ProgramSandbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramSandbox.swift; sourceTree = "<group>"; };
-		70EDBC142D54EE57003F7B63 /* AudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayer.swift; sourceTree = "<group>"; };
-		70EDBC162D54F00F003F7B63 /* AudioPlayerView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerView2.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,12 +97,10 @@
 		7007640B2D4B5D4200411F53 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				708366012D57AB8200DF1AB6 /* Sandbox.swift */,
-				70D3B94A2D5FF35C00BFF6F7 /* ProgramSandbox.swift */,
-				7074574E2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift */,
-				70EDBC162D54F00F003F7B63 /* AudioPlayerView2.swift */,
-				707457502D4AB236000DC5EC /* ContentView.swift */,
+				709143712D64C4CF00D3C3A9 /* Special-views */,
 				700764052D4AD5B500411F53 /* ProgramScreen.swift */,
+				708366012D57AB8200DF1AB6 /* Sandbox.swift */,
+				707457502D4AB236000DC5EC /* ContentView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -112,9 +108,9 @@
 		7007640D2D4BEEAE00411F53 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				70EDBC142D54EE57003F7B63 /* AudioPlayer.swift */,
 				700764012D4ACFD900411F53 /* APIService.swift */,
 				70D3B9462D5BB71B00BFF6F7 /* AudioPlayerManager.swift */,
+				7091436F2D639DB200D3C3A9 /* BigModel.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -187,6 +183,15 @@
 				7074576C2D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITestsLaunchTests.swift */,
 			);
 			path = GroovyMorningFM_MobileAppUITests;
+			sourceTree = "<group>";
+		};
+		709143712D64C4CF00D3C3A9 /* Special-views */ = {
+			isa = PBXGroup;
+			children = (
+				7074574E2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift */,
+				7091436D2D6394C100D3C3A9 /* GroovyRootView.swift */,
+			);
+			path = "Special-views";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -322,14 +327,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				70EDBC152D54EE57003F7B63 /* AudioPlayer.swift in Sources */,
 				700764062D4AD5B500411F53 /* ProgramScreen.swift in Sources */,
 				700764042D4AD12D00411F53 /* Program.swift in Sources */,
+				709143702D639DB200D3C3A9 /* BigModel.swift in Sources */,
 				707457512D4AB236000DC5EC /* ContentView.swift in Sources */,
 				700764022D4ACFD900411F53 /* APIService.swift in Sources */,
 				7074574F2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift in Sources */,
-				70EDBC172D54F00F003F7B63 /* AudioPlayerView2.swift in Sources */,
-				70D3B94B2D5FF35C00BFF6F7 /* ProgramSandbox.swift in Sources */,
+				7091436E2D6394C100D3C3A9 /* GroovyRootView.swift in Sources */,
 				70D3B9472D5BB71B00BFF6F7 /* AudioPlayerManager.swift in Sources */,
 				70D3B9492D5FE73600BFF6F7 /* RecordName.swift in Sources */,
 				708366022D57AB8200DF1AB6 /* Sandbox.swift in Sources */,
