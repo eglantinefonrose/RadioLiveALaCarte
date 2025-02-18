@@ -187,13 +187,21 @@ public class RadioLiveALaCarteServiceTest {
 
         try {
 
-            Program program = new Program("programId", "France Inter", 16, 50, 0, 16, 51, 0);
+            Program program1 = new Program("programId", "France Inter", 18, 39, 0, 18, 41, 0);
 
-            String programID = RadioLiveALaCarteUserService.getInstance().createProgram(program);
-            RadioLiveALaCarteUserService.getInstance().addUserProgram("user001", programID);
+            String program1ID = RadioLiveALaCarteUserService.getInstance().createProgram(program1);
+            RadioLiveALaCarteUserService.getInstance().addUserProgram("user001", program1ID);
 
-            Program justCreatedProgram = RadioLiveALaCarteUserService.getInstance().getProgramByID(programID);
-            RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram);
+            Program justCreatedProgram1 = RadioLiveALaCarteUserService.getInstance().getProgramByID(program1ID);
+            RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram1);
+
+            Program program2 = new Program("programId", "France Info", 18, 40, 0, 18, 42, 0);
+
+            String program2ID = RadioLiveALaCarteUserService.getInstance().createProgram(program2);
+            RadioLiveALaCarteUserService.getInstance().addUserProgram("user001", program2ID);
+
+            Program justCreatedProgram2 = RadioLiveALaCarteUserService.getInstance().getProgramByID(program2ID);
+            RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram2);
 
             System.in.read();
 

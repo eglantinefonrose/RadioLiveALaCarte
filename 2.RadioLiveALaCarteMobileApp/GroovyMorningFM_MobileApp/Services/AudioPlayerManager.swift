@@ -14,13 +14,17 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     var audioPlayer: AVAudioPlayer?
     private var fetchTimer: Timer?
     
-    @Published var isPlaying: Bool = true
+    @Published var isPlaying: Bool = false
     var wasPaused: Bool = false
     @Published var index: Int = 0
     @Published var currentTime: TimeInterval = 0
     @Published var duration: TimeInterval = 1
     var recordName: RecordName = RecordName(withSegments: 0, output_name: "")
     var baseName: String = ""
+    
+    var liveBaseNames: [String] = []
+    var liveBaseNameIndex: Int = 0
+    
     var isFirstAudioPlayed: Bool = false
     @Published var currentIndex: Int = 0
     @Published var isLivePlaying: Bool = false
@@ -51,9 +55,9 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         super.init()
         setupTimers(repet: false)
         fetchAllURLs()
-        print(audioURLs)
+        //print(audioURLs)
         
-        isLivePlaying = true
+        //isLivePlaying = true
         
         if (!audioURLs.isEmpty) {
             loadAudio(at: currentIndex)
@@ -85,17 +89,19 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             } else {
                 let programName = program.id
                 self.recordName = RecordName.fetchRecordName(for: programName)
-                baseName = RecordName.fetchRecordName(for: programName).output_name
-                print(baseName)
+                liveBaseNames.append(RecordName.fetchRecordName(for: programName).output_name)
             }
             
         }
+        
+        print("all URls = \(audioURLs)")
         
     }
     
     private func loadAudio(at index: Int) {
         guard index >= 0, index < audioURLs.count else { return }
         let url = audioURLs[index]
+        print("url chargée = \(url)")
         
         URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
             guard let self = self, let data = data, error == nil else {
@@ -126,6 +132,8 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         
     func nextTrack() {
         
+        print(isLivePlaying)
+        
         if (currentIndex+1 < audioURLs.count) {
             
             currentIndex += 1
@@ -134,11 +142,25 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             
         } else {
             
-            isLivePlaying = true
-            if (recordName.withSegments == 0) {
+            // On passe au live
+            
+            /*if (recordName.withSegments == 0) {
+                isLivePlaying = true
                 setupTimers(repet: false)
                 fetchNonLiveAudio()
             } else {
+                setupTimers(repet: true)
+                fetchAndReplaceAudio()
+            }*/
+            
+            if (liveBaseNameIndex < liveBaseNames.count) {
+                if (!isLivePlaying) {
+                    // Premier audio du live
+                    isLivePlaying = true
+                } else {
+                    liveBaseNameIndex += 1
+                }
+                
                 setupTimers(repet: true)
                 fetchAndReplaceAudio()
             }
@@ -152,7 +174,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         if currentIndex > 0 {
             if isLivePlaying {
                 loadAudio(at: currentIndex)
-                print(currentIndex)
+                //print(currentIndex)
                 isLivePlaying = false
             } else {
                 currentIndex -= 1
@@ -186,7 +208,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     
     @objc func fetchNonLiveAudio() {
         
-        let urlString = "http://localhost:8287/media/mp3/\(baseName)"
+        let urlString = "http://localhost:8287/media/mp3/\(audioURLs[index])"
         guard let url = URL(string: urlString) else { return }
 
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
@@ -227,8 +249,11 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     }
 
     @objc func fetchAndReplaceAudio() {
-        let urlString = "http://localhost:8287/api/radio/concateneFile/baseName/\(baseName)"
         
+        print("liveBaseNames = \(liveBaseNames)")
+        print("liveBaseNames = \(liveBaseNameIndex)")
+        
+        let urlString = "http://localhost:8287/api/radio/concateneFile/baseName/\(liveBaseNames[liveBaseNameIndex])"
         guard let url = URL(string: urlString) else { return }
 
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
@@ -251,8 +276,8 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     }
 
     func loadNewAudio(baseName: String) {
-        let urlString = "http://localhost:8287/media/mp3/concatenated_output\(baseName)output_\(index).mp3"
-        print("Chargement de l'audio \(urlString)")
+        let urlString = "http://localhost:8287/media/mp3/concatenated_output\(liveBaseNames[liveBaseNameIndex])output_\(index).mp3"
+        print("Chargement de l'audio livex \(urlString)")
 
         guard let url = URL(string: urlString) else { return }
 
