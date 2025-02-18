@@ -19,8 +19,8 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     @Published var index: Int = 0
     @Published var currentTime: TimeInterval = 0
     @Published var duration: TimeInterval = 1
-    var recordName: RecordName
-    var baseName: String
+    var recordName: RecordName = RecordName(withSegments: 0, output_name: "")
+    var baseName: String = ""
     var isFirstAudioPlayed: Bool = false
     @Published var currentIndex: Int = 0
     @Published var isLivePlaying: Bool = false
@@ -30,8 +30,12 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     var bigModel: BigModel = BigModel.shared
     
     private var audioURLs: [URL] = [
-        /*URL(string: "http://localhost:8287/media/mp3/concatenated_outputoutput_1b448102-9b82-4936-bced-8dc7b00ef5f6_16360output_5.mp3")!,
-        URL(string: "http://localhost:8287/media/mp3/concatenated_outputoutput_78aacd7a-6239-49c2-9e73-007ef6c7f8c9_16480output_6.mp3")!*/
+        
+        // Il faut charger les URL des audios depuis le serveur
+        // Les URL correspondent à des PROGRAMMES
+        
+        /*URL(string: "http://localhost:8287/media/mp3/concatenated_outputoutput_78aacd7a-6239-49c2-9e73-007ef6c7f8c9_16480output_6.mp3")!,
+        URL(string: "http://localhost:8287/media/mp3/output_6aed0f91-c041-417a-8d3e-df635fa1e99f_16460output_0003.mp3")!*/
     ]
     
     public func setAudioURLs(urls: [URL]) {
@@ -44,24 +48,49 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
 
     override init() {
         
-        let programName = bigModel.currentProgram.id
-        print("programName = \(programName)")
-        recordName = RecordName.fetchRecordName(for: programName)
-        baseName = RecordName.fetchRecordName(for: programName).output_name
-        print("baseName = \(baseName)")
-        
         super.init()
         setupTimers(repet: false)
+        fetchAllURLs()
+        print(audioURLs)
         
         isLivePlaying = true
-        if (recordName.withSegments == 0) {
+        
+        if (!audioURLs.isEmpty) {
+            loadAudio(at: currentIndex)
             setupTimers(repet: false)
-            fetchNonLiveAudio()
         } else {
-            setupTimers(repet: true)
-            fetchAndReplaceAudio()
+            if (recordName.withSegments == 0) {
+                setupTimers(repet: false)
+                fetchNonLiveAudio()
+                print("Without segments : \(recordName.output_name)")
+            } else {
+                setupTimers(repet: true)
+                fetchAndReplaceAudio()
+                print("With segments : \(recordName.output_name)")
+            }
         }
                 
+    }
+    
+    private func fetchAllURLs() {
+        
+        let fetchedPrograms = APIService.fetchPrograms(for: "user001")
+        
+        for program in fetchedPrograms {
+            
+            let recordName = RecordName.fetchRecordName(for: program.id)
+            
+            if (recordName.withSegments == 0) {
+                audioURLs.append(URL(string: "http://localhost:8287/media/mp3/\(recordName.output_name)")!)
+            } else {
+                let programName = program.id
+                self.recordName = RecordName.fetchRecordName(for: programName)
+                baseName = RecordName.fetchRecordName(for: programName).output_name
+                print(baseName)
+            }
+            
+        }
+        
     }
     
     private func loadAudio(at index: Int) {
