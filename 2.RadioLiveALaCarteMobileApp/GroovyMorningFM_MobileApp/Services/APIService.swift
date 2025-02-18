@@ -7,7 +7,8 @@
 
 import Foundation
 
-class APIService {
+class APIService: ObservableObject {
+    
     static let shared = APIService()
     
     func validerHoraire(debut: Int, fin: Int) {
@@ -27,7 +28,7 @@ class APIService {
     }
     
     func creerHoraireDanielMorin() {
-        let urlString = "http://localhost:8287/api/radio/createAndRecordProgram/radioName/FranceInter/startTimeHour/6/startTimeMinute/56/startTimeSeconds/0/endTimeHour/7/endTimeMinute/0/endTimeSeconds/0/userID/user001"
+        let urlString = "http://localhost:8287/api/radio/createAndRecordProgram/radioName/FranceInter/startTimeHour/12/startTimeMinute/0/startTimeSeconds/0/endTimeHour/12/endTimeMinute/5/endTimeSeconds/0/userID/user001"
         guard let url = URL(string: urlString) else { return }
         
         var request = URLRequest(url: url)
@@ -75,6 +76,11 @@ class APIService {
     
     static func getFirstProgram(for userId: String) -> Program {
         let programs: [Program] = self.fetchPrograms(for: userId)
+        
+        if (programs.isEmpty) {
+            return Program(id: "", radioName: "", startTimeHour: 0, startTimeMinute: 0, startTimeSeconds: 0, endTimeHour: 0, endTimeMinute: 0, endTimeSeconds: 0)
+        }
+        
         return programs[0]
     }
     
