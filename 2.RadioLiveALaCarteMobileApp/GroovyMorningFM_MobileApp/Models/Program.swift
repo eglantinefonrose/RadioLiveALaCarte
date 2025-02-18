@@ -29,4 +29,28 @@ class Program: Codable, Identifiable {
         self.endTimeSeconds = endTimeSeconds
     }
     
+    func isProgramAvailable() -> Bool {
+        let calendar = Calendar.current
+        let now = Date()
+        let currentComponents = calendar.dateComponents([.hour, .minute, .second], from: now)
+
+        // Comparaison avec l'heure actuelle
+        if let currentHour = currentComponents.hour,
+           let currentMinute = currentComponents.minute,
+           let currentSecond = currentComponents.second {
+            
+            if startTimeHour > currentHour {
+                return false
+            } else if startTimeHour == currentHour {
+                if startTimeMinute > currentMinute {
+                    return false
+                } else if startTimeMinute == currentMinute {
+                    return startTimeSeconds > currentSecond
+                }
+            }
+        }
+        
+        return true
+    }
+    
 }
