@@ -26,7 +26,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     private var liveBaseNameIndex: Int = 0
     
     var isFirstAudioPlayed: Bool = false
-    @Published var currentIndex: Int = 0
+    //@Published var bigModel.currentProgramIndex: Int = 0
     @Published var isLivePlaying: Bool = false
     var username: String = ""
     
@@ -54,7 +54,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         fetchAllURLs()
         
         if (!audioURLs.isEmpty) {
-            loadAudio(at: currentIndex)
+            loadAudio(at: bigModel.currentProgramIndex)
             setupTimers(repet: false)
         } else {
             if (!liveBaseNames.isEmpty) {
@@ -69,6 +69,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     private func fetchAllURLs() {
         
         let fetchedPrograms = APIService.fetchPrograms(for: "user001")
+        bigModel.programs = fetchedPrograms
         
         for program in fetchedPrograms {
             
@@ -126,11 +127,11 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         
         print(isLivePlaying)
         
-        if (currentIndex+1 < audioURLs.count) {
+        if (bigModel.currentProgramIndex+1 < audioURLs.count) {
             
-            currentIndex += 1
-            loadAudio(at: currentIndex)
-            print(currentIndex)
+            bigModel.currentProgramIndex += 1
+            loadAudio(at: bigModel.currentProgramIndex)
+            print(bigModel.currentProgramIndex)
             
         } else {
             
@@ -163,15 +164,15 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     
     func previousTrack() {
         
-        if currentIndex > 0 {
+        if bigModel.currentProgramIndex > 0 {
+            bigModel.currentProgramIndex -= 1
             if isLivePlaying {
-                loadAudio(at: currentIndex)
-                //print(currentIndex)
+                loadAudio(at: bigModel.currentProgramIndex)
+                //print(bigModel.currentProgramIndex)
                 isLivePlaying = false
             } else {
-                currentIndex -= 1
-                loadAudio(at: currentIndex)
-                print(currentIndex)
+                loadAudio(at: bigModel.currentProgramIndex)
+                print(bigModel.currentProgramIndex)
             }
         }
         

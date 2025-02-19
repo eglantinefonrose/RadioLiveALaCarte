@@ -2,6 +2,7 @@ import SwiftUI
 
 struct Sandbox: View {
     
+    @ObservedObject private var bigModel = BigModel.shared
     @StateObject private var audioManager = AudioPlayerManager()
     
     @State private var offsetY: CGFloat = UIScreen.main.bounds.height / 2
@@ -100,7 +101,7 @@ struct Sandbox: View {
             }
             .padding()
             
-            BottomSheetView(offsetY: $offsetY, minHeight: minHeight, maxHeight: maxHeight)
+            BottomSheetView(offsetY: $offsetY, minHeight: minHeight, maxHeight: maxHeight, programs: bigModel.programs)
             
         }
         
@@ -115,20 +116,23 @@ struct Sandbox: View {
 }
 
 struct BottomSheetView: View {
+    
     @Binding var offsetY: CGFloat
     let minHeight: CGFloat
     let maxHeight: CGFloat
-
+    var programs: [Program]
+    
     var body: some View {
         VStack {
-            Capsule()
+            /*Capsule()
                 .frame(width: 40, height: 6)
                 .foregroundColor(.gray)
-                .padding(.top, 10)
+                .padding(.top, 10)*/
 
             List {
-                ForEach(0..<20, id: \.self) { index in
-                    Text("Item \(index)")
+                ForEach(programs.indices, id: \.self) { index in
+                    Text("\(programs[index].radioName)")
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
             .frame(height: maxHeight - 50)
