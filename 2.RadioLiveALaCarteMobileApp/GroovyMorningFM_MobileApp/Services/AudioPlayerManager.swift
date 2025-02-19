@@ -22,8 +22,8 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     var recordName: RecordName = RecordName(withSegments: 0, output_name: "")
     var baseName: String = ""
     
-    var liveBaseNames: [String] = []
-    var liveBaseNameIndex: Int = 0
+    private var liveBaseNames: [String] = []
+    private var liveBaseNameIndex: Int = 0
     
     var isFirstAudioPlayed: Bool = false
     @Published var currentIndex: Int = 0
@@ -33,14 +33,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     var apiService: APIService = APIService.shared
     var bigModel: BigModel = BigModel.shared
     
-    private var audioURLs: [URL] = [
-        
-        // Il faut charger les URL des audios depuis le serveur
-        // Les URL correspondent à des PROGRAMMES
-        
-        /*URL(string: "http://localhost:8287/media/mp3/concatenated_outputoutput_78aacd7a-6239-49c2-9e73-007ef6c7f8c9_16480output_6.mp3")!,
-        URL(string: "http://localhost:8287/media/mp3/output_6aed0f91-c041-417a-8d3e-df635fa1e99f_16460output_0003.mp3")!*/
-    ]
+    private var audioURLs: [URL] = []
     
     public func setAudioURLs(urls: [URL]) {
         audioURLs = urls
@@ -49,25 +42,22 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     public func setUserName(username: String) {
         self.username = username
     }
+    
+    public func areThereAnyAudiosAvailable() -> Bool {
+        return !(audioURLs.isEmpty && liveBaseNames.isEmpty)
+    }
 
     override init() {
         
         super.init()
         setupTimers(repet: false)
         fetchAllURLs()
-        //print(audioURLs)
-        
-        //isLivePlaying = true
         
         if (!audioURLs.isEmpty) {
             loadAudio(at: currentIndex)
             setupTimers(repet: false)
         } else {
-            if (recordName.withSegments == 0) {
-                setupTimers(repet: false)
-                fetchNonLiveAudio()
-                print("Without segments : \(recordName.output_name)")
-            } else {
+            if (!liveBaseNames.isEmpty) {
                 setupTimers(repet: true)
                 fetchAndReplaceAudio()
                 print("With segments : \(recordName.output_name)")
@@ -85,7 +75,9 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             let recordName = RecordName.fetchRecordName(for: program.id)
             
             if (recordName.withSegments == 0) {
-                audioURLs.append(URL(string: "http://localhost:8287/media/mp3/\(recordName.output_name)")!)
+                if (recordName.output_name != "") {
+                    audioURLs.append(URL(string: "http://localhost:8287/media/mp3/\(recordName.output_name)")!)
+                }
             } else {
                 let programName = program.id
                 self.recordName = RecordName.fetchRecordName(for: programName)
