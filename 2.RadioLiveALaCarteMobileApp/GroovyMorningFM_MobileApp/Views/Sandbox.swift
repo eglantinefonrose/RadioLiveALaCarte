@@ -101,7 +101,7 @@ struct Sandbox: View {
             }
             .padding()
             
-            BottomSheetView(offsetY: $offsetY, minHeight: minHeight, maxHeight: maxHeight, programs: bigModel.programs)
+            BottomSheetView(audioManager: audioManager, offsetY: $offsetY, minHeight: minHeight, maxHeight: maxHeight, programs: bigModel.programs)
             
         }
         
@@ -117,6 +117,8 @@ struct Sandbox: View {
 
 struct BottomSheetView: View {
     
+    @StateObject var audioManager: AudioPlayerManager
+    @ObservedObject var bigModel = BigModel.shared
     @Binding var offsetY: CGFloat
     let minHeight: CGFloat
     let maxHeight: CGFloat
@@ -133,6 +135,10 @@ struct BottomSheetView: View {
                 ForEach(programs.indices, id: \.self) { index in
                     Text("\(programs[index].radioName)")
                         .frame(maxWidth: .infinity, alignment: .leading)
+                        .fontWeight(  (index == bigModel.currentProgramIndex) ? .bold : .regular)
+                        .onTapGesture {
+                            audioManager.updateCurrentProgramIndex(index: index)
+                        }
                 }
             }
             .frame(height: maxHeight - 50)

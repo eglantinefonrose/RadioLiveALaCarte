@@ -23,7 +23,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     var baseName: String = ""
     
     private var liveBaseNames: [String] = []
-    private var liveBaseNameIndex: Int = 0
+    //private var (bigModel.currentProgramIndex - audioUrls.count): Int = 0
     
     var isFirstAudioPlayed: Bool = false
     //@Published var bigModel.currentProgramIndex: Int = 0
@@ -64,6 +64,28 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             }
         }
                 
+    }
+    
+    public func updateCurrentProgramIndex(index: Int) {
+                
+        if (bigModel.currentProgramIndex < audioURLs.count) {
+            self.bigModel.currentProgramIndex = index
+            loadAudio(at: bigModel.currentProgramIndex)
+        } else {
+            
+            if ( ((bigModel.currentProgramIndex - audioURLs.count)) < liveBaseNames.count) {
+                if (!isLivePlaying) {
+                    // Premier audio du live
+                    isLivePlaying = true
+                } else {
+                    bigModel.currentProgramIndex += 1
+                }
+                
+                setupTimers(repet: true)
+                fetchAndReplaceAudio()
+            }
+            
+        }
     }
     
     private func fetchAllURLs() {
@@ -135,23 +157,12 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             
         } else {
             
-            // On passe au live
-            
-            /*if (recordName.withSegments == 0) {
-                isLivePlaying = true
-                setupTimers(repet: false)
-                fetchNonLiveAudio()
-            } else {
-                setupTimers(repet: true)
-                fetchAndReplaceAudio()
-            }*/
-            
-            if (liveBaseNameIndex < liveBaseNames.count) {
+            if ((bigModel.currentProgramIndex - audioURLs.count) < liveBaseNames.count) {
                 if (!isLivePlaying) {
                     // Premier audio du live
                     isLivePlaying = true
                 } else {
-                    liveBaseNameIndex += 1
+                    bigModel.currentProgramIndex += 1
                 }
                 
                 setupTimers(repet: true)
@@ -244,9 +255,9 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     @objc func fetchAndReplaceAudio() {
         
         print("liveBaseNames = \(liveBaseNames)")
-        print("liveBaseNames = \(liveBaseNameIndex)")
+        print("liveBaseNames = \((bigModel.currentProgramIndex - audioURLs.count))")
         
-        let urlString = "http://localhost:8287/api/radio/concateneFile/baseName/\(liveBaseNames[liveBaseNameIndex])"
+        let urlString = "http://localhost:8287/api/radio/concateneFile/baseName/\(liveBaseNames[(bigModel.currentProgramIndex - audioURLs.count)])"
         guard let url = URL(string: urlString) else { return }
 
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
@@ -269,7 +280,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     }
 
     func loadNewAudio(baseName: String) {
-        let urlString = "http://localhost:8287/media/mp3/concatenated_output\(liveBaseNames[liveBaseNameIndex])output_\(index).mp3"
+        let urlString = "http://localhost:8287/media/mp3/concatenated_output\(liveBaseNames[(bigModel.currentProgramIndex - audioURLs.count)])output_\(index).mp3"
         print("Chargement de l'audio livex \(urlString)")
 
         guard let url = URL(string: urlString) else { return }
