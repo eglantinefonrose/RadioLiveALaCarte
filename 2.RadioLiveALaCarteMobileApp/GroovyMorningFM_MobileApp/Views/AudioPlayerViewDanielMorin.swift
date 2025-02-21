@@ -84,7 +84,19 @@ struct AudioPlayerViewDanielMorin: View {
                             audioManager.seek(to: min(audioManager.currentTime + 10, audioManager.duration)) // Avance de 10 secondes
                         }
                     
-                } .padding()
+                }
+                
+                VStack {
+                    Text("Programmer l'enregistrement de Daniel Morin pour demain (7:57 - 8:00)")
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(.gray)
+                        .padding(15)
+                }.background(Color.white)
+                .cornerRadius(10)
+                .padding(.horizontal, 25)
+                .onTapGesture {
+                    APIService.shared.creerHoraireDanielMorin()
+                }
                 
             }
             
