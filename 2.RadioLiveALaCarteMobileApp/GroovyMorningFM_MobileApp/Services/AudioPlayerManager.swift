@@ -91,8 +91,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     
     private func fetchAllURLs() {
         
-        let fetchedPrograms = APIService.fetchPrograms(for: "user001")
-        bigModel.programs = fetchedPrograms
+        let fetchedPrograms = bigModel.programs
         
         for program in fetchedPrograms {
             

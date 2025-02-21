@@ -349,4 +349,15 @@ public class RadioLiveALaCarteResource {
 
     }
 
+    @GET
+    @Path("/getFavIcoByRadioName/radioName/{radioName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getFavIcoByRadioName(@PathParam("radioName") String radioName)  throws Exception {
+
+        return RadioInformationAndPlanningService.getInstance().getFavIcoByRadioName(radioName);
+
+    }
+
+    // getFavIcoByRadioName(String name)
+
 }

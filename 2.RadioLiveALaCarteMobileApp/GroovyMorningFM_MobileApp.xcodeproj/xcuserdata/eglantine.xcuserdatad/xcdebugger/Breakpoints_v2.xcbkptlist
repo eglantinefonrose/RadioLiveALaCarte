@@ -3,4 +3,84 @@
    uuid = "487B9B22-3558-491C-BE20-70EB5527DCD4"
    type = "1"
    version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "84F616C4-3AE1-4C3A-AFC5-DFE0D36A2548"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GroovyMorningFM_MobileApp/Services/AudioPlayerManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "init()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9FB22BA6-9DEF-464A-B852-25C99EF480C7"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GroovyMorningFM_MobileApp/Services/AudioPlayerManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "55"
+            endingLineNumber = "55"
+            landmarkName = "init()"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D00C209F-4197-4814-98EF-E71A77442D96"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GroovyMorningFM_MobileApp/Services/AudioPlayerManager.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "96"
+            endingLineNumber = "96"
+            landmarkName = "fetchAllURLs()"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "D00C209F-4197-4814-98EF-E71A77442D96 - 4d3eb1db09ef8991"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "GroovyMorningFM_MobileApp.AudioPlayerManager.fetchAllURLs() -&gt; ()"
+                  moduleName = "GroovyMorningFM_MobileApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Services/AudioPlayerManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "96"
+                  endingLineNumber = "96">
+               </Location>
+               <Location
+                  uuid = "D00C209F-4197-4814-98EF-E71A77442D96 - 4d3eb1db09ef8991"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "GroovyMorningFM_MobileApp.AudioPlayerManager.fetchAllURLs() -&gt; ()"
+                  moduleName = "GroovyMorningFM_MobileApp"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Services/AudioPlayerManager.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "96"
+                  endingLineNumber = "96">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
 </Bucket>

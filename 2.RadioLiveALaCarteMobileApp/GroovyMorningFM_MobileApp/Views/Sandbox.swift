@@ -2,7 +2,6 @@ import SwiftUI
 
 struct Sandbox: View {
     
-    @ObservedObject private var bigModel = BigModel.shared
     @StateObject private var audioManager = AudioPlayerManager()
     
     @State private var offsetY: CGFloat = UIScreen.main.bounds.height / 2

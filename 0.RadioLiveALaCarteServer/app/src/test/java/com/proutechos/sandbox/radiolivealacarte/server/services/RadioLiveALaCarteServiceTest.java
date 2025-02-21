@@ -187,7 +187,7 @@ public class RadioLiveALaCarteServiceTest {
 
         try {
 
-            Program program1 = new Program("programId", "France Inter", 15, 9, 0, 15, 13, 0);
+            Program program1 = new Program("programId", "France Inter", 18, 5, 0, 18, 13, 0);
 
             String program1ID = RadioLiveALaCarteUserService.getInstance().createProgram(program1);
             RadioLiveALaCarteUserService.getInstance().addUserProgram("user001", program1ID);
