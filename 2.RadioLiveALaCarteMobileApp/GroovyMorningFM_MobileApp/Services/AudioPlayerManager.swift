@@ -23,7 +23,8 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     var baseName: String = ""
     
     private var liveBaseNames: [String] = []
-    //private var (bigModel.currentProgramIndex - audioUrls.count): Int = 0
+    private var liveBaseNameIndex: Int = 0
+    private var asLiveJustStarted: Bool = true
     
     var isFirstAudioPlayed: Bool = false
     //@Published var bigModel.currentProgramIndex: Int = 0
@@ -269,14 +270,40 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
                 print("Données invalides")
                 return
             }
+
             DispatchQueue.main.async {
-                print(urlString)
+                
                 self?.index = index
-                self?.audioPlayer?.play()
+                //self?.audioPlayer?.play()
                 self?.loadNewAudio(baseName: self!.baseName)
             }
+            
+            /*DispatchQueue.main.async { [self] in
+                
+                do {
+                                        
+                    let newAudioPlayer = try AVAudioPlayer(data: data)
+                    newAudioPlayer.delegate = self
+                    newAudioPlayer.prepareToPlay()
+                    
+                    self?.audioPlayer = newAudioPlayer  // Remplacer par le nouveau
+                    self?.audioPlayer?.play()
+                    self?.index = index
+                    
+                    self?.duration = newAudioPlayer.duration  // Mettre à jour la durée
+                    self?.currentTime = newAudioPlayer.currentTime  // Mettre à jour le temps actuel
+                    
+                    self?.loadNewAudio(baseName: self!.baseName)
+                    
+                } catch {
+                    print("Erreur lors du chargement du nouvel audio: \(error)")
+                }
+                
+            }*/
+            
         }
         task.resume()
+        
     }
 
     func loadNewAudio(baseName: String) {
@@ -309,7 +336,12 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             let newAudioPlayer = try AVAudioPlayer(data: data)
             newAudioPlayer.delegate = self
             newAudioPlayer.prepareToPlay()
-            newAudioPlayer.currentTime = min(previousTime, newAudioPlayer.duration)  // Assurer la continuité
+            
+            if (asLiveJustStarted) {
+                newAudioPlayer.currentTime = 0
+            } else {
+                newAudioPlayer.currentTime = min(previousTime, newAudioPlayer.duration)  // Assurer la continuité
+            }
             
             self.audioPlayer?.stop()  // Stopper l'ancien fichier
             self.audioPlayer = newAudioPlayer  // Remplacer par le nouveau
@@ -320,6 +352,10 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             }
             self.duration = newAudioPlayer.duration  // Mettre à jour la durée
             self.currentTime = newAudioPlayer.currentTime  // Mettre à jour le temps actuel
+            
+            if (asLiveJustStarted) {
+                asLiveJustStarted = false
+            }
             
         } catch {
             print("Erreur lors du chargement du nouvel audio: \(error)")

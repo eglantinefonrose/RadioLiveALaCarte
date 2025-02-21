@@ -8,11 +8,12 @@ struct Sandbox: View {
     @State private var offsetY: CGFloat = UIScreen.main.bounds.height / 2
     let minHeight: CGFloat = UIScreen.main.bounds.height / 2
     let maxHeight: CGFloat = UIScreen.main.bounds.height - 100
+    @ObservedObject private var bigModel: BigModel = BigModel.shared
 
     var body: some View {
         
         ZStack {
-            
+                        
             VStack(spacing: 20) {
                 Text("🎵 Lecture Audio")
                     .font(.title)
@@ -160,4 +161,3 @@ struct BottomSheetView: View {
         .animation(.spring(), value: offsetY)
     }
 }
-
