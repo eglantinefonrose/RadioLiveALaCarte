@@ -1,5 +1,6 @@
 package com.proutechos.sandbox.radiolivealacarte.server.api;
 
+import com.proutechos.sandbox.radiolivealacarte.server.model.LightenedRadioStationAndAmountOfResponses;
 import com.proutechos.sandbox.radiolivealacarte.server.model.Program;
 import com.proutechos.sandbox.radiolivealacarte.server.model.RadioStation;
 import com.proutechos.sandbox.radiolivealacarte.server.model.UserModel;
@@ -54,6 +55,18 @@ public class RadioLiveALaCarteResource {
     @Produces(MediaType.APPLICATION_JSON)
     public RadioStation[] searchByName(@PathParam("name") String name) throws Exception {
         return RadioInformationAndPlanningService.getInstance().searchByName(name);
+    }
+
+    /**
+     * curl -s -X GET "http://localhost:8287/api/radio/lightenSearchByName/FranceInter"
+     * param name
+     * @return
+     */
+    @GET
+    @Path("lightenSearchByName/{name}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public LightenedRadioStationAndAmountOfResponses lightenSearchByName(@PathParam("name") String name) throws Exception {
+        return RadioInformationAndPlanningService.getInstance().lightenSearchByName(name);
     }
 
     private static final String STREAM_URL = "https://stream.radiofrance.fr/franceinter/franceinter_hifi.m3u8?id=radiofrance"; // URL du flux HLS
