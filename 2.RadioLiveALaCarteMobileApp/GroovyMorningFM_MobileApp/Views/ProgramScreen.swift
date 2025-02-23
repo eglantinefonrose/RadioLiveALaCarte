@@ -16,7 +16,6 @@ struct ProgramScreen: View {
     private let userId = "user001"
     @ObservedObject var apiService: APIService = APIService.shared
     @ObservedObject var bigModel: BigModel = BigModel.shared
-    let imageUrl = URL(string: "https://static2.mytuner.mobi/media/tvos_radios/vhxpjerr5lfa.png")!
     
     var body: some View {
         
@@ -37,49 +36,39 @@ struct ProgramScreen: View {
                         .fontWeight(.semibold)
                         .padding(20)
                     
-                    List(Array(programs.enumerated()), id: \.element.id) { index, program in
-                        HStack {
-                            
-                            AsyncImage(url: imageUrl){ phase in
-                                switch phase {
-                                    case .empty:
-                                        ProgressView() // Affiche un indicateur de chargement
-                                    case .success(let image):
-                                        image.resizable()
-                                            .scaledToFit()
-                                            .frame(width: 40, height: 40)
-                                    case .failure:
-                                        Image(systemName: "photo") // Image de secours en cas d'échec
-                                            .resizable()
-                                            .scaledToFit()
-                                            .frame(width: 200, height: 200)
-                                            .foregroundColor(.gray)
-                                    @unknown default:
-                                        EmptyView()
-                                }
-                            }
-                            
-                            VStack(alignment: .leading) {
-                                Text(program.radioName)
-                                    .font(.headline)
-                                    .foregroundStyle(program.isProgramAvailable() ? Color.black : Color.gray)
-                                Text("\(program.startTimeHour):\(program.startTimeMinute):\(program.startTimeSeconds) - \(program.endTimeHour):\(program.endTimeMinute):\(program.endTimeSeconds)")
-                                    .font(.subheadline)
-                                    .foregroundColor(.gray)
-                            }.onTapGesture {
-                                if (program.isProgramAvailable()) {
-                                    bigModel.currentProgramIndex = index
-                                    bigModel.currentView = .AudioPlayerView
-                                } else {
-                                    print("The program isn't available yet")
+                    ScrollView {
+                        List(Array(programs.enumerated()), id: \.element.id) { index, program in
+                            HStack {
+                                                                                                
+                                AsyncImage(url: URL(string: program.favIcoURL)){ result in
+                                            result.image?
+                                                .resizable()
+                                                .scaledToFill()
+                                        }
+                                        .frame(width: 40, height: 40)
+                                
+                                VStack(alignment: .leading) {
+                                    Text(program.radioName)
+                                        .font(.headline)
+                                        .foregroundStyle(program.isProgramAvailable() ? Color.black : Color.gray)
+                                    Text("\(program.startTimeHour):\(program.startTimeMinute):\(program.startTimeSeconds) - \(program.endTimeHour):\(program.endTimeMinute):\(program.endTimeSeconds)")
+                                        .font(.subheadline)
+                                        .foregroundColor(.gray)
+                                }.onTapGesture {
+                                    if (program.isProgramAvailable()) {
+                                        bigModel.currentProgramIndex = index
+                                        bigModel.currentView = .AudioPlayerView
+                                    } else {
+                                        print("The program isn't available yet")
+                                    }
                                 }
                             }
                         }
-                    }
-                    .onAppear {
-                        let fetchedPrograms = APIService.fetchPrograms(for: userId)
-                        self.programs = fetchedPrograms
-                        bigModel.programs = fetchedPrograms
+                        .onAppear {
+                            let fetchedPrograms = APIService.fetchPrograms(for: userId)
+                            self.programs = fetchedPrograms
+                            bigModel.programs = fetchedPrograms
+                        }
                     }
                 }.edgesIgnoringSafeArea(.all)
                 
@@ -106,7 +95,42 @@ struct ProgramScreen: View {
         }
         
     }
+    
+    func fetchIconName(radioName: String) -> String {
+        let urlString = "http://localhost:8287/api/radio/getFavIcoByRadioName/radioName/\(radioName)"
+        guard let url = URL(string: urlString) else {
+            return ""
+        }
+        
+        var resultString: String = ""
+        let semaphore = DispatchSemaphore(value: 0)
+        
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            defer { semaphore.signal() }
+            if let error = error {
+                print("Erreur :", error.localizedDescription)
+                return
+            }
+            
+            guard let data = data else {
+                return
+            }
+            
+            do {
+                if let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? String {
+                    resultString = jsonObject
+                }
+            } catch {
+                print("Erreur de décodage :", error.localizedDescription)
+            }
+        }.resume()
+        
+        semaphore.wait()
+        return resultString
+    }
+    
 }
+
 
 struct ProgramScreen_Previews: PreviewProvider {
     static var previews: some View {

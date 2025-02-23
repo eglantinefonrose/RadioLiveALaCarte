@@ -78,7 +78,7 @@ class APIService: ObservableObject {
         let programs: [Program] = self.fetchPrograms(for: userId)
         
         if (programs.isEmpty) {
-            return Program(id: "", radioName: "", startTimeHour: 0, startTimeMinute: 0, startTimeSeconds: 0, endTimeHour: 0, endTimeMinute: 0, endTimeSeconds: 0)
+            return Program(id: "", radioName: "", startTimeHour: 0, startTimeMinute: 0, startTimeSeconds: 0, endTimeHour: 0, endTimeMinute: 0, endTimeSeconds: 0, favIcoURL: "")
         }
         
         return programs[0]

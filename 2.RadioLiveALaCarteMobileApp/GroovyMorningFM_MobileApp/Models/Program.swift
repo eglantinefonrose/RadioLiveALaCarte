@@ -17,8 +17,9 @@ class Program: Codable, Identifiable {
     var endTimeHour: Int
     var endTimeMinute: Int
     var endTimeSeconds: Int
+    var favIcoURL: String
     
-    init(id: String, radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, endTimeHour: Int, endTimeMinute: Int, endTimeSeconds: Int) {
+    init(id: String, radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, endTimeHour: Int, endTimeMinute: Int, endTimeSeconds: Int, favIcoURL: String) {
         self.id = id
         self.radioName = radioName
         self.startTimeHour = startTimeHour
@@ -27,6 +28,7 @@ class Program: Codable, Identifiable {
         self.endTimeHour = endTimeHour
         self.endTimeMinute = endTimeMinute
         self.endTimeSeconds = endTimeSeconds
+        self.favIcoURL = favIcoURL
     }
     
     func isProgramAvailable() -> Bool {

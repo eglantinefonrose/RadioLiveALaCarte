@@ -336,6 +336,8 @@ public class RadioLiveALaCarteResource {
 
         } catch (ProutechosBaseException e) {
             throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
     }
