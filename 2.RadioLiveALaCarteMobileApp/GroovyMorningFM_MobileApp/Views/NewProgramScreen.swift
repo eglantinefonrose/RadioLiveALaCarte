@@ -9,6 +9,8 @@ import SwiftUI
 
 struct NewProgramScreen: View {
     
+    @ObservedObject var bigModel: BigModel = BigModel.shared
+    
     @State private var horaireDebut: Double = 8.0
     @State private var horaireFin: Double = 18.0
     @State private var radioName: String = ""
@@ -18,6 +20,17 @@ struct NewProgramScreen: View {
     private let delay: TimeInterval = 0.3
     @State private var lastUpdateTime: Date? = nil
     @FocusState private var isTextFieldFocused: Bool
+    
+    @State private var hour1 = 12
+    @State private var minute1 = 0
+    @State private var second1 = 0
+    
+    @State private var hour2 = 12
+    @State private var minute2 = 0
+    @State private var second2 = 0
+    
+    let hours = Array(0...23)
+    let minutesAndSeconds = Array(0...59)
     
     var body: some View {
         VStack {
@@ -58,7 +71,6 @@ struct NewProgramScreen: View {
                     
                 }
             
-            //if (isUserTyping) {
             if isTextFieldFocused {
                 
                 List(Array(listAndAmountOfResponses.lightenedRadioStations.enumerated()), id: \.element.id) { index, radioStation in
@@ -81,30 +93,81 @@ struct NewProgramScreen: View {
                 }
                 
             }
-            //}
             
             if (!isTextFieldFocused) {
-            //if (!isUserTyping) {
-                
-                Text("Sélectionnez les horaires")
-                    .font(.title)
-                    .padding()
                 
                 VStack {
-                    Text("Début: \(Int(horaireDebut))h")
-                    Slider(value: $horaireDebut, in: 0...23, step: 1)
+                    
+                    VStack {
+                        Text("Premier horaire")
+                            .font(.headline)
+                        
+                        HStack {
+                            Picker("Heure", selection: $hour1) {
+                                ForEach(hours, id: \.self) { hour in
+                                    Text("\(hour) h").tag(hour)
+                                }
+                            }
+                            .pickerStyle(WheelPickerStyle())
+                            
+                            Picker("Minute", selection: $minute1) {
+                                ForEach(minutesAndSeconds, id: \.self) { minute in
+                                    Text("\(minute) m").tag(minute)
+                                }
+                            }
+                            .pickerStyle(WheelPickerStyle())
+                            
+                            Picker("Seconde", selection: $second1) {
+                                ForEach(minutesAndSeconds, id: \.self) { second in
+                                    Text("\(second) s").tag(second)
+                                }
+                            }
+                            .pickerStyle(WheelPickerStyle())
+                        }
+                    }
+                    
+                    VStack {
+                        Text("Deuxième horaire")
+                            .font(.headline)
+                        
+                        HStack {
+                            Picker("Heure", selection: $hour2) {
+                                ForEach(hours, id: \.self) { hour in
+                                    Text("\(hour) h").tag(hour)
+                                }
+                            }
+                            .pickerStyle(WheelPickerStyle())
+                            
+                            Picker("Minute", selection: $minute2) {
+                                ForEach(minutesAndSeconds, id: \.self) { minute in
+                                    Text("\(minute) m").tag(minute)
+                                }
+                            }
+                            .pickerStyle(WheelPickerStyle())
+                            
+                            Picker("Seconde", selection: $second2) {
+                                ForEach(minutesAndSeconds, id: \.self) { second in
+                                    Text("\(second) s").tag(second)
+                                }
+                            }
+                            .pickerStyle(WheelPickerStyle())
+                        }
+                    }
+                    
                 }
-                .padding()
-                
-                VStack {
-                    Text("Fin: \(Int(horaireFin))h")
-                    Slider(value: $horaireFin, in: 0...23, step: 1)
-                }
-                .padding()
                 
                 Button(action: {
-                    APIService.shared.validerHoraire(debut: Int(horaireDebut), fin: Int(horaireFin))
-                    print(radioName)
+                    APIService.shared.validerHoraire(radioName: radioName, startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, endTimeHour: hour2, endTimeMinute: minute2, endTimeSeconds: second2) { result in
+                        
+                        switch result {
+                            case .success(let message):
+                                print("Succès :", message)
+                                bigModel.currentView = .ProgramScreen
+                            case .failure(let error):
+                                print("Erreur :", error.localizedDescription)
+                        }
+                        
+                    }
                 }) {
                     Text("Valider")
                         .font(.headline)
@@ -115,7 +178,6 @@ struct NewProgramScreen: View {
                         .cornerRadius(10)
                 }
                 .padding()
-                
             }
             
         }

@@ -11,18 +11,66 @@ class APIService: ObservableObject {
     
     static let shared = APIService()
     
-    func validerHoraire(debut: Int, fin: Int) {
-        let urlString = "http://creeProgram/\(debut)/\(fin)"
+    /*func validerHoraire(radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, endTimeHour: Int, endTimeMinute: Int, endTimeSeconds: Int) {
+        
+        let urlString = "http://localhost:8287/api/radio/createAndRecordProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeHour)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001"
         guard let url = URL(string: urlString) else { return }
         
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = "POST"
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("Erreur :", error.localizedDescription)
             } else {
                 print("Requête envoyée avec succès à :", urlString)
+            }
+        }.resume()
+    }*/
+    
+    func validerHoraire(
+        radioName: String,
+        startTimeHour: Int,
+        startTimeMinute: Int,
+        startTimeSeconds: Int,
+        endTimeHour: Int,
+        endTimeMinute: Int,
+        endTimeSeconds: Int,
+        completion: @escaping (Result<String, Error>) -> Void
+    ) {
+        // Construction correcte de l'URL
+        let urlString = "http://localhost:8287/api/radio/createAndRecordProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeMinute)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001"
+        
+        // Vérification de l'URL valide
+        guard let url = URL(string: urlString) else {
+            completion(.failure(NSError(domain: "URL invalide", code: 400, userInfo: nil)))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        // Exécution de la requête
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            // Vérification d'une erreur réseau
+            if let error = error {
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+                return
+            }
+            
+            // Vérification du code HTTP
+            if let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
+                DispatchQueue.main.async {
+                    completion(.success("Requête réussie avec statut \(httpResponse.statusCode)"))
+                }
+            } else {
+                let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+                let errorMessage = "Requête échouée avec statut \(statusCode)"
+                DispatchQueue.main.async {
+                    completion(.failure(NSError(domain: errorMessage, code: statusCode, userInfo: nil)))
+                }
             }
         }.resume()
     }

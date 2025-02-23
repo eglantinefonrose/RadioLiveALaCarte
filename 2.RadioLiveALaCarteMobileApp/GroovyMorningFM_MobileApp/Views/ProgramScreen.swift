@@ -60,11 +60,6 @@ struct ProgramScreen: View {
                         }
                     }
                 }
-                .onAppear {
-                    let fetchedPrograms = APIService.fetchPrograms(for: userId)
-                    self.programs = fetchedPrograms
-                    bigModel.programs = fetchedPrograms
-                }
             }
             
             VStack {
@@ -87,6 +82,11 @@ struct ProgramScreen: View {
             }
             
         }.edgesIgnoringSafeArea(.all)
+        .onAppear {
+            let fetchedPrograms = APIService.fetchPrograms(for: userId)
+            self.programs = fetchedPrograms
+            bigModel.programs = fetchedPrograms
+        }
                     
     }
     
