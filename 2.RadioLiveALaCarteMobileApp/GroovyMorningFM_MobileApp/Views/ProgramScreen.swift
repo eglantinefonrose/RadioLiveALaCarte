@@ -19,81 +19,75 @@ struct ProgramScreen: View {
     
     var body: some View {
         
-        NavigationView {
+        VStack(spacing: 0) {
             
-            ZStack {
+            HStack {
+                Spacer()
+                Image(systemName: "person.circle")
+                    .padding(10)
+            }.background(Color.gray)
+            
+            Text("Bonjour \(userId), voici votre programme du jour")
+                .font(.largeTitle)
+                .fontWeight(.semibold)
+                .padding(20)
+            
+            NavigationView {
                 
-                VStack {
-                    
+                List(Array(programs.enumerated()), id: \.element.id) { index, program in
                     HStack {
-                        Spacer()
-                        Image(systemName: "person.circle")
-                            .padding(10)
-                    }.background(Color.gray)
-                    
-                    Text("Bonjour \(userId), voici votre programme du jour")
-                        .font(.largeTitle)
-                        .fontWeight(.semibold)
-                        .padding(20)
-                    
-                    ScrollView {
-                        List(Array(programs.enumerated()), id: \.element.id) { index, program in
-                            HStack {
-                                                                                                
-                                AsyncImage(url: URL(string: program.favIcoURL)){ result in
-                                            result.image?
-                                                .resizable()
-                                                .scaledToFill()
-                                        }
-                                        .frame(width: 40, height: 40)
-                                
-                                VStack(alignment: .leading) {
-                                    Text(program.radioName)
-                                        .font(.headline)
-                                        .foregroundStyle(program.isProgramAvailable() ? Color.black : Color.gray)
-                                    Text("\(program.startTimeHour):\(program.startTimeMinute):\(program.startTimeSeconds) - \(program.endTimeHour):\(program.endTimeMinute):\(program.endTimeSeconds)")
-                                        .font(.subheadline)
-                                        .foregroundColor(.gray)
-                                }.onTapGesture {
-                                    if (program.isProgramAvailable()) {
-                                        bigModel.currentProgramIndex = index
-                                        bigModel.currentView = .AudioPlayerView
-                                    } else {
-                                        print("The program isn't available yet")
-                                    }
+                        AsyncImage(url: URL(string: program.favIcoURL)){ result in
+                                    result.image?
+                                        .resizable()
+                                        .scaledToFill()
                                 }
+                                .frame(width: 40, height: 40)
+                        
+                        VStack(alignment: .leading) {
+                            Text(program.radioName)
+                                .font(.headline)
+                                .foregroundStyle(program.isProgramAvailable() ? Color.black : Color.gray)
+                            Text("\(program.startTimeHour):\(program.startTimeMinute):\(program.startTimeSeconds) - \(program.endTimeHour):\(program.endTimeMinute):\(program.endTimeSeconds)")
+                                .font(.subheadline)
+                                .foregroundColor(.gray)
+                        }.onTapGesture {
+                            if (program.isProgramAvailable()) {
+                                bigModel.currentProgramIndex = index
+                                bigModel.currentView = .AudioPlayerView
+                            } else {
+                                print("The program isn't available yet")
                             }
                         }
-                        .onAppear {
-                            let fetchedPrograms = APIService.fetchPrograms(for: userId)
-                            self.programs = fetchedPrograms
-                            bigModel.programs = fetchedPrograms
-                        }
                     }
-                }.edgesIgnoringSafeArea(.all)
-                
-                VStack {
-                    
+                }
+                .onAppear {
+                    let fetchedPrograms = APIService.fetchPrograms(for: userId)
+                    self.programs = fetchedPrograms
+                    bigModel.programs = fetchedPrograms
+                }
+            }
+            
+            VStack {
+                                
+                HStack {
                     Spacer()
-                    
-                    HStack {
-                        Spacer()
-                        VStack {
-                            Image(systemName: "plus")
-                                .foregroundStyle(Color.white)
-                                .fontWeight(.bold)
-                            Text("Créer un programme")
-                                .foregroundStyle(Color.white)
-                        }.padding(.vertical, 20)
-                        Spacer()
-                    }.background(Color.purple)
-                    
+                    VStack {
+                        Image(systemName: "plus")
+                            .foregroundStyle(Color.white)
+                            .fontWeight(.bold)
+                        Text("Créer un programme")
+                            .foregroundStyle(Color.white)
+                    }.padding(.vertical, 20)
+                    Spacer()
+                }.background(Color.purple)
+                .onTapGesture {
+                    bigModel.currentView = .NewProgramScreen
                 }
                 
             }
             
-        }
-        
+        }.edgesIgnoringSafeArea(.all)
+                    
     }
     
     func fetchIconName(radioName: String) -> String {

@@ -17,7 +17,10 @@ struct GroovyRootView: View {
             ProgramScreen()
         }
         if (BigModel.shared.currentView == .AudioPlayerView) {
-            Sandbox()
+            AudioPlayerView()
+        }
+        if (BigModel.shared.currentView == .NewProgramScreen) {
+            NewProgramScreen()
         }
         
     }
@@ -26,4 +29,5 @@ struct GroovyRootView: View {
 enum GroovyView {
     case ProgramScreen
     case AudioPlayerView
+    case NewProgramScreen
 }

@@ -115,4 +115,43 @@ class APIService: ObservableObject {
         }.resume()
     }
     
+    static func searchByName(for name: String, completion: @escaping (LightenedRadioStationAndAmountOfResponses) -> Void) {
+        
+        let urlString = "http://localhost:8287/api/radio/lightenSearchByName/\(name)"
+        print(urlString)
+        
+        guard let url = URL(string: urlString) else {
+            completion(LightenedRadioStationAndAmountOfResponses(lightenedRadioStations: [], amountOfResponses: 0))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("Erreur :", error.localizedDescription)
+                completion(LightenedRadioStationAndAmountOfResponses(lightenedRadioStations: [], amountOfResponses: 0))
+                return
+            }
+            
+            guard let data = data else {
+                completion(LightenedRadioStationAndAmountOfResponses(lightenedRadioStations: [], amountOfResponses: 0))
+                return
+            }
+            
+            do {
+                let fileList = try JSONDecoder().decode(LightenedRadioStationAndAmountOfResponses.self, from: data)
+                DispatchQueue.main.async {
+                    completion(fileList)
+                }
+            } catch {
+                print("Erreur de décodage :", error.localizedDescription)
+                print(data)
+                completion(LightenedRadioStationAndAmountOfResponses(lightenedRadioStations: [], amountOfResponses: 0))
+            }
+        }.resume()
+        
+    }
+    
 }

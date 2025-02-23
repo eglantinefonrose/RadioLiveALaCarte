@@ -4,6 +4,7 @@ import com.proutechos.sandbox.radiolivealacarte.server.model.Program;
 import com.proutechos.sandbox.radiolivealacarte.server.model.UserModel;
 import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteDataStorage;
 import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteUserService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.planning.RadioInformationAndPlanningService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RadioRecordingSchedulerService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.streaming.StreamingService;
 import com.proutechos.utils.server.rest.config.exceptions.ProutechosBaseException;
@@ -223,6 +224,14 @@ public class RadioLiveALaCarteServiceTest {
             e.printStackTrace();
         }
 
+    }
+
+    @Test public void lightenSearchByName() throws Exception {
+        try {
+            System.out.println(RadioInformationAndPlanningService.getInstance().lightenSearchByName("France"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

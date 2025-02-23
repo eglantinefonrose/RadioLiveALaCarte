@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct Sandbox: View {
+struct AudioPlayerView: View {
     
     @StateObject private var audioManager = AudioPlayerManager()
     
