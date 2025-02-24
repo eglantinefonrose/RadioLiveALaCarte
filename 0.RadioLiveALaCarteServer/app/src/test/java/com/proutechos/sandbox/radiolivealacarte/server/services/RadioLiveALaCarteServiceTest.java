@@ -234,4 +234,12 @@ public class RadioLiveALaCarteServiceTest {
         }
     }
 
+    @Test public void deleteProgram() throws Exception {
+        try {
+            RadioLiveALaCarteDataStorage.deleteProgram("0356e867-b433-4ccb-8ab1-600f50204885");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

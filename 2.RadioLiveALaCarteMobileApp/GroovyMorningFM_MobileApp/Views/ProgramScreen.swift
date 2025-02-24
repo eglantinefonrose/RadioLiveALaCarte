@@ -35,7 +35,9 @@ struct ProgramScreen: View {
             NavigationView {
                 
                 List(Array(programs.enumerated()), id: \.element.id) { index, program in
+                    
                     HStack {
+                        
                         AsyncImage(url: URL(string: program.favIcoURL)){ result in
                                     result.image?
                                         .resizable()
@@ -50,13 +52,30 @@ struct ProgramScreen: View {
                             Text("\(program.startTimeHour):\(program.startTimeMinute):\(program.startTimeSeconds) - \(program.endTimeHour):\(program.endTimeMinute):\(program.endTimeSeconds)")
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
-                        }.onTapGesture {
-                            if (program.isProgramAvailable()) {
-                                bigModel.currentProgramIndex = index
-                                bigModel.currentView = .AudioPlayerView
-                            } else {
-                                print("The program isn't available yet")
+                        }
+                        
+                        Spacer()
+                        
+                        Image(systemName: "trash")
+                            .onTapGesture {
+                                apiService.deleteProgram(programID: program.id) { result in
+                                    switch result {
+                                    case .success:
+                                        let fetchedPrograms = APIService.fetchPrograms(for: userId)
+                                        self.programs = fetchedPrograms
+                                        bigModel.programs = fetchedPrograms
+                                    case .failure(let error):
+                                        print("Erreur lors de la suppression :", error.localizedDescription)
+                                    }
+                                }
                             }
+                        
+                    }.onTapGesture {
+                        if (program.isProgramAvailable()) {
+                            bigModel.currentProgramIndex = index
+                            bigModel.currentView = .AudioPlayerView
+                        } else {
+                            print("The program isn't available yet")
                         }
                     }
                 }
