@@ -158,7 +158,7 @@ struct NewProgramScreen: View {
                 
                 Button(action: {
                     
-                    if (estDansLeFutur(heure: hour1, minute: minute1, seconde: second1) && (radioName != "")) {
+                    if (ProgramManager.shared.estDansLeFutur(heure: hour1, minute: minute1, seconde: second1) && (radioName != "")) {
                         APIService.shared.validerHoraire(radioName: radioName, startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, endTimeHour: hour2, endTimeMinute: minute2, endTimeSeconds: second2) { result in
                             
                             switch result {
@@ -171,7 +171,10 @@ struct NewProgramScreen: View {
                             
                         }
                     }
-                    if !estDansLeFutur(heure: hour1, minute: minute1, seconde: second1) {
+                    
+                    // estDansLeFutur(heure: hour1, minute: minute1, seconde: second1)
+                    
+                    if (ProgramManager.shared.estDansLeFutur(heure: hour1, minute: minute1, seconde: second1)) {
                         print("L'horaire est déjà passée dans la journée")
                     }
                     if radioName == "" {
@@ -192,22 +195,6 @@ struct NewProgramScreen: View {
             
         }
         .padding()
-    }
-    
-    func estDansLeFutur(heure: Int, minute: Int, seconde: Int) -> Bool {
-        let calendrier = Calendar.current
-        let maintenant = Date()
-        
-        var composants = calendrier.dateComponents([.year, .month, .day], from: maintenant)
-        composants.hour = heure
-        composants.minute = minute
-        composants.second = seconde
-        
-        if let dateDonnee = calendrier.date(from: composants) {
-            return dateDonnee > maintenant
-        }
-        
-        return false
     }
     
 }

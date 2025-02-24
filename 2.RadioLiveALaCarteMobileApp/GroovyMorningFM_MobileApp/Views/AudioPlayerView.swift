@@ -14,20 +14,6 @@ struct AudioPlayerView: View {
         ZStack {
                         
             VStack(spacing: 20) {
-                /*Text("🎵 Lecture Audio")
-                    .font(.title)
-                    .bold()
-                
-                // Affichage de l'état de la lecture
-                if audioManager.isPlaying {
-                    Text("Lecture en cours...")
-                        .font(.headline)
-                        .foregroundColor(.green)
-                } else {
-                    Text("Prêt à jouer")
-                        .font(.headline)
-                        .foregroundColor(.gray)
-                }*/
                 
                 AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)){ result in
                             result.image?
@@ -98,11 +84,6 @@ struct AudioPlayerView: View {
                     }
                     
                 }
-                
-                Text("Lancer l'enregistrement de la chronique de Daniel Morin")
-                    .onTapGesture {
-                        APIService.shared.creerHoraireDanielMorin()
-                    }
                 
                 Spacer()
             }
