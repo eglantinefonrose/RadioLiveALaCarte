@@ -14,7 +14,7 @@ struct AudioPlayerView: View {
         ZStack {
                         
             VStack(spacing: 20) {
-                Text("🎵 Lecture Audio")
+                /*Text("🎵 Lecture Audio")
                     .font(.title)
                     .bold()
                 
@@ -27,7 +27,14 @@ struct AudioPlayerView: View {
                     Text("Prêt à jouer")
                         .font(.headline)
                         .foregroundColor(.gray)
-                }
+                }*/
+                
+                AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)){ result in
+                            result.image?
+                                .resizable()
+                                .scaledToFill()
+                        }
+                        .frame(width: 100)
                 
                 VStack {
                     

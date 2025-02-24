@@ -157,17 +157,27 @@ struct NewProgramScreen: View {
                 }
                 
                 Button(action: {
-                    APIService.shared.validerHoraire(radioName: radioName, startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, endTimeHour: hour2, endTimeMinute: minute2, endTimeSeconds: second2) { result in
-                        
-                        switch result {
-                            case .success(let message):
-                                print("Succès :", message)
-                                bigModel.currentView = .ProgramScreen
-                            case .failure(let error):
-                                print("Erreur :", error.localizedDescription)
+                    
+                    if (estDansLeFutur(heure: hour1, minute: minute1, seconde: second1) && (radioName != "")) {
+                        APIService.shared.validerHoraire(radioName: radioName, startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, endTimeHour: hour2, endTimeMinute: minute2, endTimeSeconds: second2) { result in
+                            
+                            switch result {
+                                case .success(let message):
+                                    print("Succès :", message)
+                                    bigModel.currentView = .ProgramScreen
+                                case .failure(let error):
+                                    print("Erreur :", error.localizedDescription)
+                            }
+                            
                         }
-                        
                     }
+                    if !estDansLeFutur(heure: hour1, minute: minute1, seconde: second1) {
+                        print("L'horaire est déjà passée dans la journée")
+                    }
+                    if radioName == "" {
+                        print("Le champ de nom de radio est vide")
+                    }
+                    
                 }) {
                     Text("Valider")
                         .font(.headline)
@@ -183,6 +193,23 @@ struct NewProgramScreen: View {
         }
         .padding()
     }
+    
+    func estDansLeFutur(heure: Int, minute: Int, seconde: Int) -> Bool {
+        let calendrier = Calendar.current
+        let maintenant = Date()
+        
+        var composants = calendrier.dateComponents([.year, .month, .day], from: maintenant)
+        composants.hour = heure
+        composants.minute = minute
+        composants.second = seconde
+        
+        if let dateDonnee = calendrier.date(from: composants) {
+            return dateDonnee > maintenant
+        }
+        
+        return false
+    }
+    
 }
 
 
