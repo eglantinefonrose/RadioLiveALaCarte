@@ -1,8 +1,10 @@
 package com.proutechos.sandbox.radiolivealacarte.server.api;
 
+import com.proutechos.sandbox.radiolivealacarte.server.model.LightenedRadioStationAndAmountOfResponses;
 import com.proutechos.sandbox.radiolivealacarte.server.model.Program;
 import com.proutechos.sandbox.radiolivealacarte.server.model.RadioStation;
 import com.proutechos.sandbox.radiolivealacarte.server.model.UserModel;
+import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteDataStorage;
 import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteUserService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.planning.RadioInformationAndPlanningService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RadioRecordingSchedulerService;
@@ -54,6 +56,18 @@ public class RadioLiveALaCarteResource {
     @Produces(MediaType.APPLICATION_JSON)
     public RadioStation[] searchByName(@PathParam("name") String name) throws Exception {
         return RadioInformationAndPlanningService.getInstance().searchByName(name);
+    }
+
+    /**
+     * curl -s -X GET "http://localhost:8287/api/radio/lightenSearchByName/FranceInter"
+     * param name
+     * @return
+     */
+    @GET
+    @Path("lightenSearchByName/{name}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public LightenedRadioStationAndAmountOfResponses lightenSearchByName(@PathParam("name") String name) throws Exception {
+        return RadioInformationAndPlanningService.getInstance().lightenSearchByName(name);
     }
 
     private static final String STREAM_URL = "https://stream.radiofrance.fr/franceinter/franceinter_hifi.m3u8?id=radiofrance"; // URL du flux HLS
@@ -141,37 +155,6 @@ public class RadioLiveALaCarteResource {
                 .header("Content-Disposition", "attachment; filename=\"" + mp3File.getName() + "\"")
                 .build();
     }
-
-    /**
-     * curl -X POST "http://localhost:8287/api/radio/program/startsAt/22/3/0/endsAt/22/4/0/withSegments/0/https%3A%2F%2Fstream.radiofrance.fr%2Ffranceinfo%2Ffranceinfo_hifi.m3u8%3Fid%3Dradiofrance"
-     * @return
-     */
-    /*@POST
-    @Path("/program/startsAt/{startHour}/{startMinute}/{startSeconds}/endsAt/{endHour}/{endMinute}/{endSeconds}/withSegments/{withSegments}")
-    public void program(@PathParam("startHour") int startHour, @PathParam("startMinute") int startMinute, @PathParam("startSeconds") int startSeconds, @PathParam("endHour") int endHour, @PathParam("endMinute") int endMinute, @PathParam("endSeconds") int endSeconds, @PathParam("withSegments") int withSegments, @QueryParam("url") String encodedUrl) throws SchedulerException {
-        // Décoder l'URL encodée dans le chemin
-        try {
-            String url = URLDecoder.decode(encodedUrl, StandardCharsets.UTF_8.name());
-            RadioRecordingSchedulerService.getInstance().recordFromHourly(startHour, startMinute, startSeconds, endHour, endMinute, endSeconds, withSegments, url);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }*/
-
-
-
-    /**
-     * curl -s -X POST "http://localhost:8287/api/radio/recordWithSegments"
-     * @return
-     */
-
-    // Fonction qui marche, mais pas une bonne idée de l'appeler car la création de segments ne s'arrête pas :O
-
-    /*@POST
-    @Path("/recordWithSegments")
-    public void recordWithSegments() {
-        StreamingService.getInstance().recordWithSegments("https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance");
-    }*/
 
     /**
      * curl -s -X GET "http://localhost:8287/api/radio/getAllCountries"
@@ -301,21 +284,6 @@ public class RadioLiveALaCarteResource {
         }
     }
 
-    /*Program program = new Program("430934", "Radio XYZ", 8, 30, 0, 10, 0, 0);
-        UserModel user = new UserModel("1", "John", "Doe");
-
-        try {
-
-            String userId = RadioLiveALaCarteUserService.getInstance().createAccount(user);
-            String programID = RadioLiveALaCarteUserService.getInstance().createProgram(program);
-            RadioLiveALaCarteUserService.getInstance().addUserProgram(userId, programID);
-
-        } catch (ProutechosBaseException e) {
-            e.printStackTrace();
-        }*/
-
-    // http://localhost:4200/api/radio/createAndRecordProgram/radioName/${radioName}/startTimeHour/${startTimeHour}/startTimeMinute/${startTimeMinute}/startTimeSeconds/${startTimeSeconds}/endTimeHour/${endTimeHour}/endTimeMinute/${endTimeMinute}/endTimeSeconds/${endTimeSeconds}/userID/${userID}`
-
     /**
      * curl -s -X POST "http://localhost:8287/api/radio/createAndRecordProgram/radioName/FranceInter/startTimeHour/15/startTimeMinute/31/startTimeSeconds/0/endTimeHour/15/endTimeMinute/33/endTimeSeconds/0/userID/aa768288-7621-49c8-99bd-c33c6fc02cc5"
      * @return
@@ -336,6 +304,8 @@ public class RadioLiveALaCarteResource {
 
         } catch (ProutechosBaseException e) {
             throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
     }
@@ -346,6 +316,28 @@ public class RadioLiveALaCarteResource {
     public Integer getConcatenedFile(@PathParam("baseName") String baseName)  throws IOException, InterruptedException {
 
         return StreamingService.getInstance().concatene(baseName);
+
+    }
+
+    @GET
+    @Path("/getFavIcoByRadioName/radioName/{radioName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getFavIcoByRadioName(@PathParam("radioName") String radioName)  throws Exception {
+
+        return RadioInformationAndPlanningService.getInstance().getFavIcoByRadioName(radioName);
+
+    }
+
+    @POST
+    @Path("/deleteProgram/programId/{programId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void deleteProgram(@PathParam("programId") String programId)  throws Exception {
+
+        try {
+            RadioLiveALaCarteUserService.getInstance().deleteProgram(programId);
+        } catch (ProutechosBaseException e) {
+            throw e;
+        }
 
     }
 

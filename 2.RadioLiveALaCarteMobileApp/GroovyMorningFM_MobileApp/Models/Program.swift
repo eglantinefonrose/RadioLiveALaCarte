@@ -17,8 +17,9 @@ class Program: Codable, Identifiable {
     var endTimeHour: Int
     var endTimeMinute: Int
     var endTimeSeconds: Int
-    
-    init(id: String, radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, endTimeHour: Int, endTimeMinute: Int, endTimeSeconds: Int) {
+    var favIcoURL: String
+        
+    init(id: String, radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, endTimeHour: Int, endTimeMinute: Int, endTimeSeconds: Int, favIcoURL: String) {
         self.id = id
         self.radioName = radioName
         self.startTimeHour = startTimeHour
@@ -27,30 +28,11 @@ class Program: Codable, Identifiable {
         self.endTimeHour = endTimeHour
         self.endTimeMinute = endTimeMinute
         self.endTimeSeconds = endTimeSeconds
+        self.favIcoURL = favIcoURL
     }
     
     func isProgramAvailable() -> Bool {
-        let calendar = Calendar.current
-        let now = Date()
-        let currentComponents = calendar.dateComponents([.hour, .minute, .second], from: now)
-
-        // Comparaison avec l'heure actuelle
-        if let currentHour = currentComponents.hour,
-           let currentMinute = currentComponents.minute,
-           let currentSecond = currentComponents.second {
-            
-            if startTimeHour > currentHour {
-                return false
-            } else if startTimeHour == currentHour {
-                if startTimeMinute > currentMinute {
-                    return false
-                } else if startTimeMinute == currentMinute {
-                    return startTimeSeconds > currentSecond
-                }
-            }
-        }
-        
-        return true
+        return !(ProgramManager.shared.estDansLeFutur(heure: startTimeHour, minute: startTimeMinute, seconde: startTimeSeconds))
     }
     
 }

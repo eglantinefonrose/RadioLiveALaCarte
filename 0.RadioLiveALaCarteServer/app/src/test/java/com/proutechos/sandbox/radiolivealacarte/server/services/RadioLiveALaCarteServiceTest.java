@@ -4,6 +4,7 @@ import com.proutechos.sandbox.radiolivealacarte.server.model.Program;
 import com.proutechos.sandbox.radiolivealacarte.server.model.UserModel;
 import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteDataStorage;
 import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteUserService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.planning.RadioInformationAndPlanningService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RadioRecordingSchedulerService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.streaming.StreamingService;
 import com.proutechos.utils.server.rest.config.exceptions.ProutechosBaseException;
@@ -187,13 +188,21 @@ public class RadioLiveALaCarteServiceTest {
 
         try {
 
-            Program program = new Program("programId", "France Inter", 17, 32, 0, 17, 33, 0);
+            Program program1 = new Program("programId", "France Inter", 18, 5, 0, 18, 13, 0);
 
-            String programID = RadioLiveALaCarteUserService.getInstance().createProgram(program);
-            RadioLiveALaCarteUserService.getInstance().addUserProgram("user001", programID);
+            String program1ID = RadioLiveALaCarteUserService.getInstance().createProgram(program1);
+            RadioLiveALaCarteUserService.getInstance().addUserProgram("user001", program1ID);
 
-            Program justCreatedProgram = RadioLiveALaCarteUserService.getInstance().getProgramByID(programID);
-            RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram);
+            Program justCreatedProgram1 = RadioLiveALaCarteUserService.getInstance().getProgramByID(program1ID);
+            RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram1);
+
+            /*Program program2 = new Program("programId", "France Info", 18, 40, 0, 18, 42, 0);
+
+            String program2ID = RadioLiveALaCarteUserService.getInstance().createProgram(program2);
+            RadioLiveALaCarteUserService.getInstance().addUserProgram("user001", program2ID);
+
+            Program justCreatedProgram2 = RadioLiveALaCarteUserService.getInstance().getProgramByID(program2ID);
+            RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram2);*/
 
             System.in.read();
 
@@ -215,6 +224,22 @@ public class RadioLiveALaCarteServiceTest {
             e.printStackTrace();
         }
 
+    }
+
+    @Test public void lightenSearchByName() throws Exception {
+        try {
+            System.out.println(RadioInformationAndPlanningService.getInstance().lightenSearchByName("France"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test public void deleteProgram() throws Exception {
+        try {
+            RadioLiveALaCarteDataStorage.deleteProgram("0356e867-b433-4ccb-8ab1-600f50204885");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

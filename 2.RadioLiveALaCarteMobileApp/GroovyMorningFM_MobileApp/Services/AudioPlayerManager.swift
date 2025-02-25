@@ -14,25 +14,27 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     var audioPlayer: AVAudioPlayer?
     private var fetchTimer: Timer?
     
-    @Published var isPlaying: Bool = true
+    @Published var isPlaying: Bool = false
     var wasPaused: Bool = false
     @Published var index: Int = 0
     @Published var currentTime: TimeInterval = 0
     @Published var duration: TimeInterval = 1
-    var recordName: RecordName
-    var baseName: String
+    var recordName: RecordName = RecordName(withSegments: 0, output_name: "")
+    var baseName: String = ""
+    
+    private var liveBaseNames: [String] = []
+    private var liveBaseNameIndex: Int = 0
+    private var asLiveJustStarted: Bool = true
+    
     var isFirstAudioPlayed: Bool = false
-    @Published var currentIndex: Int = 0
+    //@Published var bigModel.currentProgramIndex: Int = 0
     @Published var isLivePlaying: Bool = false
     var username: String = ""
     
     var apiService: APIService = APIService.shared
     var bigModel: BigModel = BigModel.shared
     
-    private var audioURLs: [URL] = [
-        /*URL(string: "http://localhost:8287/media/mp3/concatenated_outputoutput_1b448102-9b82-4936-bced-8dc7b00ef5f6_16360output_5.mp3")!,
-        URL(string: "http://localhost:8287/media/mp3/concatenated_outputoutput_78aacd7a-6239-49c2-9e73-007ef6c7f8c9_16480output_6.mp3")!*/
-    ]
+    private var audioURLs: [URL] = []
     
     public func setAudioURLs(urls: [URL]) {
         audioURLs = urls
@@ -41,32 +43,80 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     public func setUserName(username: String) {
         self.username = username
     }
+    
+    public func areThereAnyAudiosAvailable() -> Bool {
+        return !(audioURLs.isEmpty && liveBaseNames.isEmpty)
+    }
 
     override init() {
         
-        let programName = bigModel.currentProgram.id
-        print("programName = \(programName)")
-        recordName = RecordName.fetchRecordName(for: programName)
-        baseName = RecordName.fetchRecordName(for: programName).output_name
-        print("baseName = \(baseName)")
-        
         super.init()
         setupTimers(repet: false)
+        fetchAllURLs()
         
-        isLivePlaying = true
-        if (recordName.withSegments == 0) {
+        if (!audioURLs.isEmpty) {
+            loadAudio(at: bigModel.currentProgramIndex)
             setupTimers(repet: false)
-            fetchNonLiveAudio()
         } else {
-            setupTimers(repet: true)
-            fetchAndReplaceAudio()
+            if (!liveBaseNames.isEmpty) {
+                setupTimers(repet: true)
+                fetchAndReplaceAudio()
+                print("With segments : \(recordName.output_name)")
+            }
         }
                 
+    }
+    
+    public func updateCurrentProgramIndex(index: Int) {
+                
+        if (bigModel.currentProgramIndex < audioURLs.count) {
+            self.bigModel.currentProgramIndex = index
+            loadAudio(at: bigModel.currentProgramIndex)
+        } else {
+            
+            if ( ((bigModel.currentProgramIndex - audioURLs.count)) < liveBaseNames.count) {
+                if (!isLivePlaying) {
+                    // Premier audio du live
+                    isLivePlaying = true
+                } else {
+                    bigModel.currentProgramIndex += 1
+                }
+                
+                setupTimers(repet: true)
+                fetchAndReplaceAudio()
+            }
+            
+        }
+    }
+    
+    private func fetchAllURLs() {
+        
+        let fetchedPrograms = bigModel.programs
+        
+        for program in fetchedPrograms {
+            
+            let recordName = RecordName.fetchRecordName(for: program.id)
+            
+            if (recordName.withSegments == 0) {
+                if (recordName.output_name != "") {
+                    audioURLs.append(URL(string: "http://localhost:8287/media/mp3/\(recordName.output_name)")!)
+                }
+            } else {
+                let programName = program.id
+                self.recordName = RecordName.fetchRecordName(for: programName)
+                liveBaseNames.append(RecordName.fetchRecordName(for: programName).output_name)
+            }
+            
+        }
+        
+        print("all URls = \(audioURLs)")
+        
     }
     
     private func loadAudio(at index: Int) {
         guard index >= 0, index < audioURLs.count else { return }
         let url = audioURLs[index]
+        print("url chargée = \(url)")
         
         URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
             guard let self = self, let data = data, error == nil else {
@@ -97,19 +147,24 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         
     func nextTrack() {
         
-        if (currentIndex+1 < audioURLs.count) {
+        print(isLivePlaying)
+        
+        if (bigModel.currentProgramIndex+1 < audioURLs.count) {
             
-            currentIndex += 1
-            loadAudio(at: currentIndex)
-            print(currentIndex)
+            bigModel.currentProgramIndex += 1
+            loadAudio(at: bigModel.currentProgramIndex)
+            print(bigModel.currentProgramIndex)
             
         } else {
             
-            isLivePlaying = true
-            if (recordName.withSegments == 0) {
-                setupTimers(repet: false)
-                fetchNonLiveAudio()
-            } else {
+            if ((bigModel.currentProgramIndex - audioURLs.count) < liveBaseNames.count) {
+                if (!isLivePlaying) {
+                    // Premier audio du live
+                    isLivePlaying = true
+                } else {
+                    bigModel.currentProgramIndex += 1
+                }
+                
                 setupTimers(repet: true)
                 fetchAndReplaceAudio()
             }
@@ -120,15 +175,15 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     
     func previousTrack() {
         
-        if currentIndex > 0 {
+        if bigModel.currentProgramIndex > 0 {
+            bigModel.currentProgramIndex -= 1
             if isLivePlaying {
-                loadAudio(at: currentIndex)
-                print(currentIndex)
+                loadAudio(at: bigModel.currentProgramIndex)
+                //print(bigModel.currentProgramIndex)
                 isLivePlaying = false
             } else {
-                currentIndex -= 1
-                loadAudio(at: currentIndex)
-                print(currentIndex)
+                loadAudio(at: bigModel.currentProgramIndex)
+                print(bigModel.currentProgramIndex)
             }
         }
         
@@ -157,7 +212,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     
     @objc func fetchNonLiveAudio() {
         
-        let urlString = "http://localhost:8287/media/mp3/\(baseName)"
+        let urlString = "http://localhost:8287/media/mp3/\(audioURLs[index])"
         guard let url = URL(string: urlString) else { return }
 
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
@@ -198,8 +253,11 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     }
 
     @objc func fetchAndReplaceAudio() {
-        let urlString = "http://localhost:8287/api/radio/concateneFile/baseName/\(baseName)"
         
+        print("liveBaseNames = \(liveBaseNames)")
+        print("liveBaseNames = \((bigModel.currentProgramIndex - audioURLs.count))")
+        
+        let urlString = "http://localhost:8287/api/radio/concateneFile/baseName/\(liveBaseNames[(bigModel.currentProgramIndex - audioURLs.count)])"
         guard let url = URL(string: urlString) else { return }
 
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
@@ -211,19 +269,45 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
                 print("Données invalides")
                 return
             }
+
             DispatchQueue.main.async {
-                print(urlString)
+                
                 self?.index = index
-                self?.audioPlayer?.play()
+                //self?.audioPlayer?.play()
                 self?.loadNewAudio(baseName: self!.baseName)
             }
+            
+            /*DispatchQueue.main.async { [self] in
+                
+                do {
+                                        
+                    let newAudioPlayer = try AVAudioPlayer(data: data)
+                    newAudioPlayer.delegate = self
+                    newAudioPlayer.prepareToPlay()
+                    
+                    self?.audioPlayer = newAudioPlayer  // Remplacer par le nouveau
+                    self?.audioPlayer?.play()
+                    self?.index = index
+                    
+                    self?.duration = newAudioPlayer.duration  // Mettre à jour la durée
+                    self?.currentTime = newAudioPlayer.currentTime  // Mettre à jour le temps actuel
+                    
+                    self?.loadNewAudio(baseName: self!.baseName)
+                    
+                } catch {
+                    print("Erreur lors du chargement du nouvel audio: \(error)")
+                }
+                
+            }*/
+            
         }
         task.resume()
+        
     }
 
     func loadNewAudio(baseName: String) {
-        let urlString = "http://localhost:8287/media/mp3/concatenated_output\(baseName)output_\(index).mp3"
-        print("Chargement de l'audio \(urlString)")
+        let urlString = "http://localhost:8287/media/mp3/concatenated_output\(liveBaseNames[(bigModel.currentProgramIndex - audioURLs.count)])output_\(index).mp3"
+        print("Chargement de l'audio livex \(urlString)")
 
         guard let url = URL(string: urlString) else { return }
 
@@ -251,7 +335,12 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             let newAudioPlayer = try AVAudioPlayer(data: data)
             newAudioPlayer.delegate = self
             newAudioPlayer.prepareToPlay()
-            newAudioPlayer.currentTime = min(previousTime, newAudioPlayer.duration)  // Assurer la continuité
+            
+            if (asLiveJustStarted) {
+                newAudioPlayer.currentTime = 0
+            } else {
+                newAudioPlayer.currentTime = min(previousTime, newAudioPlayer.duration)  // Assurer la continuité
+            }
             
             self.audioPlayer?.stop()  // Stopper l'ancien fichier
             self.audioPlayer = newAudioPlayer  // Remplacer par le nouveau
@@ -262,6 +351,10 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             }
             self.duration = newAudioPlayer.duration  // Mettre à jour la durée
             self.currentTime = newAudioPlayer.currentTime  // Mettre à jour le temps actuel
+            
+            if (asLiveJustStarted) {
+                asLiveJustStarted = false
+            }
             
         } catch {
             print("Erreur lors du chargement du nouvel audio: \(error)")
