@@ -14,8 +14,8 @@
             filePath = "GroovyMorningFM_MobileApp/Services/AudioPlayerManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "190"
-            endingLineNumber = "190"
+            startingLineNumber = "240"
+            endingLineNumber = "240"
             landmarkName = "previousTrack()"
             landmarkType = "7">
          </BreakpointContent>

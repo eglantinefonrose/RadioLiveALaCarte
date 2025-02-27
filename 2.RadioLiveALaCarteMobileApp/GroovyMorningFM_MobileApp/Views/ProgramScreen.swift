@@ -16,6 +16,8 @@ struct ProgramScreen: View {
     private let userId = "user001"
     @ObservedObject var apiService: APIService = APIService.shared
     @ObservedObject var bigModel: BigModel = BigModel.shared
+    @State private var showPopup: Bool = false
+    @State var ipAddress: String = ""
     
     var body: some View {
         
@@ -61,7 +63,7 @@ struct ProgramScreen: View {
                                 apiService.deleteProgram(programID: program.id) { result in
                                     switch result {
                                     case .success:
-                                        let fetchedPrograms = APIService.fetchPrograms(for: userId)
+                                        let fetchedPrograms = apiService.fetchPrograms(for: userId)
                                         self.programs = fetchedPrograms
                                         bigModel.programs = fetchedPrograms
                                     case .failure(let error):
@@ -102,15 +104,21 @@ struct ProgramScreen: View {
             
         }.edgesIgnoringSafeArea(.all)
         .onAppear {
-            let fetchedPrograms = APIService.fetchPrograms(for: userId)
+            let fetchedPrograms = apiService.fetchPrograms(for: userId)
             self.programs = fetchedPrograms
             bigModel.programs = fetchedPrograms
+            if bigModel.ipAdress == "" {
+                showPopup = true
+            }
+        }
+        .sheet(isPresented: $showPopup) {
+            IpInputView(ipAddress: $ipAddress, isPresented: $showPopup)
         }
                     
     }
     
     func fetchIconName(radioName: String) -> String {
-        let urlString = "http://localhost:8287/api/radio/getFavIcoByRadioName/radioName/\(radioName)"
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/getFavIcoByRadioName/radioName/\(radioName)"
         guard let url = URL(string: urlString) else {
             return ""
         }
@@ -144,6 +152,38 @@ struct ProgramScreen: View {
     
 }
 
+struct IpInputView: View {
+    @Binding var ipAddress: String
+    @Binding var isPresented: Bool
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Entrez l'adresse IP")
+                .font(.headline)
+            
+            TextField("Adresse IP", text: $ipAddress)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+            
+            HStack {
+                Button("Annuler") {
+                    isPresented = false
+                }
+                .foregroundColor(.red)
+                
+                Spacer()
+                
+                Button("Valider") {
+                    isPresented = false
+                    BigModel.shared.ipAdress = ipAddress
+                }
+                .foregroundColor(.blue)
+            }
+            .padding()
+        }
+        .padding()
+    }
+}
 
 struct ProgramScreen_Previews: PreviewProvider {
     static var previews: some View {

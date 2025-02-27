@@ -10,10 +10,11 @@ import Foundation
 class APIService: ObservableObject {
     
     static let shared = APIService()
+    let bigModel: BigModel = BigModel.shared
     
     /*func validerHoraire(radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, endTimeHour: Int, endTimeMinute: Int, endTimeSeconds: Int) {
         
-        let urlString = "http://localhost:8287/api/radio/createAndRecordProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeHour)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001"
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createAndRecordProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeHour)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001"
         guard let url = URL(string: urlString) else { return }
         
         var request = URLRequest(url: url)
@@ -39,7 +40,7 @@ class APIService: ObservableObject {
         completion: @escaping (Result<String, Error>) -> Void
     ) {
         // Construction correcte de l'URL
-        let urlString = "http://localhost:8287/api/radio/createAndRecordProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeMinute)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001"
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createAndRecordProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeMinute)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001"
         
         // Vérification de l'URL valide
         guard let url = URL(string: urlString) else {
@@ -76,7 +77,7 @@ class APIService: ObservableObject {
     }
     
     func creerHoraireDanielMorin() {
-        let urlString = "http://localhost:8287/api/radio/createAndRecordProgram/radioName/FranceInter/startTimeHour/6/startTimeMinute/57/startTimeSeconds/0/endTimeHour/7/endTimeMinute/0/endTimeSeconds/1/userID/user001"
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createAndRecordProgram/radioName/FranceInter/startTimeHour/6/startTimeMinute/57/startTimeSeconds/0/endTimeHour/7/endTimeMinute/0/endTimeSeconds/1/userID/user001"
         guard let url = URL(string: urlString) else { return }
         
         var request = URLRequest(url: url)
@@ -91,8 +92,8 @@ class APIService: ObservableObject {
         }.resume()
     }
     
-    static func fetchPrograms(for userId: String) -> [Program] {
-        let urlString = "http://localhost:8287/api/radio/getProgramsByUser/userId/\(userId)"
+    func fetchPrograms(for userId: String) -> [Program] {
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/getProgramsByUser/userId/\(userId)"
         guard let url = URL(string: urlString) else {
             return []
         }
@@ -122,7 +123,7 @@ class APIService: ObservableObject {
         return programs
     }
     
-    static func getFirstProgram(for userId: String) -> Program {
+    func getFirstProgram(for userId: String) -> Program {
         let programs: [Program] = self.fetchPrograms(for: userId)
         
         if (programs.isEmpty) {
@@ -163,9 +164,9 @@ class APIService: ObservableObject {
         }.resume()
     }
     
-    static func searchByName(for name: String, completion: @escaping (LightenedRadioStationAndAmountOfResponses) -> Void) {
+    func searchByName(for name: String, completion: @escaping (LightenedRadioStationAndAmountOfResponses) -> Void) {
         
-        let urlString = "http://localhost:8287/api/radio/lightenSearchByName/\(name)"
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/lightenSearchByName/\(name)"
         print(urlString)
         
         guard let url = URL(string: urlString) else {
@@ -203,7 +204,7 @@ class APIService: ObservableObject {
     }
     
     public func deleteProgram(programID: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        let urlString = "http://localhost:8287/api/radio/deleteProgram/programId/\(programID)"
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/deleteProgram/programId/\(programID)"
         guard let url = URL(string: urlString) else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
             return

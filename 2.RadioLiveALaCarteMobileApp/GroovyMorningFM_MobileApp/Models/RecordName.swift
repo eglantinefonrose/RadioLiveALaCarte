@@ -18,7 +18,8 @@ class RecordName: Codable, Identifiable {
     }
     
     static func fetchRecordName(for programId: String) -> RecordName {
-        let urlString = "http://localhost:8287/api/radio/getSuitableFileNameByProgramId/programId/\(programId)"
+        let urlString = "http://\(BigModel.shared.ipAdress):8287/api/radio/getSuitableFileNameByProgramId/programId/\(programId)"
+        print("http://\(BigModel.shared.ipAdress)/api/radio/getSuitableFileNameByProgramId/programId/\(programId)")
         guard let url = URL(string: urlString) else {
             return RecordName(withSegments: 0, output_name: "")
         }

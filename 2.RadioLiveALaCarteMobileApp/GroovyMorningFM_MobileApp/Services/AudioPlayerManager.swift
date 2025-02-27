@@ -6,6 +6,7 @@
 //
 
 import AVFoundation
+import Combine
 
 // Daniel Morin : 6h56 à 7h
 
@@ -34,7 +35,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     private var fetchTimer: Timer?
     
     var apiService: APIService = APIService.shared
-    var bigModel: BigModel = BigModel.shared
+    let bigModel: BigModel = BigModel.shared
     
     private var audioURLs: [URL] = []
     
@@ -69,6 +70,54 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
                 
     }
     
+    /*override init() {
+        super.init()
+        
+        setupTimers(repet: false)
+        
+        bigModel.$ipAdress
+            .sink { [weak self] newIP in
+                if (newIP != "") {
+                    fetchAllURLs()
+                    
+                    if !audioURLs.isEmpty {
+                        loadAudio(at: bigModel.currentProgramIndex)
+                        setupTimers(repet: false)
+                    } else {
+                        if !liveBaseNames.isEmpty {
+                            setupTimers(repet: true)
+                            fetchAndReplaceAudio()
+                            print("With segments : \(recordName.output_name)")
+                        }
+                    }
+                }
+            }
+            .store(in: &cancellables) // Nécessite Combine
+    }*/
+    
+    /*override init() {
+        super.init()
+        
+        // Observer pour ipAdress
+        NotificationCenter.default.addObserver(self, selector: #selector(ipAddressDidUpdate), name: .ipAddressUpdated, object: nil)
+        
+        setupTimers(repet: false)
+
+        if !audioURLs.isEmpty {
+            loadAudio(at: bigModel.currentProgramIndex)
+            setupTimers(repet: false)
+        } else if !liveBaseNames.isEmpty {
+            setupTimers(repet: true)
+            fetchAndReplaceAudio()
+            print("With segments : \(recordName.output_name)")
+        }
+    }
+
+    @objc private func ipAddressDidUpdate() {
+        fetchAllURLs()
+    }*/
+
+    
     public func updateCurrentProgramIndex(index: Int) {
                 
         if (bigModel.currentProgramIndex < audioURLs.count) {
@@ -101,7 +150,8 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             
             if (recordName.withSegments == 0) {
                 if (recordName.output_name != "") {
-                    audioURLs.append(URL(string: "http://localhost:8287/media/mp3/\(recordName.output_name)")!)
+                    audioURLs.append(URL(string: "http://\(bigModel.ipAdress):8287/media/mp3/\(recordName.output_name)")!)
+                    print("http://\(bigModel.ipAdress):8287/media/mp3/\(recordName.output_name)")
                 }
             } else {
                 let programName = program.id
@@ -245,13 +295,13 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     
     func fetchBaseName() {
         
-        print(APIService.fetchPrograms(for: "user001"))
+        print(apiService.fetchPrograms(for: "user001"))
         
     }
     
     @objc func fetchNonLiveAudio() {
         
-        let urlString = "http://localhost:8287/media/mp3/\(audioURLs[index])"
+        let urlString = "http://\(bigModel.ipAdress):8287/media/mp3/\(audioURLs[index])"
         guard let url = URL(string: urlString) else { return }
 
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
@@ -295,7 +345,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         
         print("bigModel.currentProgramIndex+1 - audioURLs.count = \(bigModel.currentProgramIndex+1 - audioURLs.count)")
         print("liveBaseNames.count = \(liveBaseNames.count)")
-        let urlString = "http://localhost:8287/api/radio/concateneFile/baseName/\(liveBaseNames[(bigModel.currentProgramIndex - audioURLs.count)])"
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/concateneFile/baseName/\(liveBaseNames[(bigModel.currentProgramIndex - audioURLs.count)])"
         guard let url = URL(string: urlString) else { return }
 
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
@@ -343,7 +393,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     }
 
     func loadNewAudio(baseName: String) {
-        let urlString = "http://localhost:8287/media/mp3/concatenated_output\(liveBaseNames[(bigModel.currentProgramIndex - audioURLs.count)])output_\(index).mp3"
+        let urlString = "http://\(bigModel.ipAdress):8287/media/mp3/concatenated_output\(liveBaseNames[(bigModel.currentProgramIndex - audioURLs.count)])output_\(index).mp3"
         print("Chargement de l'audio livex \(urlString)")
 
         guard let url = URL(string: urlString) else { return }
@@ -426,4 +476,8 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             nextTrack()
         }
     }
+}
+
+extension Notification.Name {
+    static let ipAddressUpdated = Notification.Name("ipAddressUpdated")
 }
