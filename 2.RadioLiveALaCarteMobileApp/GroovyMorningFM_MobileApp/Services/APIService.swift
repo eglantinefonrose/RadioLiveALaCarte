@@ -92,7 +92,8 @@ class APIService: ObservableObject {
         }.resume()
     }
     
-    func fetchPrograms(for userId: String) -> [Program] {
+    /*func fetchPrograms(for userId: String) -> [Program] {
+        
         let urlString = "http://\(bigModel.ipAdress):8287/api/radio/getProgramsByUser/userId/\(userId)"
         guard let url = URL(string: urlString) else {
             return []
@@ -121,16 +122,61 @@ class APIService: ObservableObject {
         
         semaphore.wait()
         return programs
+        
+    }*/
+    
+    /*func fetchPrograms(for userId: String) async -> [Program] {
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/getProgramsByUser/userId/\(userId)"
+        print(urlString)
+        guard let url = URL(string: urlString) else {
+            return []
+        }
+
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let programs = try JSONDecoder().decode([Program].self, from: data)
+            return programs
+        } catch {
+            print("Erreur :", error.localizedDescription)
+            return []
+        }
+    }*/
+    func fetchPrograms(for userId: String) async -> [Program] {
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/getProgramsByUser/userId/\(userId)"
+        print(urlString)
+        guard let url = URL(string: urlString) else {
+            return []
+        }
+        
+        let maxRetries = 5
+        let delay: UInt64 = 2_000_000_000 // 2 secondes en nanosecondes
+        
+        for attempt in 1...maxRetries {
+            do {
+                let (data, _) = try await URLSession.shared.data(from: url)
+                let programs = try JSONDecoder().decode([Program].self, from: data)
+                return programs
+            } catch {
+                print("Tentative \(attempt) échouée: \(error.localizedDescription)")
+                if attempt < maxRetries {
+                    try? await Task.sleep(nanoseconds: delay)
+                }
+            }
+        }
+        
+        return []
     }
     
-    func getFirstProgram(for userId: String) -> Program {
-        let programs: [Program] = self.fetchPrograms(for: userId)
+    func getFirstProgram(for userId: String) async -> Program {
+        
+        let programs: [Program] = await self.fetchPrograms(for: userId)
         
         if (programs.isEmpty) {
             return Program(id: "", radioName: "", startTimeHour: 0, startTimeMinute: 0, startTimeSeconds: 0, endTimeHour: 0, endTimeMinute: 0, endTimeSeconds: 0, favIcoURL: "")
         }
         
         return programs[0]
+        
     }
     
     static func fetchFilesWithoutSegmentNames(for userId: String, completion: @escaping ([String]) -> Void) {

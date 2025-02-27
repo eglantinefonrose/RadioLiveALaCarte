@@ -25,3 +25,7 @@ class BigModel: ObservableObject {
     }
     
 }
+
+extension Notification.Name {
+    static let ipAdressUpdated = Notification.Name("ipAdressUpdated")
+}

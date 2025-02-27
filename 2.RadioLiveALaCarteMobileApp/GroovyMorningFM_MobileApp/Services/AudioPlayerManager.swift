@@ -69,53 +69,6 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         }
                 
     }
-    
-    /*override init() {
-        super.init()
-        
-        setupTimers(repet: false)
-        
-        bigModel.$ipAdress
-            .sink { [weak self] newIP in
-                if (newIP != "") {
-                    fetchAllURLs()
-                    
-                    if !audioURLs.isEmpty {
-                        loadAudio(at: bigModel.currentProgramIndex)
-                        setupTimers(repet: false)
-                    } else {
-                        if !liveBaseNames.isEmpty {
-                            setupTimers(repet: true)
-                            fetchAndReplaceAudio()
-                            print("With segments : \(recordName.output_name)")
-                        }
-                    }
-                }
-            }
-            .store(in: &cancellables) // Nécessite Combine
-    }*/
-    
-    /*override init() {
-        super.init()
-        
-        // Observer pour ipAdress
-        NotificationCenter.default.addObserver(self, selector: #selector(ipAddressDidUpdate), name: .ipAddressUpdated, object: nil)
-        
-        setupTimers(repet: false)
-
-        if !audioURLs.isEmpty {
-            loadAudio(at: bigModel.currentProgramIndex)
-            setupTimers(repet: false)
-        } else if !liveBaseNames.isEmpty {
-            setupTimers(repet: true)
-            fetchAndReplaceAudio()
-            print("With segments : \(recordName.output_name)")
-        }
-    }
-
-    @objc private func ipAddressDidUpdate() {
-        fetchAllURLs()
-    }*/
 
     
     public func updateCurrentProgramIndex(index: Int) {
@@ -293,9 +246,9 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     }
 
     
-    func fetchBaseName() {
+    func fetchBaseName() async {
         
-        print(apiService.fetchPrograms(for: "user001"))
+        await print(apiService.fetchPrograms(for: "user001"))
         
     }
     

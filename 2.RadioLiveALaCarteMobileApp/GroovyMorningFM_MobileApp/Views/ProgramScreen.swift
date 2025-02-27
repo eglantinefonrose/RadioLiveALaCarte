@@ -63,9 +63,11 @@ struct ProgramScreen: View {
                                 apiService.deleteProgram(programID: program.id) { result in
                                     switch result {
                                     case .success:
-                                        let fetchedPrograms = apiService.fetchPrograms(for: userId)
-                                        self.programs = fetchedPrograms
-                                        bigModel.programs = fetchedPrograms
+                                        Task {
+                                            let fetchedPrograms = await apiService.fetchPrograms(for: userId)
+                                            self.programs = fetchedPrograms
+                                            bigModel.programs = fetchedPrograms
+                                        }
                                     case .failure(let error):
                                         print("Erreur lors de la suppression :", error.localizedDescription)
                                     }
@@ -103,16 +105,30 @@ struct ProgramScreen: View {
             }
             
         }.edgesIgnoringSafeArea(.all)
+        .onChange(of: bigModel.ipAdress) { oldId, newIp in
+            //if let newIp != "" {
+                Task {
+                    let fetchedPrograms = await apiService.fetchPrograms(for: userId)
+                    self.programs = fetchedPrograms
+                    bigModel.programs = fetchedPrograms
+                }
+            //}
+        }
         .onAppear {
-            let fetchedPrograms = apiService.fetchPrograms(for: userId)
-            self.programs = fetchedPrograms
-            bigModel.programs = fetchedPrograms
+            
             if bigModel.ipAdress == "" {
                 showPopup = true
+            } else {
+                Task {
+                    let fetchedPrograms = await apiService.fetchPrograms(for: userId)
+                    self.programs = fetchedPrograms
+                    bigModel.programs = fetchedPrograms
+                }
             }
+            
         }
         .sheet(isPresented: $showPopup) {
-            IpInputView(ipAddress: $ipAddress, isPresented: $showPopup)
+            IpInputView(ipAddress: $ipAddress, isPresented: $showPopup, userId: userId, programs: programs)
         }
                     
     }
@@ -153,8 +169,13 @@ struct ProgramScreen: View {
 }
 
 struct IpInputView: View {
+    
     @Binding var ipAddress: String
     @Binding var isPresented: Bool
+    var userId: String
+    @ObservedObject var apiService: APIService = APIService.shared
+    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @State var programs: [Program]
     
     var body: some View {
         VStack(spacing: 20) {
@@ -176,6 +197,9 @@ struct IpInputView: View {
                 Button("Valider") {
                     isPresented = false
                     BigModel.shared.ipAdress = ipAddress
+                    /*let fetchedPrograms = apiService.fetchPrograms(for: userId)
+                    self.programs = fetchedPrograms
+                    bigModel.programs = fetchedPrograms*/
                 }
                 .foregroundColor(.blue)
             }
