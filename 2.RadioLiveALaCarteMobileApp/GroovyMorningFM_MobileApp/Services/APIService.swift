@@ -41,6 +41,7 @@ class APIService: ObservableObject {
     ) {
         // Construction correcte de l'URL
         let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createAndRecordProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeMinute)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001"
+        print(urlString)
         
         // Vérification de l'URL valide
         guard let url = URL(string: urlString) else {
