@@ -13,6 +13,7 @@
 		7019FEE22D4F907C005081AC /* output_373f8ae9-b0d3-4ff2-bf22-f053497e5d75_17500.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7019FEE12D4F907C005081AC /* output_373f8ae9-b0d3-4ff2-bf22-f053497e5d75_17500.mp3 */; };
 		7019FEE42D4F90B2005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7019FEE32D4F90B2005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3 */; };
 		7019FEE62D4F90D9005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7019FEE52D4F90D9005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3 */; };
+		704F64282D6E016D000C5556 /* AudioPlayerViewDanielMorin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704F64272D6E016D000C5556 /* AudioPlayerViewDanielMorin.swift */; };
 		7074574F2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7074574E2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift */; };
 		707457512D4AB236000DC5EC /* NewProgramScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707457502D4AB236000DC5EC /* NewProgramScreen.swift */; };
 		707457532D4AB237000DC5EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 707457522D4AB237000DC5EC /* Assets.xcassets */; };
@@ -54,6 +55,7 @@
 		7019FEE12D4F907C005081AC /* output_373f8ae9-b0d3-4ff2-bf22-f053497e5d75_17500.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "output_373f8ae9-b0d3-4ff2-bf22-f053497e5d75_17500.mp3"; sourceTree = "<group>"; };
 		7019FEE32D4F90B2005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3"; sourceTree = "<group>"; };
 		7019FEE52D4F90D9005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3"; sourceTree = "<group>"; };
+		704F64272D6E016D000C5556 /* AudioPlayerViewDanielMorin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AudioPlayerViewDanielMorin.swift; path = GroovyMorningFM_MobileApp/Views/AudioPlayerViewDanielMorin.swift; sourceTree = SOURCE_ROOT; };
 		7074574B2D4AB236000DC5EC /* GroovyMorningFM_MobileApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GroovyMorningFM_MobileApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7074574E2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroovyMorningFM_MobileAppApp.swift; sourceTree = "<group>"; };
 		707457502D4AB236000DC5EC /* NewProgramScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProgramScreen.swift; sourceTree = "<group>"; };
@@ -198,6 +200,7 @@
 			isa = PBXGroup;
 			children = (
 				7074574E2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift */,
+				704F64272D6E016D000C5556 /* AudioPlayerViewDanielMorin.swift */,
 				7091436D2D6394C100D3C3A9 /* GroovyRootView.swift */,
 			);
 			path = "Special-views";
@@ -336,6 +339,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				704F64282D6E016D000C5556 /* AudioPlayerViewDanielMorin.swift in Sources */,
 				700764062D4AD5B500411F53 /* ProgramScreen.swift in Sources */,
 				700764042D4AD12D00411F53 /* Program.swift in Sources */,
 				70983FD92D6B7BBD00B01BBF /* LightenedRadioStation.swift in Sources */,

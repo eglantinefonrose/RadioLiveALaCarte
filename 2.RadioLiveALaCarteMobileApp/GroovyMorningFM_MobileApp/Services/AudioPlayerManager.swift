@@ -12,7 +12,6 @@ import AVFoundation
 class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     
     var audioPlayer: AVAudioPlayer?
-    private var fetchTimer: Timer?
     
     @Published var isPlaying: Bool = false
     var wasPaused: Bool = false
@@ -30,6 +29,9 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     //@Published var bigModel.currentProgramIndex: Int = 0
     @Published var isLivePlaying: Bool = false
     var username: String = ""
+    
+    private var updateTimer: Timer?
+    private var fetchTimer: Timer?
     
     var apiService: APIService = APIService.shared
     var bigModel: BigModel = BigModel.shared
@@ -146,9 +148,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     }
         
     func nextTrack() {
-        
-        print(isLivePlaying)
-        
+                
         if (bigModel.currentProgramIndex+1 < audioURLs.count) {
             
             bigModel.currentProgramIndex += 1
@@ -157,14 +157,15 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             
         } else {
             
-            if ((bigModel.currentProgramIndex - audioURLs.count) < liveBaseNames.count) {
+            if ((bigModel.currentProgramIndex+1 - audioURLs.count) < liveBaseNames.count) {
+                
+                bigModel.currentProgramIndex += 1
+                asLiveJustStarted = true
+                
                 if (!isLivePlaying) {
                     // Premier audio du live
                     isLivePlaying = true
-                } else {
-                    bigModel.currentProgramIndex += 1
                 }
-                
                 setupTimers(repet: true)
                 fetchAndReplaceAudio()
             }
@@ -175,21 +176,34 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     
     func previousTrack() {
         
-        if bigModel.currentProgramIndex > 0 {
+        if (bigModel.currentProgramIndex <= audioURLs.count) {
+            
+            invalidateTimers()
+            isLivePlaying = false
             bigModel.currentProgramIndex -= 1
-            if isLivePlaying {
-                loadAudio(at: bigModel.currentProgramIndex)
-                //print(bigModel.currentProgramIndex)
-                isLivePlaying = false
+            loadAudio(at: bigModel.currentProgramIndex)
+            
+        } else {
+            
+            if ((bigModel.currentProgramIndex - audioURLs.count) > 0) {
+                    
+                bigModel.currentProgramIndex -= 1
+                asLiveJustStarted = true
+                
+                setupTimers(repet: true)
+                fetchAndReplaceAudio()
+                
             } else {
+                bigModel.currentProgramIndex -= 1
+                isLivePlaying = false
                 loadAudio(at: bigModel.currentProgramIndex)
-                print(bigModel.currentProgramIndex)
             }
+            
         }
         
     }
 
-    private func setupTimers(repet: Bool) {
+    /*private func setupTimers(repet: Bool) {
         // Timer pour mettre à jour currentTime chaque seconde
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             self?.updateCurrentTime()
@@ -198,11 +212,36 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         if (repet) {
             // Timer pour récupérer un nouvel audio toutes les 5 secondes
             fetchTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
-                self?.fetchAndReplaceAudio()
+                if ((self?.isLivePlaying) != nil) {
+                    self?.fetchAndReplaceAudio()
+                }
             }
         }
         
+    }*/
+    private func setupTimers(repet: Bool) {
+        // Invalider les anciens timers si existants
+        updateTimer?.invalidate()
+        fetchTimer?.invalidate()
+
+        // Timer pour mettre à jour currentTime chaque seconde
+        updateTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            self?.updateCurrentTime()
+        }
+
+        if repet {
+            // Timer pour récupérer un nouvel audio toutes les 5 secondes
+            fetchTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
+                self?.fetchAndReplaceAudio()
+            }
+        }
     }
+    
+    private func invalidateTimers() {
+        fetchTimer?.invalidate()
+        fetchTimer = nil
+    }
+
     
     func fetchBaseName() {
         
@@ -254,9 +293,8 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
 
     @objc func fetchAndReplaceAudio() {
         
-        print("liveBaseNames = \(liveBaseNames)")
-        print("liveBaseNames = \((bigModel.currentProgramIndex - audioURLs.count))")
-        
+        print("bigModel.currentProgramIndex+1 - audioURLs.count = \(bigModel.currentProgramIndex+1 - audioURLs.count)")
+        print("liveBaseNames.count = \(liveBaseNames.count)")
         let urlString = "http://localhost:8287/api/radio/concateneFile/baseName/\(liveBaseNames[(bigModel.currentProgramIndex - audioURLs.count)])"
         guard let url = URL(string: urlString) else { return }
 
@@ -273,7 +311,6 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             DispatchQueue.main.async {
                 
                 self?.index = index
-                //self?.audioPlayer?.play()
                 self?.loadNewAudio(baseName: self!.baseName)
             }
             

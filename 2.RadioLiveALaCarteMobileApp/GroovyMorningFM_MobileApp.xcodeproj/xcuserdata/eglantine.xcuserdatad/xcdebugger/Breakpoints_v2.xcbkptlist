@@ -7,32 +7,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "84F616C4-3AE1-4C3A-AFC5-DFE0D36A2548"
-            shouldBeEnabled = "Yes"
+            uuid = "9E91368A-E835-4C3C-A613-C68B551BF046"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "GroovyMorningFM_MobileApp/Services/AudioPlayerManager.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "53"
-            endingLineNumber = "53"
-            landmarkName = "init()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "9FB22BA6-9DEF-464A-B852-25C99EF480C7"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "GroovyMorningFM_MobileApp/Services/AudioPlayerManager.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "55"
-            endingLineNumber = "55"
-            landmarkName = "init()"
+            startingLineNumber = "190"
+            endingLineNumber = "190"
+            landmarkName = "previousTrack()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

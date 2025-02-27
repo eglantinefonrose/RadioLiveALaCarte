@@ -76,7 +76,7 @@ class APIService: ObservableObject {
     }
     
     func creerHoraireDanielMorin() {
-        let urlString = "http://localhost:8287/api/radio/createAndRecordProgram/radioName/FranceInter/startTimeHour/12/startTimeMinute/0/startTimeSeconds/0/endTimeHour/12/endTimeMinute/5/endTimeSeconds/0/userID/user001"
+        let urlString = "http://localhost:8287/api/radio/createAndRecordProgram/radioName/FranceInter/startTimeHour/6/startTimeMinute/57/startTimeSeconds/0/endTimeHour/7/endTimeMinute/0/endTimeSeconds/1/userID/user001"
         guard let url = URL(string: urlString) else { return }
         
         var request = URLRequest(url: url)
