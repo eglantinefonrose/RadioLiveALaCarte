@@ -36,6 +36,18 @@ struct NewProgramScreen: View {
     var body: some View {
         VStack {
             
+            HStack {
+                Text("Back")
+                    .bold()
+                    .foregroundStyle(Color.blue)
+                    .onTapGesture {
+                        if (bigModel.viewHistoryList.count >= 2) {
+                            bigModel.currentView = bigModel.viewHistoryList[bigModel.viewHistoryList.count-2]
+                        }
+                    }
+                Spacer()
+            }
+            
             Text("Sélectionnez la radio")
                 .font(.title)
                 .padding()
@@ -195,6 +207,8 @@ struct NewProgramScreen: View {
                 .padding()
             }
             
+        }.onAppear {
+            bigModel.viewHistoryList.append(.NewProgramScreen)
         }
         .padding()
     }

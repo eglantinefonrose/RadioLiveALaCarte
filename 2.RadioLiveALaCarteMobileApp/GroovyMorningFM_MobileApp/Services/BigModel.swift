@@ -23,6 +23,7 @@ class BigModel: ObservableObject {
             }
         }
     }
+    @Published var viewHistoryList: [GroovyView] = []
     
 }
 

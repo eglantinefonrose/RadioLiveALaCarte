@@ -24,6 +24,16 @@ struct ProgramScreen: View {
         VStack(spacing: 0) {
             
             HStack {
+                Text("Back")
+                    .bold()
+                    .foregroundStyle(Color.blue)
+                    .padding(10)
+                    .onTapGesture {
+                        if (bigModel.viewHistoryList.count >= 2) {
+                            bigModel.currentView = bigModel.viewHistoryList[bigModel.viewHistoryList.count-2]
+                        }
+                    }
+                
                 Spacer()
                 Image(systemName: "person.circle")
                     .padding(10)
@@ -109,7 +119,7 @@ struct ProgramScreen: View {
                 
             }
             
-        }.edgesIgnoringSafeArea(.all)
+        }
         .onChange(of: bigModel.ipAdress) { oldId, newIp in
             //if let newIp != "" {
                 Task {
@@ -120,6 +130,8 @@ struct ProgramScreen: View {
             //}
         }
         .onAppear {
+            
+            bigModel.viewHistoryList.append(.ProgramScreen)
             
             if bigModel.ipAdress == "" {
                 showPopup = true
@@ -135,6 +147,7 @@ struct ProgramScreen: View {
         .sheet(isPresented: $showPopup) {
             IpInputView(ipAddress: $ipAddress, isPresented: $showPopup, userId: userId, programs: programs)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     
     }
     

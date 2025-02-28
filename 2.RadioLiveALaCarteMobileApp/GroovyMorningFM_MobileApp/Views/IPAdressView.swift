@@ -15,7 +15,20 @@ struct IPAdressView: View {
     var body: some View {
         
         VStack(spacing: 0) {
+            
             VStack {
+                
+                HStack {
+                    Text("Back")
+                        .bold()
+                        .foregroundStyle(Color.blue)
+                        .onTapGesture {
+                            if (bigModel.viewHistoryList.count >= 2) {
+                                bigModel.currentView = bigModel.viewHistoryList[bigModel.viewHistoryList.count-2]
+                            }
+                        }
+                    Spacer()
+                }
                 
                 Spacer()
                 
@@ -49,7 +62,10 @@ struct IPAdressView: View {
             }
 
             
-        }.edgesIgnoringSafeArea(.all)
+        }
+        .onAppear {
+            bigModel.viewHistoryList.append(.IpAdressView)
+        }
         
     }
 }
