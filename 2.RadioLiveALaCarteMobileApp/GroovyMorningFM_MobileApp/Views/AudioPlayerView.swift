@@ -53,7 +53,7 @@ struct AudioPlayerView: View {
                                     .font(.title)
                             }
                             
-                            Image(systemName: "backward.fill")
+                            Image(systemName: "backward.end.fill")
                                 .onTapGesture {
                                     audioManager.previousTrack()
                                 }
@@ -65,7 +65,7 @@ struct AudioPlayerView: View {
                                     .font(.largeTitle)
                             }
                             
-                            Image(systemName: "forward.fill")
+                            Image(systemName: "forward.end.fill")
                                 .onTapGesture {
                                     audioManager.nextTrack()
                                 }

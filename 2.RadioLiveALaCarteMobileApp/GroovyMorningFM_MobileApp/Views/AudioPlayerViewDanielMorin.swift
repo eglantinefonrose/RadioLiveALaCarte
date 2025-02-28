@@ -57,7 +57,7 @@ struct AudioPlayerViewDanielMorin: View {
                             audioManager.seek(to: max(audioManager.currentTime - 10, 0)) // Retour de 10 secondes
                         }
                     
-                    Image(systemName: "backward.fill")
+                    Image(systemName: "backward.end.fill")
                         .onTapGesture {
                             audioManager.previousTrack()
                         }
@@ -71,7 +71,7 @@ struct AudioPlayerViewDanielMorin: View {
                             audioManager.playPause()
                         }
                     
-                    Image(systemName: "forward.fill")
+                    Image(systemName: "forward.end.fill")
                         .onTapGesture {
                             audioManager.nextTrack()
                         }

@@ -29,7 +29,7 @@ class APIService: ObservableObject {
         }.resume()
     }*/
     
-    func validerHoraire(
+    /*func validerHoraire(
         radioName: String,
         startTimeHour: Int,
         startTimeMinute: Int,
@@ -50,6 +50,7 @@ class APIService: ObservableObject {
         }
         
         var request = URLRequest(url: url)
+        request.timeoutInterval = 3 // Timeout de 3 secondes
         request.httpMethod = "POST"
         
         // Exécution de la requête
@@ -75,7 +76,62 @@ class APIService: ObservableObject {
                 }
             }
         }.resume()
+    }*/
+    
+    func validerHoraire(
+        radioName: String,
+        startTimeHour: Int,
+        startTimeMinute: Int,
+        startTimeSeconds: Int,
+        endTimeHour: Int,
+        endTimeMinute: Int,
+        endTimeSeconds: Int,
+        completion: @escaping (Result<String, Error>) -> Void
+    ) {
+        let urlString = "http://10.4.10.3:8287/api/radio/createAndRecordProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeMinute)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001"
+        
+        print(urlString)
+        
+        guard let url = URL(string: urlString) else {
+            completion(.failure(NSError(domain: "URL invalide", code: 400, userInfo: nil)))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 3 // Timeout de 3 secondes
+        request.httpMethod = "POST"
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            // Gestion de l'erreur réseau
+            if let error = error as? URLError, error.code == .timedOut {
+                DispatchQueue.main.async {
+                    completion(.failure(NSError(domain: "Délai d'attente dépassé (timeout de 3s)", code: URLError.timedOut.rawValue, userInfo: nil)))
+                }
+                return
+            } else if let error = error {
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+                return
+            }
+            
+            // Vérification du code HTTP
+            if let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
+                DispatchQueue.main.async {
+                    completion(.success("Requête réussie avec statut \(httpResponse.statusCode)"))
+                }
+            } else {
+                let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+                let errorMessage = "Requête échouée avec statut \(statusCode)"
+                DispatchQueue.main.async {
+                    completion(.failure(NSError(domain: errorMessage, code: statusCode, userInfo: nil)))
+                }
+            }
+        }
+        
+        task.resume()
     }
+
     
     func creerHoraireDanielMorin() {
         let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createAndRecordProgram/radioName/FranceInter/startTimeHour/6/startTimeMinute/57/startTimeSeconds/0/endTimeHour/7/endTimeMinute/0/endTimeSeconds/1/userID/user001"

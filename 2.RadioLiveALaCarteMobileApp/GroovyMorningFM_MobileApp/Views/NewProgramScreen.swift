@@ -168,6 +168,7 @@ struct NewProgramScreen: View {
                                     bigModel.currentView = .ProgramScreen
                                 case .failure(let error):
                                     print("Erreur :", error.localizedDescription)
+                                    bigModel.currentView = .ProgramScreen
                             }
                             
                         }
