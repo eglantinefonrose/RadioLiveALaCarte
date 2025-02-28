@@ -22,6 +22,9 @@ struct GroovyRootView: View {
         if (BigModel.shared.currentView == .NewProgramScreen) {
             NewProgramScreen()
         }
+        if (BigModel.shared.currentView == .IpAdressView) {
+            IPAdressView()
+        }
         
     }
 }
@@ -30,4 +33,5 @@ enum GroovyView {
     case ProgramScreen
     case AudioPlayerView
     case NewProgramScreen
+    case IpAdressView
 }

@@ -27,6 +27,11 @@ struct ProgramScreen: View {
                 Spacer()
                 Image(systemName: "person.circle")
                     .padding(10)
+                Image(systemName: "gear")
+                    .padding(10)
+                    .onTapGesture {
+                        bigModel.currentView = .IpAdressView
+                    }
             }.background(Color.gray)
             
             Text("Bonjour \(userId), voici votre programme du jour")
