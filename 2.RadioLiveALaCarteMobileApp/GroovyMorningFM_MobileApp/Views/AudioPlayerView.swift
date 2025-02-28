@@ -15,6 +15,18 @@ struct AudioPlayerView: View {
                         
             VStack(spacing: 20) {
                 
+                HStack {
+                    Text("Back")
+                        .bold()
+                        .foregroundStyle(Color.blue)
+                        .onTapGesture {
+                            if (bigModel.viewHistoryList.count >= 2) {
+                                bigModel.currentView = bigModel.viewHistoryList[bigModel.viewHistoryList.count-2]
+                            }
+                        }
+                    Spacer()
+                }
+                
                 AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)){ result in
                             result.image?
                                 .resizable()
@@ -91,6 +103,8 @@ struct AudioPlayerView: View {
             
             BottomSheetView(audioManager: audioManager, offsetY: $offsetY, minHeight: minHeight, maxHeight: maxHeight, programs: bigModel.programs)
             
+        }.onAppear {
+            bigModel.viewHistoryList.append(.AudioPlayerView)
         }
         
     }
