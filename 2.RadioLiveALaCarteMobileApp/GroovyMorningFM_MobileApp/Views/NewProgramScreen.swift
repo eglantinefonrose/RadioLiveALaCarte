@@ -10,6 +10,7 @@ import SwiftUI
 struct NewProgramScreen: View {
     
     @ObservedObject var bigModel: BigModel = BigModel.shared
+    @ObservedObject var apiService: APIService = APIService.shared
     
     @State private var horaireDebut: Double = 8.0
     @State private var horaireFin: Double = 18.0
@@ -53,13 +54,13 @@ struct NewProgramScreen: View {
                             let timeInterval = Date().timeIntervalSince(lastUpdateTime)
                             // Si le délai est supérieur à 300 ms, on effectue l'appel API
                             if timeInterval > delay {
-                                APIService.searchByName(for: newValue) { listAndAmountOfResponses in
+                                apiService.searchByName(for: newValue) { listAndAmountOfResponses in
                                     self.listAndAmountOfResponses = listAndAmountOfResponses
                                 }
                             }
                         } else {
                             // Effectue l'appel si c'est le premier changement de valeur
-                            APIService.searchByName(for: newValue) { listAndAmountOfResponses in
+                            apiService.searchByName(for: newValue) { listAndAmountOfResponses in
                                 self.listAndAmountOfResponses = listAndAmountOfResponses
                             }
                         }
@@ -167,6 +168,7 @@ struct NewProgramScreen: View {
                                     bigModel.currentView = .ProgramScreen
                                 case .failure(let error):
                                     print("Erreur :", error.localizedDescription)
+                                    bigModel.currentView = .ProgramScreen
                             }
                             
                         }

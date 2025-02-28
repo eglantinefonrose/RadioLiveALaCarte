@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 class BigModel: ObservableObject {
     
@@ -15,5 +16,16 @@ class BigModel: ObservableObject {
     @Published var currentProgram: Program = Program(id: "", radioName: "", startTimeHour: 0, startTimeMinute: 0, startTimeSeconds: 0, endTimeHour: 0, endTimeMinute: 0, endTimeSeconds: 0, favIcoURL: "")
     @Published var programs: [Program] = []
     @Published var currentProgramIndex: Int = 0
+    @AppStorage("ipAddress") var ipAdress: String = "" {
+        didSet {
+            if !ipAdress.isEmpty {
+                NotificationCenter.default.post(name: .ipAddressUpdated, object: nil)
+            }
+        }
+    }
     
+}
+
+extension Notification.Name {
+    static let ipAdressUpdated = Notification.Name("ipAdressUpdated")
 }

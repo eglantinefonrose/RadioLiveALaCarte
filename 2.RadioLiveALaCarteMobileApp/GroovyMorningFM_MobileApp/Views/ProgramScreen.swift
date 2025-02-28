@@ -16,6 +16,8 @@ struct ProgramScreen: View {
     private let userId = "user001"
     @ObservedObject var apiService: APIService = APIService.shared
     @ObservedObject var bigModel: BigModel = BigModel.shared
+    @State private var showPopup: Bool = false
+    @State var ipAddress: String = ""
     
     var body: some View {
         
@@ -25,6 +27,11 @@ struct ProgramScreen: View {
                 Spacer()
                 Image(systemName: "person.circle")
                     .padding(10)
+                Image(systemName: "gear")
+                    .padding(10)
+                    .onTapGesture {
+                        bigModel.currentView = .IpAdressView
+                    }
             }.background(Color.gray)
             
             Text("Bonjour \(userId), voici votre programme du jour")
@@ -61,9 +68,11 @@ struct ProgramScreen: View {
                                 apiService.deleteProgram(programID: program.id) { result in
                                     switch result {
                                     case .success:
-                                        let fetchedPrograms = APIService.fetchPrograms(for: userId)
-                                        self.programs = fetchedPrograms
-                                        bigModel.programs = fetchedPrograms
+                                        Task {
+                                            let fetchedPrograms = await apiService.fetchPrograms(for: userId)
+                                            self.programs = fetchedPrograms
+                                            bigModel.programs = fetchedPrograms
+                                        }
                                     case .failure(let error):
                                         print("Erreur lors de la suppression :", error.localizedDescription)
                                     }
@@ -101,16 +110,36 @@ struct ProgramScreen: View {
             }
             
         }.edgesIgnoringSafeArea(.all)
+        .onChange(of: bigModel.ipAdress) { oldId, newIp in
+            //if let newIp != "" {
+                Task {
+                    let fetchedPrograms = await apiService.fetchPrograms(for: userId)
+                    self.programs = fetchedPrograms
+                    bigModel.programs = fetchedPrograms
+                }
+            //}
+        }
         .onAppear {
-            let fetchedPrograms = APIService.fetchPrograms(for: userId)
-            self.programs = fetchedPrograms
-            bigModel.programs = fetchedPrograms
+            
+            if bigModel.ipAdress == "" {
+                showPopup = true
+            } else {
+                Task {
+                    let fetchedPrograms = await apiService.fetchPrograms(for: userId)
+                    self.programs = fetchedPrograms
+                    bigModel.programs = fetchedPrograms
+                }
+            }
+            
+        }
+        .sheet(isPresented: $showPopup) {
+            IpInputView(ipAddress: $ipAddress, isPresented: $showPopup, userId: userId, programs: programs)
         }
                     
     }
     
     func fetchIconName(radioName: String) -> String {
-        let urlString = "http://localhost:8287/api/radio/getFavIcoByRadioName/radioName/\(radioName)"
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/getFavIcoByRadioName/radioName/\(radioName)"
         guard let url = URL(string: urlString) else {
             return ""
         }
@@ -144,6 +173,46 @@ struct ProgramScreen: View {
     
 }
 
+struct IpInputView: View {
+    
+    @Binding var ipAddress: String
+    @Binding var isPresented: Bool
+    var userId: String
+    @ObservedObject var apiService: APIService = APIService.shared
+    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @State var programs: [Program]
+    
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Entrez l'adresse IP")
+                .font(.headline)
+            
+            TextField("Adresse IP", text: $ipAddress)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+            
+            HStack {
+                Button("Annuler") {
+                    isPresented = false
+                }
+                .foregroundColor(.red)
+                
+                Spacer()
+                
+                Button("Valider") {
+                    isPresented = false
+                    BigModel.shared.ipAdress = ipAddress
+                    /*let fetchedPrograms = apiService.fetchPrograms(for: userId)
+                    self.programs = fetchedPrograms
+                    bigModel.programs = fetchedPrograms*/
+                }
+                .foregroundColor(.blue)
+            }
+            .padding()
+        }
+        .padding()
+    }
+}
 
 struct ProgramScreen_Previews: PreviewProvider {
     static var previews: some View {

@@ -10,10 +10,11 @@ import Foundation
 class APIService: ObservableObject {
     
     static let shared = APIService()
+    let bigModel: BigModel = BigModel.shared
     
     /*func validerHoraire(radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, endTimeHour: Int, endTimeMinute: Int, endTimeSeconds: Int) {
         
-        let urlString = "http://localhost:8287/api/radio/createAndRecordProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeHour)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001"
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createAndRecordProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeHour)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001"
         guard let url = URL(string: urlString) else { return }
         
         var request = URLRequest(url: url)
@@ -28,7 +29,7 @@ class APIService: ObservableObject {
         }.resume()
     }*/
     
-    func validerHoraire(
+    /*func validerHoraire(
         radioName: String,
         startTimeHour: Int,
         startTimeMinute: Int,
@@ -39,7 +40,8 @@ class APIService: ObservableObject {
         completion: @escaping (Result<String, Error>) -> Void
     ) {
         // Construction correcte de l'URL
-        let urlString = "http://localhost:8287/api/radio/createAndRecordProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeMinute)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001"
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createAndRecordProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeMinute)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001"
+        print(urlString)
         
         // Vérification de l'URL valide
         guard let url = URL(string: urlString) else {
@@ -48,6 +50,7 @@ class APIService: ObservableObject {
         }
         
         var request = URLRequest(url: url)
+        request.timeoutInterval = 3 // Timeout de 3 secondes
         request.httpMethod = "POST"
         
         // Exécution de la requête
@@ -73,10 +76,65 @@ class APIService: ObservableObject {
                 }
             }
         }.resume()
+    }*/
+    
+    func validerHoraire(
+        radioName: String,
+        startTimeHour: Int,
+        startTimeMinute: Int,
+        startTimeSeconds: Int,
+        endTimeHour: Int,
+        endTimeMinute: Int,
+        endTimeSeconds: Int,
+        completion: @escaping (Result<String, Error>) -> Void
+    ) {
+        let urlString = "http://10.4.10.3:8287/api/radio/createAndRecordProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeMinute)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001"
+        
+        print(urlString)
+        
+        guard let url = URL(string: urlString) else {
+            completion(.failure(NSError(domain: "URL invalide", code: 400, userInfo: nil)))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 3 // Timeout de 3 secondes
+        request.httpMethod = "POST"
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            // Gestion de l'erreur réseau
+            if let error = error as? URLError, error.code == .timedOut {
+                DispatchQueue.main.async {
+                    completion(.failure(NSError(domain: "Délai d'attente dépassé (timeout de 3s)", code: URLError.timedOut.rawValue, userInfo: nil)))
+                }
+                return
+            } else if let error = error {
+                DispatchQueue.main.async {
+                    completion(.failure(error))
+                }
+                return
+            }
+            
+            // Vérification du code HTTP
+            if let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
+                DispatchQueue.main.async {
+                    completion(.success("Requête réussie avec statut \(httpResponse.statusCode)"))
+                }
+            } else {
+                let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+                let errorMessage = "Requête échouée avec statut \(statusCode)"
+                DispatchQueue.main.async {
+                    completion(.failure(NSError(domain: errorMessage, code: statusCode, userInfo: nil)))
+                }
+            }
+        }
+        
+        task.resume()
     }
+
     
     func creerHoraireDanielMorin() {
-        let urlString = "http://localhost:8287/api/radio/createAndRecordProgram/radioName/FranceInter/startTimeHour/6/startTimeMinute/57/startTimeSeconds/0/endTimeHour/7/endTimeMinute/0/endTimeSeconds/1/userID/user001"
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createAndRecordProgram/radioName/FranceInter/startTimeHour/6/startTimeMinute/57/startTimeSeconds/0/endTimeHour/7/endTimeMinute/0/endTimeSeconds/1/userID/user001"
         guard let url = URL(string: urlString) else { return }
         
         var request = URLRequest(url: url)
@@ -91,8 +149,9 @@ class APIService: ObservableObject {
         }.resume()
     }
     
-    static func fetchPrograms(for userId: String) -> [Program] {
-        let urlString = "http://localhost:8287/api/radio/getProgramsByUser/userId/\(userId)"
+    /*func fetchPrograms(for userId: String) -> [Program] {
+        
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/getProgramsByUser/userId/\(userId)"
         guard let url = URL(string: urlString) else {
             return []
         }
@@ -120,16 +179,61 @@ class APIService: ObservableObject {
         
         semaphore.wait()
         return programs
+        
+    }*/
+    
+    /*func fetchPrograms(for userId: String) async -> [Program] {
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/getProgramsByUser/userId/\(userId)"
+        print(urlString)
+        guard let url = URL(string: urlString) else {
+            return []
+        }
+
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let programs = try JSONDecoder().decode([Program].self, from: data)
+            return programs
+        } catch {
+            print("Erreur :", error.localizedDescription)
+            return []
+        }
+    }*/
+    func fetchPrograms(for userId: String) async -> [Program] {
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/getProgramsByUser/userId/\(userId)"
+        print(urlString)
+        guard let url = URL(string: urlString) else {
+            return []
+        }
+        
+        let maxRetries = 5
+        let delay: UInt64 = 2_000_000_000 // 2 secondes en nanosecondes
+        
+        for attempt in 1...maxRetries {
+            do {
+                let (data, _) = try await URLSession.shared.data(from: url)
+                let programs = try JSONDecoder().decode([Program].self, from: data)
+                return programs
+            } catch {
+                print("Tentative \(attempt) échouée: \(error.localizedDescription)")
+                if attempt < maxRetries {
+                    try? await Task.sleep(nanoseconds: delay)
+                }
+            }
+        }
+        
+        return []
     }
     
-    static func getFirstProgram(for userId: String) -> Program {
-        let programs: [Program] = self.fetchPrograms(for: userId)
+    func getFirstProgram(for userId: String) async -> Program {
+        
+        let programs: [Program] = await self.fetchPrograms(for: userId)
         
         if (programs.isEmpty) {
             return Program(id: "", radioName: "", startTimeHour: 0, startTimeMinute: 0, startTimeSeconds: 0, endTimeHour: 0, endTimeMinute: 0, endTimeSeconds: 0, favIcoURL: "")
         }
         
         return programs[0]
+        
     }
     
     static func fetchFilesWithoutSegmentNames(for userId: String, completion: @escaping ([String]) -> Void) {
@@ -163,9 +267,9 @@ class APIService: ObservableObject {
         }.resume()
     }
     
-    static func searchByName(for name: String, completion: @escaping (LightenedRadioStationAndAmountOfResponses) -> Void) {
+    func searchByName(for name: String, completion: @escaping (LightenedRadioStationAndAmountOfResponses) -> Void) {
         
-        let urlString = "http://localhost:8287/api/radio/lightenSearchByName/\(name)"
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/lightenSearchByName/\(name)"
         print(urlString)
         
         guard let url = URL(string: urlString) else {
@@ -203,7 +307,7 @@ class APIService: ObservableObject {
     }
     
     public func deleteProgram(programID: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        let urlString = "http://localhost:8287/api/radio/deleteProgram/programId/\(programID)"
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/deleteProgram/programId/\(programID)"
         guard let url = URL(string: urlString) else {
             completion(.failure(NSError(domain: "Invalid URL", code: 0, userInfo: nil)))
             return
