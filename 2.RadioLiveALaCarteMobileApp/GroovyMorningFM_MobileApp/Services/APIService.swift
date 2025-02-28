@@ -29,7 +29,7 @@ class APIService: ObservableObject {
         }.resume()
     }*/
     
-    /*func validerHoraire(
+    func validerHoraire(
         radioName: String,
         startTimeHour: Int,
         startTimeMinute: Int,
@@ -76,9 +76,9 @@ class APIService: ObservableObject {
                 }
             }
         }.resume()
-    }*/
+    }
     
-    func validerHoraire(
+    /*func validerHoraire(
         radioName: String,
         startTimeHour: Int,
         startTimeMinute: Int,
@@ -130,7 +130,7 @@ class APIService: ObservableObject {
         }
         
         task.resume()
-    }
+    }*/
 
     
     func creerHoraireDanielMorin() {

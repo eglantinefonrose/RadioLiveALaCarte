@@ -184,6 +184,9 @@ struct NewProgramScreen: View {
                             }
                             
                         }
+                    } else {
+                        print("radio name = \(radioName)")
+                        print("Dans le futur")
                     }
                     
                     // estDansLeFutur(heure: hour1, minute: minute1, seconde: second1)
