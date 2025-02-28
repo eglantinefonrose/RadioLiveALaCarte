@@ -1,6 +1,5 @@
 import tensorflow_hub as hub
 import librosa
-import numpy as np
 from scipy.spatial.distance import cosine
 
 def format_timestamps(timestamps):
@@ -118,5 +117,4 @@ def detect_transitions(file_path, threshold=0.5, hop_size=1.0):
 if __name__ == "__main__":
     audio_file = "/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/@rd/0.segmentationProgrammesIntelligente/assets/DANIEL_MORIN_test1.mp3"  # Remplacez par votre fichier
     transitions = detect_transitions(audio_file, threshold=0.3)
-
 
