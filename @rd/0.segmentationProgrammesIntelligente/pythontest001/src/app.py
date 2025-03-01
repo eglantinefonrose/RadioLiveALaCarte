@@ -78,10 +78,9 @@ app = Flask(__name__)
 
 @app.route('/timestamps', methods=['GET'])
 def get_timestamps():
-    #output_name = request.args.get('output_name', '')
-    #timestamps = find_timestamps(output_name)
-    #return jsonify(timestamps)
-    return [10,20]
+    output_name = request.args.get('output_name', '')
+    timestamps = find_timestamps(output_name)
+    return jsonify(timestamps)
 
 if __name__ == '__main__':
     app.run(debug=True)
