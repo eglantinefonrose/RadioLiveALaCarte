@@ -103,7 +103,7 @@ public class RadioLiveALaCarteServiceTest {
         }
     }
 
-    @Test public void tryToRecord()  {
+    /*@Test public void tryToRecord()  {
 
         // Attendez que l'utilisateur appuie sur Entrée pour arrêter l'enregistrement
         try {
@@ -115,7 +115,7 @@ public class RadioLiveALaCarteServiceTest {
             e.printStackTrace();
         }
 
-    }
+    }*/
 
     @Test public void createProgram() {
         try {

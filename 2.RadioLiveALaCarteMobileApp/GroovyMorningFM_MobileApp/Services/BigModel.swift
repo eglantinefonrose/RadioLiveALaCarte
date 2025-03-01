@@ -25,6 +25,8 @@ class BigModel: ObservableObject {
     }
     @Published var viewHistoryList: [GroovyView] = []
     
+    @Published var raw: Bool = true
+    
 }
 
 extension Notification.Name {

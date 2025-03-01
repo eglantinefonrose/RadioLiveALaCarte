@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import whisper
 import re
 
@@ -26,12 +26,12 @@ def trouver_indices_segments(result, search_term):
 def format_timestamps(t):
     return f"{int(t // 60)}:{int(t % 60):02d}"
 
-def find_timestamps():
+def find_timestamps(output_name: str):
     # Charger le modèle Whisper
     model = whisper.load_model("small")
 
     # Charger et transcrire l'audio avec timestamps
-    audio_path = "/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/@rd/0.segmentationProgrammesIntelligente/assets/DANIEL_MORIN_test1.mp3"
+    audio_path = output_name
     result = model.transcribe(audio_path, word_timestamps=True)
 
     # Afficher la transcription complète avec timestamps
@@ -52,7 +52,7 @@ def find_timestamps():
 
     premier_indice, dernier_indice = trouver_indices_segments(result, search_term)
 
-    if premier_indice is not None:
+    if (premier_indice and dernier_indice) is not None:
         if dernier_indice+1 != result["segments"]:
             premier_segment = result["segments"][premier_indice]
             start_time = premier_segment["start"]
@@ -63,7 +63,6 @@ def find_timestamps():
             else:
                 end_time = dernier_segment[-1]
 
-            #print(f"Le terme de recherche a été trouvé pour la première fois à {start_time} et pour la dernière fois à {end_time}.")
             return [start_time, end_time]
     else:
         print("Le terme de recherche n'a pas été trouvé.")
@@ -71,14 +70,18 @@ def find_timestamps():
         start_time = premier_segment["start"]
         dernier_segment = result["segments"][-1]
         end_time = dernier_segment["end"]
+        print(start_time)
+        print(end_time)
         return [start_time, end_time]
 
 app = Flask(__name__)
 
 @app.route('/timestamps', methods=['GET'])
 def get_timestamps():
-    timestamps = find_timestamps()
-    return jsonify(timestamps)
+    #output_name = request.args.get('output_name', '')
+    #timestamps = find_timestamps(output_name)
+    #return jsonify(timestamps)
+    return [10,20]
 
 if __name__ == '__main__':
     app.run(debug=True)

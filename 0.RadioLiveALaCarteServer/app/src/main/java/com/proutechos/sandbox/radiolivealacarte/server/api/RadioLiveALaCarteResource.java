@@ -6,6 +6,7 @@ import com.proutechos.sandbox.radiolivealacarte.server.model.RadioStation;
 import com.proutechos.sandbox.radiolivealacarte.server.model.UserModel;
 import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteDataStorage;
 import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteUserService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.ia.TrimingWithIAService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.planning.RadioInformationAndPlanningService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RadioRecordingSchedulerService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RecordName;
@@ -335,6 +336,19 @@ public class RadioLiveALaCarteResource {
 
         try {
             RadioLiveALaCarteUserService.getInstance().deleteProgram(programId);
+        } catch (ProutechosBaseException e) {
+            throw e;
+        }
+
+    }
+
+    @POST
+    @Path("/trim")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void trim()  throws Exception {
+
+        try {
+            TrimingWithIAService.trimAudioDanielMorin("/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer/app/src/main/resources/static/media/mp3/output_3cd230bd-9ab9-4a3d-a633-eb9177f86278_960output_0127.mp3", "/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer/app/src/main/resources/static/media/mp3/output_3cd230bd-9ab9-4a3d-a633-eb9177f86278_960output_0127-trimmed.mp3");
         } catch (ProutechosBaseException e) {
             throw e;
         }
