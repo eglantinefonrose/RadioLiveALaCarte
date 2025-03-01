@@ -114,21 +114,5 @@ En observant les **transitions detectées selon différentes émissions**, on co
 > ```
 > 
 
+- Solution 1 : Détecter l'écart entre les transitions le plus proche de l'horaire présumée
 
-
-```java
-
-class RealStartAndEndForProgram {
-    public int startTimecode;
-    public int endTimecode;
-} 
-
-class RealStartAndEndForProgramFinder {
-    
-    public RealStartAndEndForProgram findRealStartAndEndForProgram(int[] timeCodesFoundByAIModel, int theoriticalProgramDurationInSec) {
-        ...
-    }
-    
-}
-
-```
