@@ -136,71 +136,6 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         
     }
     
-    /*private func loadAudio(at index: Int) {
-     
-     var url: URL = URL(string: "")!
-     
-     guard index >= 0, index < audioURLs.count else { return }
-     
-     if bigModel.raw {
-         url = audioURLs[index]
-     } else {
-         url = URL(string: addTrimmedToFileName(fileName: audioURLs[index].absoluteString))!
-     }
-        
-     print("url chargée = \(url)")
-     
-     URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-         guard let self = self, let data = data, error == nil else {
-             print("Erreur de chargement de l'audio: \(error?.localizedDescription ?? "Inconnue")")
-             return
-         }
-         
-         DispatchQueue.main.async {
-             self.prepareAudio(data: data)
-         }
-     }.resume()
- }*/
-    
-    /*private func loadAudio(at index: Int) {
-        
-        guard index >= 0, index < audioURLs.count else { return }
-        
-        func fetchAudio(from url: URL) {
-            
-            print("url = \(url)")
-            
-            URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-                
-                guard let self = self, let data = data else {
-                    
-                    print("Erreur de chargement de l'audio: \(String(describing: error?.localizedDescription))")
-                    print("L'url est : \(url)")
-                    return
-                    
-                }
-                
-                if (bigModel.raw) {
-                    print("Nouvelle tentative avec l'URL originale")
-                    fetchAudio(from: audioURLs[index], retryWithOriginal: false)
-                }
-                
-                DispatchQueue.main.async {
-                    self.prepareAudio(data: data)
-                }
-            }.resume()
-        }
-        
-        if bigModel.raw {
-            let url: URL = URL(string: addTrimmedToFileName(urlString: audioURLs[index].absoluteString)!)!
-            fetchAudio(from: url)
-        } else {
-            let url: URL = audioURLs[index]
-            fetchAudio(from: url)
-        }
-        
-    }*/
-    
     private func loadAudio(at index: Int) {
         guard index >= 0, index < audioURLs.count else { return }
         
@@ -392,29 +327,6 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
                 self?.loadNewAudio(baseName: self!.baseName)
             }
             
-            /*DispatchQueue.main.async { [self] in
-                
-                do {
-                                        
-                    let newAudioPlayer = try AVAudioPlayer(data: data)
-                    newAudioPlayer.delegate = self
-                    newAudioPlayer.prepareToPlay()
-                    
-                    self?.audioPlayer = newAudioPlayer  // Remplacer par le nouveau
-                    self?.audioPlayer?.play()
-                    self?.index = index
-                    
-                    self?.duration = newAudioPlayer.duration  // Mettre à jour la durée
-                    self?.currentTime = newAudioPlayer.currentTime  // Mettre à jour le temps actuel
-                    
-                    self?.loadNewAudio(baseName: self!.baseName)
-                    
-                } catch {
-                    print("Erreur lors du chargement du nouvel audio: \(error)")
-                }
-                
-            }*/
-            
         }
         task.resume()
         
@@ -486,6 +398,15 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             self.isPlaying = true
             wasPaused = false
         }
+    }
+    
+    func loadAndPlay() {
+        
+        if (!isLivePlaying) {
+            loadAudio(at: bigModel.currentProgramIndex)
+            print(bigModel.currentProgramIndex)
+        }
+        
     }
 
     func updateCurrentTime() {

@@ -27,6 +27,10 @@ struct AudioPlayerView: View {
                     Spacer()
                 }
                 
+                Toggle("Show trimmed audios", isOn: $bigModel.raw)
+                    .bold()
+                    .padding(20)
+                
                 AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)){ result in
                             result.image?
                                 .resizable()
@@ -105,6 +109,9 @@ struct AudioPlayerView: View {
             
         }.onAppear {
             bigModel.viewHistoryList.append(.AudioPlayerView)
+        }
+        .onChange(of: bigModel.raw) { oldValue, newValue in
+            audioManager.loadAndPlay()
         }
         
     }
