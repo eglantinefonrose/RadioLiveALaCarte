@@ -119,6 +119,17 @@ struct AudioPlayerViewDanielMorin: View {
                     
                 }
                 
+                HStack {
+                    Text("Programmer l'enregistrement de Daniel Morin pour demain (7:57 - 8:00)")
+                        .multilineTextAlignment(.center)
+                        .padding(.vertical, 10)
+                        .padding(.horizontal, 25)
+                }.background(Color.white)
+                    .cornerRadius(10)
+                    .onTapGesture {
+                        APIService.shared.creerHoraireDanielMorin()
+                    }
+                
                 Spacer()
             }
             .padding()
