@@ -4,7 +4,6 @@ import com.proutechos.sandbox.radiolivealacarte.server.model.LightenedRadioStati
 import com.proutechos.sandbox.radiolivealacarte.server.model.Program;
 import com.proutechos.sandbox.radiolivealacarte.server.model.RadioStation;
 import com.proutechos.sandbox.radiolivealacarte.server.model.UserModel;
-import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteDataStorage;
 import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteUserService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.ia.TrimingWithIAService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.planning.RadioInformationAndPlanningService;
@@ -232,12 +231,12 @@ public class RadioLiveALaCarteResource {
     }
 
     @POST
-    @Path("/recordProgram/programId/{programId}/radioName/{radioName}/startTimeHour/{startTimeHour}/startTimeMinute/{startTimeMinute}/startTimeSeconds/{startTimeSeconds}/endTimeHour/{endTimeHour}/endTimeMinute/{endTimeMinute}/endTimeSeconds/{endTimeSeconds}")
-    public void recordProgram(@PathParam("programId") String programId, @PathParam("radioName") String radioName, @PathParam("startTimeHour") int startTimeHour, @PathParam("startTimeMinute") int startTimeMinute, @PathParam("startTimeSeconds") int startTimeSeconds, @PathParam("endTimeHour") int endTimeHour, @PathParam("endTimeMinute") int endTimeMinute, @PathParam("endTimeSeconds") int endTimeSeconds) throws ProutechosBaseException {
+    @Path("/recordProgram/programId/{programId}/radioName/{radioName}/startTimeHour/{startTimeHour}/startTimeMinute/{startTimeMinute}/startTimeSeconds/{startTimeSeconds}/endTimeHour/{endTimeHour}/endTimeMinute/{endTimeMinute}/endTimeSeconds/{endTimeSeconds}/danielMorinVersion/{danielMorinVersion}")
+    public void recordProgram(@PathParam("programId") String programId, @PathParam("radioName") String radioName, @PathParam("startTimeHour") int startTimeHour, @PathParam("startTimeMinute") int startTimeMinute, @PathParam("startTimeSeconds") int startTimeSeconds, @PathParam("endTimeHour") int endTimeHour, @PathParam("endTimeMinute") int endTimeMinute, @PathParam("endTimeSeconds") int endTimeSeconds, @PathParam("danielMorinVersion") int danielMorinVersion) throws ProutechosBaseException {
 
         try {
             Program program = new Program(programId, radioName, startTimeHour, startTimeMinute, startTimeSeconds, endTimeHour, endTimeMinute, endTimeSeconds);
-            RadioRecordingSchedulerService.getInstance().recordProgram(program);
+            RadioRecordingSchedulerService.getInstance().recordProgram(program, danielMorinVersion);
         } catch (ProutechosBaseException e) {
             throw e;
         }
@@ -290,8 +289,8 @@ public class RadioLiveALaCarteResource {
      * @return
      */
     @POST
-    @Path("/createAndRecordProgram/radioName/{radioName}/startTimeHour/{startTimeHour}/startTimeMinute/{startTimeMinute}/startTimeSeconds/{startTimeSeconds}/endTimeHour/{endTimeHour}/endTimeMinute/{endTimeMinute}/endTimeSeconds/{endTimeSeconds}/userID/{userID}")
-    public void recordProgram(@PathParam("radioName") String radioName, @PathParam("startTimeHour") int startTimeHour, @PathParam("startTimeMinute") int startTimeMinute, @PathParam("startTimeSeconds") int startTimeSeconds, @PathParam("endTimeHour") int endTimeHour, @PathParam("endTimeMinute") int endTimeMinute, @PathParam("endTimeSeconds") int endTimeSeconds, @PathParam("userID") String userID) throws ProutechosBaseException {
+    @Path("/createAndRecordProgram/radioName/{radioName}/startTimeHour/{startTimeHour}/startTimeMinute/{startTimeMinute}/startTimeSeconds/{startTimeSeconds}/endTimeHour/{endTimeHour}/endTimeMinute/{endTimeMinute}/endTimeSeconds/{endTimeSeconds}/userID/{userID}/danielMorinVersion/{danielMorinVersion}")
+    public void recordProgram(@PathParam("radioName") String radioName, @PathParam("startTimeHour") int startTimeHour, @PathParam("startTimeMinute") int startTimeMinute, @PathParam("startTimeSeconds") int startTimeSeconds, @PathParam("endTimeHour") int endTimeHour, @PathParam("endTimeMinute") int endTimeMinute, @PathParam("endTimeSeconds") int endTimeSeconds, @PathParam("userID") String userID, @PathParam("danielMorinVersion") Integer danielMorinVersion) throws ProutechosBaseException {
 
         try {
 
@@ -301,7 +300,7 @@ public class RadioLiveALaCarteResource {
             RadioLiveALaCarteUserService.getInstance().addUserProgram(userID, programID);
 
             Program justCreatedProgram = RadioLiveALaCarteUserService.getInstance().getProgramByID(programID);
-            RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram);
+            RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram, danielMorinVersion);
 
         } catch (ProutechosBaseException e) {
             throw e;
@@ -342,17 +341,17 @@ public class RadioLiveALaCarteResource {
 
     }
 
-    @POST
-    @Path("/trim")
+    /*@POST
+    @Path("/trim/danielMorinVersion/{danielMorinVersion}")
     @Produces(MediaType.APPLICATION_JSON)
-    public void trim()  throws Exception {
+    public void trim(@PathParam("danielMorinVersion") Integer danielMorinVersion)  throws Exception {
 
         try {
-            TrimingWithIAService.trimAudioDanielMorin("/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer/app/src/main/resources/static/media/mp3/output_3cd230bd-9ab9-4a3d-a633-eb9177f86278_960output_0127.mp3", "/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer/app/src/main/resources/static/media/mp3/output_3cd230bd-9ab9-4a3d-a633-eb9177f86278_960output_0127-trimmed.mp3");
+            TrimingWithIAService.trimAudio("/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer/app/src/main/resources/static/media/mp3/output_3cd230bd-9ab9-4a3d-a633-eb9177f86278_960output_0127.mp3", "/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer/app/src/main/resources/static/media/mp3/output_3cd230bd-9ab9-4a3d-a633-eb9177f86278_960output_0127-trimmed.mp3", danielMorinVersion);
         } catch (ProutechosBaseException e) {
             throw e;
         }
 
-    }
+    }*/
 
 }

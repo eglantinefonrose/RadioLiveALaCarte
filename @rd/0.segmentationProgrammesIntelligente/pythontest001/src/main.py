@@ -1,62 +1,14 @@
 import tensorflow_hub as hub
 import librosa
 from scipy.spatial.distance import cosine
+from mutagen.mp3 import MP3
 
 def format_timestamps(timestamps):
     return [f"{int(t // 60)}:{int(t % 60):02d}" for t in timestamps]
 
-
-'''def closest_duration(timestamps, assumedDuration):
-    timestamps.sort()  # Trier les timestamps
-    best_t1, best_t2 = None, None
-    min_diff = float('inf')
-
-    for i in range(len(timestamps) - 1):
-        for j in range(i + 1, len(timestamps)):
-            duration = timestamps[j] - timestamps[i]
-
-            if duration >= assumedDuration:
-                diff = duration - assumedDuration
-                if diff < min_diff:
-                    min_diff = diff
-                    best_t1, best_t2 = timestamps[i], timestamps[j]
-
-                # Une fois qu'on dépasse le minimum, inutile de continuer avec ce i
-                break
-
-    return [best_t1, best_t2]'''
-
-
-'''def closest_duration(timestamps, assumedDuration, startTime):
-    # Filtrer les timestamps après startTime
-    filtered_timestamps = [t for t in timestamps if t >= startTime]
-
-    if len(filtered_timestamps) < 2:
-        return None  # Impossible de trouver un écart valide
-
-    filtered_timestamps.sort()  # Trier les timestamps
-    best_t1, best_t2 = None, None
-    min_diff = float('inf')
-
-    for i in range(len(filtered_timestamps) - 1):
-        for j in range(i + 1, len(filtered_timestamps)):
-            duration = filtered_timestamps[j] - filtered_timestamps[i]
-
-            if duration >= assumedDuration:
-                diff = duration - assumedDuration
-                if diff < min_diff:
-                    min_diff = diff
-                    best_t1, best_t2 = filtered_timestamps[i], filtered_timestamps[j]
-
-                # Une fois qu'on a trouvé un écart valide, inutile de continuer pour ce i
-                break
-
-    return [best_t1, best_t2]'''
-
-
 def closest_duration(timestamps, assumedDuration, startTime):
     if not timestamps or len(timestamps) < 2:
-        return 0, 0  # Pas assez de timestamps pour faire une paire
+        return [0, assumedDuration]  # Pas assez de timestamps pour faire une paire
 
     timestamps.sort()  # Trier les timestamps
     start_time = timestamps[0] + startTime  # Horaire de début présumé
@@ -79,11 +31,13 @@ def closest_duration(timestamps, assumedDuration, startTime):
 
                 break  # Une fois qu'on a trouvé un écart valide, on arrête la boucle j
 
-    return (best_t1, best_t2) if best_t1 != 0 else (0, 0)
+    return [best_t1, best_t2] if best_t1 != 0 else [0, assumedDuration]
 
 def detect_transitions(file_path, threshold=0.5, hop_size=1.0):
     # Charger l'audio
     audio, sr = librosa.load(file_path, sr=16000, mono=True)  # VGGish attend un échantillonnage à 16 kHz
+    assumedDuration = len(audio) / sr
+    #audio = MP3(file_path)
 
     # Charger le modèle VGGish depuis TensorFlow Hub
     module_url = "https://tfhub.dev/google/vggish/1"
@@ -104,17 +58,18 @@ def detect_transitions(file_path, threshold=0.5, hop_size=1.0):
     formatted_transitions = format_timestamps(transition_timestamps)
     #print(formatted_transitions)
 
-    assumedDuration = 199
     startTime = 44
 
     result = closest_duration(transition_timestamps, assumedDuration, 30)
-    print(format_timestamps(result))
+    #print(format_timestamps(result))
 
-    print(f"Detected {len(transition_timestamps)} transitions at: {formatted_transitions}")
-    return transition_timestamps
+    #print(f"Detected {len(transition_timestamps)} transitions at: {formatted_transitions}")
+    return result
 
 # Exemple d'utilisation
 if __name__ == "__main__":
-    audio_file = "/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/@rd/0.segmentationProgrammesIntelligente/assets/DANIEL_MORIN_test1.mp3"  # Remplacez par votre fichier
-    transitions = detect_transitions(audio_file, threshold=0.3)
+    audio_file = "/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer/app/src/main/resources/static/media/mp3/output_77a59712-8cd8-41be-a3c1-408afff12abf_12320.mp3"  # Remplacez par votre fichier
+    print(detect_transitions(audio_file, threshold=0.3))
+
+#"http://127.0.0.1:5000/getTimestampsDanielMorin?output_name=/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer/app/src/main/resources/static/media/mp3/output_83220994-2616-4fd2-96e8-0d10965704c8_11490.mp3"  # Remplacez par votre fichier
 
