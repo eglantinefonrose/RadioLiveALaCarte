@@ -8,6 +8,8 @@ struct AudioPlayerView: View {
     let minHeight: CGFloat = UIScreen.main.bounds.height / 2
     let maxHeight: CGFloat = UIScreen.main.bounds.height - 100
     @ObservedObject private var bigModel: BigModel = BigModel.shared
+    @State var liked: Bool = false
+    @State var disliked: Bool = false
 
     var body: some View {
         
@@ -69,6 +71,8 @@ struct AudioPlayerView: View {
                                     .font(.title)
                             }
                             
+                            Image(systemName: disliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
+                            
                             Image(systemName: "backward.end.fill")
                                 .onTapGesture {
                                     audioManager.previousTrack()
@@ -80,6 +84,8 @@ struct AudioPlayerView: View {
                                 Image(systemName: audioManager.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                                     .font(.largeTitle)
                             }
+                            
+                            Image(systemName: liked ? "hand.thumbsup.fill" : "hand.thumbsup")
                             
                             Image(systemName: "forward.end.fill")
                                 .onTapGesture {

@@ -4,6 +4,8 @@ import com.proutechos.sandbox.radiolivealacarte.server.model.LightenedRadioStati
 import com.proutechos.sandbox.radiolivealacarte.server.model.Program;
 import com.proutechos.sandbox.radiolivealacarte.server.model.RadioStation;
 import com.proutechos.sandbox.radiolivealacarte.server.model.UserModel;
+import com.proutechos.sandbox.radiolivealacarte.server.service.FeedbackService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteDataStorage;
 import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteUserService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.ia.TrimingWithIAService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.planning.RadioInformationAndPlanningService;
@@ -302,6 +304,8 @@ public class RadioLiveALaCarteResource {
             Program justCreatedProgram = RadioLiveALaCarteUserService.getInstance().getProgramByID(programID);
             RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram, danielMorinVersion);
 
+            RadioRecordingSchedulerService.getInstance().scheduleWake(startTimeHour+":"+startTimeMinute+":"+startTimeSeconds);
+
         } catch (ProutechosBaseException e) {
             throw e;
         } catch (Exception e) {
@@ -341,17 +345,43 @@ public class RadioLiveALaCarteResource {
 
     }
 
-    /*@POST
-    @Path("/trim/danielMorinVersion/{danielMorinVersion}")
+    @POST
+    @Path("/createFeedback/programID/{programID}/feedback/{feedback}")
     @Produces(MediaType.APPLICATION_JSON)
-    public void trim(@PathParam("danielMorinVersion") Integer danielMorinVersion)  throws Exception {
+    public void createFeedback(@PathParam("programID") String programID, @PathParam("feedback") String feedback)  throws Exception {
 
         try {
-            TrimingWithIAService.trimAudio("/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer/app/src/main/resources/static/media/mp3/output_3cd230bd-9ab9-4a3d-a633-eb9177f86278_960output_0127.mp3", "/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer/app/src/main/resources/static/media/mp3/output_3cd230bd-9ab9-4a3d-a633-eb9177f86278_960output_0127-trimmed.mp3", danielMorinVersion);
+            FeedbackService.getInstance().createFeedback(programID, feedback);
         } catch (ProutechosBaseException e) {
             throw e;
         }
 
-    }*/
+    }
+
+    @POST
+    @Path("/deleteFeedback/programID/{programID}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void deleteFeedback(@PathParam("programID") String programID)  throws Exception {
+
+        try {
+            FeedbackService.getInstance().deleteFeedback(programID);
+        } catch (ProutechosBaseException e) {
+            throw e;
+        }
+
+    }
+
+    @GET
+    @Path("/getFeedback/programID/{programID}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getFeedback(@PathParam("programID") String programID)  throws Exception {
+
+        try {
+            return FeedbackService.getInstance().getFeedback(programID);
+        } catch (ProutechosBaseException e) {
+            throw e;
+        }
+
+    }
 
 }
