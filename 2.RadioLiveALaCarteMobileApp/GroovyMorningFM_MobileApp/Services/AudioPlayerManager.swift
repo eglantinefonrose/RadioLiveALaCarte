@@ -61,6 +61,10 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         
     }
     
+    public func getAudioUrlsCount() -> Int {
+        return audioURLs.count
+    }
+    
     override init() {
         self.versionDanielMorin = false // Valeur par défaut
         super.init()
@@ -121,58 +125,6 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         return newUrlString
     }
     
-    /*private func fetchAllURLs() {
-        
-        if (versionDanielMorin) {
-            DispatchQueue.main.async { [self] in
-                Task {
-                    let fetchedPrograms = await self.apiService.fetchPrograms(for: "user001")
-                    self.bigModel.programs = fetchedPrograms
-                                        
-                    for program in fetchedPrograms {
-                        
-                        let recordName = RecordName.fetchRecordName(for: program.id)
-                        
-                        if (recordName.withSegments == 0) {
-                            if (recordName.output_name != "") {
-                                audioURLs.append(URL(string: "http://\(bigModel.ipAdress):8287/media/mp3/\(recordName.output_name).mp3")!)
-                                print("http://\(bigModel.ipAdress):8287/media/mp3/\(recordName.output_name).mp3")
-                            }
-                        } else {
-                            let programName = program.id
-                            self.recordName = RecordName.fetchRecordName(for: programName)
-                            liveBaseNames.append(RecordName.fetchRecordName(for: programName).output_name)
-                        }
-                        
-                    }
-                    
-                    print("all URls = \(audioURLs)")
-                }
-            }
-        } else {
-            
-            let fetchedPrograms = self.bigModel.programs
-            
-            for program in fetchedPrograms {
-                
-                let recordName = RecordName.fetchRecordName(for: program.id)
-                
-                if (recordName.withSegments == 0) {
-                    if (recordName.output_name != "") {
-                        audioURLs.append(URL(string: "http://\(bigModel.ipAdress):8287/media/mp3/\(recordName.output_name).mp3")!)
-                        print("http://\(bigModel.ipAdress):8287/media/mp3/\(recordName.output_name).mp3")
-                    }
-                } else {
-                    let programName = program.id
-                    self.recordName = RecordName.fetchRecordName(for: programName)
-                    liveBaseNames.append(RecordName.fetchRecordName(for: programName).output_name)
-                }
-                
-            }
-            
-            print("all URls = \(audioURLs)")
-        }
-    }*/
     private func fetchAllURLs() {
             
             if (versionDanielMorin) {
@@ -407,7 +359,13 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         
         print("bigModel.currentProgramIndex+1 - audioURLs.count = \(bigModel.currentProgramIndex+1 - audioURLs.count)")
         print("liveBaseNames.count = \(liveBaseNames.count)")
-        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/concateneFile/baseName/\(liveBaseNames[(bigModel.currentProgramIndex - audioURLs.count)])"
+        var urlString = ""
+        if (audioURLs.count != 0) {
+            urlString = "http://\(bigModel.ipAdress):8287/api/radio/concateneFile/baseName/\(liveBaseNames[(bigModel.currentProgramIndex - audioURLs.count)])"
+        } else {
+            urlString = "http://\(bigModel.ipAdress):8287/api/radio/concateneFile/baseName/\(liveBaseNames[(bigModel.currentProgramIndex)])"
+        }
+        
         guard let url = URL(string: urlString) else { return }
 
         let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
@@ -456,7 +414,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
 
     private func replaceCurrentAudio(data: Data) {
         do {
-            let previousTime = (audioPlayer?.currentTime ?? 0) + 0.5  // Récupérer le timeCode actuel
+            let previousTime = (audioPlayer?.currentTime ?? 0)  // Récupérer le timeCode actuel
             
             let newAudioPlayer = try AVAudioPlayer(data: data)
             newAudioPlayer.delegate = self
@@ -524,44 +482,6 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             nextTrack()
         }
     }
-    
-    /*func giveFeedback(feedback: String) {
-        // Construction correcte de l'URL
-            
-        if (bigModel.currentProgramIndex < audioURLs.count) {
-            let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createFeedback/outputFileName/\(audioURLs[bigModel.currentProgramIndex])/feedback/\(feedback)"
-            print(urlString)
-            
-            // Vérification de l'URL valide
-            guard let url = URL(string: urlString) else {
-                return
-            }
-            
-            var request = URLRequest(url: url)
-            request.timeoutInterval = 3 // Timeout de 3 secondes
-            request.httpMethod = "POST"
-            
-            // Exécution de la requête
-            URLSession.shared.dataTask(with: request) { data, response, error in
-                // Vérification d'une erreur réseau
-                if let error = error {
-                    return
-                }
-                
-                // Vérification du code HTTP
-                if let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
-                    print()
-                } else {
-                    let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
-                    let errorMessage = "Requête échouée avec statut \(statusCode)"
-                    DispatchQueue.main.async {
-                        print(NSError(domain: errorMessage, code: statusCode, userInfo: nil))
-                    }
-                }
-            }.resume()
-        }
-    
-    }*/
     
     func giveFeedback(feedback: String, completion: @escaping (Result<String, Error>) -> Void) {
         // Construction correcte de l'URL
@@ -641,42 +561,6 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         }.resume()
     }
     
-    /*func getFeedback() -> String {
-        // Construction correcte de l'URL
-        
-        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/getFeedback/programID/\(bigModel.programs[bigModel.currentProgramIndex].id)"
-        print(urlString)
-        
-        // Vérification de l'URL valide
-        guard let url = URL(string: urlString) else {
-            //completion(.failure(NSError(domain: "URL invalide", code: 400, userInfo: nil)))
-            return ""
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        
-        // Exécution de la requête
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            // Vérification d'une erreur réseau
-            if error != nil {
-               
-                return
-            }
-            
-            // Vérification du code HTTP
-            if let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
-                
-            } else {
-                let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
-                print("Requête échouée avec statut \(statusCode)")
-                
-            }
-        }.resume()
-        
-        return ""
-        
-    }*/
     func getFeedback(completion: @escaping (Result<String, Error>) -> Void) {
         let urlString = "http://\(bigModel.ipAdress):8287/api/radio/getFeedback/programID/\(bigModel.programs[bigModel.currentProgramIndex].id)"
         print(urlString)
