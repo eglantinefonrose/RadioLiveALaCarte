@@ -58,7 +58,11 @@ struct IPAdressView: View {
             }.background(Color.purple)
             .onTapGesture {
                 bigModel.ipAdress = ipAddress
-                bigModel.currentView = .ProgramScreen
+                if (bigModel.danielMorinVersion) {
+                    bigModel.currentView = .DanielMorin
+                } else {
+                    bigModel.currentView = .ProgramScreen
+                }
             }
 
             

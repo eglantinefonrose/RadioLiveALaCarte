@@ -199,6 +199,7 @@ class APIService: ObservableObject {
         }
     }*/
     func fetchPrograms(for userId: String) async -> [Program] {
+        
         let urlString = "http://\(bigModel.ipAdress):8287/api/radio/getProgramsByUser/userId/\(userId)"
         print(urlString)
         guard let url = URL(string: urlString) else {

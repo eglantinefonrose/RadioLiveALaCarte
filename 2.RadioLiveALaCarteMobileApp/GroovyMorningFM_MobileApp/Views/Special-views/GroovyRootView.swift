@@ -10,20 +10,30 @@ import SwiftUI
 struct GroovyRootView: View {
     
     @ObservedObject var bigModel: BigModel
+    var danielMorinVersion: Bool
     
     var body: some View {
         
-        if (BigModel.shared.currentView == .ProgramScreen) {
-            ProgramScreen()
-        }
-        if (BigModel.shared.currentView == .AudioPlayerView) {
-            AudioPlayerView()
-        }
-        if (BigModel.shared.currentView == .NewProgramScreen) {
-            NewProgramScreen()
-        }
-        if (BigModel.shared.currentView == .IpAdressView) {
-            IPAdressView()
+        VStack {
+            if (BigModel.shared.currentView == .ProgramScreen) {
+                ProgramScreen()
+            }
+            if (BigModel.shared.currentView == .AudioPlayerView) {
+                AudioPlayerView()
+            }
+            if (BigModel.shared.currentView == .NewProgramScreen) {
+                NewProgramScreen()
+            }
+            if (BigModel.shared.currentView == .IpAdressView) {
+                IPAdressView()
+            }
+            if (BigModel.shared.currentView == .DanielMorin) {
+                AudioPlayerViewDanielMorin()
+            }
+        }.onAppear {
+            if (danielMorinVersion) {
+                bigModel.currentView = .DanielMorin
+            }
         }
         
     }
@@ -34,4 +44,5 @@ enum GroovyView {
     case AudioPlayerView
     case NewProgramScreen
     case IpAdressView
+    case DanielMorin
 }

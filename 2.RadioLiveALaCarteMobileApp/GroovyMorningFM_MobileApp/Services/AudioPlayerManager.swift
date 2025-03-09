@@ -22,6 +22,8 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     var recordName: RecordName = RecordName(withSegments: 0, output_name: "")
     var baseName: String = ""
     
+    var versionDanielMorin: Bool
+    
     private var liveBaseNames: [String] = []
     private var liveBaseNameIndex: Int = 0
     private var asLiveJustStarted: Bool = true
@@ -49,24 +51,32 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     public func areThereAnyAudiosAvailable() -> Bool {
         return !(audioURLs.isEmpty && liveBaseNames.isEmpty)
     }
-
-    override init() {
+    
+    init(danielMorin: Bool) {
+        self.versionDanielMorin = danielMorin
+        super.init() // Appel à l'initialisation de la classe mère
         
-        super.init()
         setupTimers(repet: false)
         fetchAllURLs()
         
-        if (!audioURLs.isEmpty) {
+    }
+    
+    override init() {
+        self.versionDanielMorin = false // Valeur par défaut
+        super.init()
+        
+        setupTimers(repet: false)
+        fetchAllURLs()
+        
+        if !self.audioURLs.isEmpty {
             loadAudio(at: bigModel.currentProgramIndex)
-            setupTimers(repet: false)
-        } else {
-            if (!liveBaseNames.isEmpty) {
-                setupTimers(repet: true)
-                fetchAndReplaceAudio()
-                print("With segments : \(recordName.output_name)")
-            }
+            self.setupTimers(repet: false)
+        } else if !self.liveBaseNames.isEmpty {
+            setupTimers(repet: true)
+            self.fetchAndReplaceAudio()
+            print("With segments : \(self.recordName.output_name)")
         }
-                
+    
     }
 
     
@@ -111,95 +121,119 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         return newUrlString
     }
     
-    private func fetchAllURLs() {
+    /*private func fetchAllURLs() {
         
-        let fetchedPrograms = bigModel.programs
-        
-        for program in fetchedPrograms {
-            
-            let recordName = RecordName.fetchRecordName(for: program.id)
-            
-            if (recordName.withSegments == 0) {
-                if (recordName.output_name != "") {
-                    audioURLs.append(URL(string: "http://\(bigModel.ipAdress):8287/media/mp3/\(recordName.output_name).mp3")!)
-                    print("http://\(bigModel.ipAdress):8287/media/mp3/\(recordName.output_name).mp3")
+        if (versionDanielMorin) {
+            DispatchQueue.main.async { [self] in
+                Task {
+                    let fetchedPrograms = await self.apiService.fetchPrograms(for: "user001")
+                    self.bigModel.programs = fetchedPrograms
+                                        
+                    for program in fetchedPrograms {
+                        
+                        let recordName = RecordName.fetchRecordName(for: program.id)
+                        
+                        if (recordName.withSegments == 0) {
+                            if (recordName.output_name != "") {
+                                audioURLs.append(URL(string: "http://\(bigModel.ipAdress):8287/media/mp3/\(recordName.output_name).mp3")!)
+                                print("http://\(bigModel.ipAdress):8287/media/mp3/\(recordName.output_name).mp3")
+                            }
+                        } else {
+                            let programName = program.id
+                            self.recordName = RecordName.fetchRecordName(for: programName)
+                            liveBaseNames.append(RecordName.fetchRecordName(for: programName).output_name)
+                        }
+                        
+                    }
+                    
+                    print("all URls = \(audioURLs)")
                 }
-            } else {
-                let programName = program.id
-                self.recordName = RecordName.fetchRecordName(for: programName)
-                liveBaseNames.append(RecordName.fetchRecordName(for: programName).output_name)
+            }
+        } else {
+            
+            let fetchedPrograms = self.bigModel.programs
+            
+            for program in fetchedPrograms {
+                
+                let recordName = RecordName.fetchRecordName(for: program.id)
+                
+                if (recordName.withSegments == 0) {
+                    if (recordName.output_name != "") {
+                        audioURLs.append(URL(string: "http://\(bigModel.ipAdress):8287/media/mp3/\(recordName.output_name).mp3")!)
+                        print("http://\(bigModel.ipAdress):8287/media/mp3/\(recordName.output_name).mp3")
+                    }
+                } else {
+                    let programName = program.id
+                    self.recordName = RecordName.fetchRecordName(for: programName)
+                    liveBaseNames.append(RecordName.fetchRecordName(for: programName).output_name)
+                }
+                
             }
             
+            print("all URls = \(audioURLs)")
         }
-        
-        print("all URls = \(audioURLs)")
-        
-    }
-    
-    /*private func loadAudio(at index: Int) {
-     
-     var url: URL = URL(string: "")!
-     
-     guard index >= 0, index < audioURLs.count else { return }
-     
-     if bigModel.raw {
-         url = audioURLs[index]
-     } else {
-         url = URL(string: addTrimmedToFileName(fileName: audioURLs[index].absoluteString))!
-     }
-        
-     print("url chargée = \(url)")
-     
-     URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-         guard let self = self, let data = data, error == nil else {
-             print("Erreur de chargement de l'audio: \(error?.localizedDescription ?? "Inconnue")")
-             return
-         }
-         
-         DispatchQueue.main.async {
-             self.prepareAudio(data: data)
-         }
-     }.resume()
- }*/
-    
-    /*private func loadAudio(at index: Int) {
-        
-        guard index >= 0, index < audioURLs.count else { return }
-        
-        func fetchAudio(from url: URL) {
-            
-            print("url = \(url)")
-            
-            URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-                
-                guard let self = self, let data = data else {
-                    
-                    print("Erreur de chargement de l'audio: \(String(describing: error?.localizedDescription))")
-                    print("L'url est : \(url)")
-                    return
-                    
-                }
-                
-                if (bigModel.raw) {
-                    print("Nouvelle tentative avec l'URL originale")
-                    fetchAudio(from: audioURLs[index], retryWithOriginal: false)
-                }
-                
-                DispatchQueue.main.async {
-                    self.prepareAudio(data: data)
-                }
-            }.resume()
-        }
-        
-        if bigModel.raw {
-            let url: URL = URL(string: addTrimmedToFileName(urlString: audioURLs[index].absoluteString)!)!
-            fetchAudio(from: url)
-        } else {
-            let url: URL = audioURLs[index]
-            fetchAudio(from: url)
-        }
-        
     }*/
+    private func fetchAllURLs() {
+            
+            if (versionDanielMorin) {
+                DispatchQueue.main.async { [self] in
+                    Task {
+                        let fetchedPrograms = await self.apiService.fetchPrograms(for: "user001")
+                        self.bigModel.programs = fetchedPrograms
+                                            
+                        for program in fetchedPrograms {
+                            
+                            let recordName = RecordName.fetchRecordName(for: program.id)
+                            
+                            if (recordName.withSegments == 0) {
+                                if (recordName.output_name != "") {
+                                    audioURLs.append(URL(string: "http://\(bigModel.ipAdress):8287/media/mp3/\(recordName.output_name).mp3")!)
+                                    print("http://\(bigModel.ipAdress):8287/media/mp3/\(recordName.output_name).mp3")
+                                }
+                            } else {
+                                let programName = program.id
+                                self.recordName = RecordName.fetchRecordName(for: programName)
+                                liveBaseNames.append(RecordName.fetchRecordName(for: programName).output_name)
+                            }
+                            
+                        }
+                        
+                        if !self.audioURLs.isEmpty {
+                            loadAudio(at: bigModel.currentProgramIndex)
+                            self.setupTimers(repet: false)
+                        } else if !self.liveBaseNames.isEmpty {
+                            setupTimers(repet: true)
+                            self.fetchAndReplaceAudio()
+                            print("With segments : \(self.recordName.output_name)")
+                        }
+                        
+                    }
+                }
+            } else {
+                
+                let fetchedPrograms = self.bigModel.programs
+                
+                for program in fetchedPrograms {
+                    
+                    let recordName = RecordName.fetchRecordName(for: program.id)
+                    
+                    if (recordName.withSegments == 0) {
+                        if (recordName.output_name != "") {
+                            audioURLs.append(URL(string: "http://\(bigModel.ipAdress):8287/media/mp3/\(recordName.output_name).mp3")!)
+                            print("http://\(bigModel.ipAdress):8287/media/mp3/\(recordName.output_name).mp3")
+                        }
+                    } else {
+                        let programName = program.id
+                        self.recordName = RecordName.fetchRecordName(for: programName)
+                        liveBaseNames.append(RecordName.fetchRecordName(for: programName).output_name)
+                    }
+                    
+                }
+                
+                print("all URls = \(audioURLs)")
+            }
+        }
+
     
     private func loadAudio(at index: Int) {
         guard index >= 0, index < audioURLs.count else { return }
@@ -392,29 +426,6 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
                 self?.loadNewAudio(baseName: self!.baseName)
             }
             
-            /*DispatchQueue.main.async { [self] in
-                
-                do {
-                                        
-                    let newAudioPlayer = try AVAudioPlayer(data: data)
-                    newAudioPlayer.delegate = self
-                    newAudioPlayer.prepareToPlay()
-                    
-                    self?.audioPlayer = newAudioPlayer  // Remplacer par le nouveau
-                    self?.audioPlayer?.play()
-                    self?.index = index
-                    
-                    self?.duration = newAudioPlayer.duration  // Mettre à jour la durée
-                    self?.currentTime = newAudioPlayer.currentTime  // Mettre à jour le temps actuel
-                    
-                    self?.loadNewAudio(baseName: self!.baseName)
-                    
-                } catch {
-                    print("Erreur lors du chargement du nouvel audio: \(error)")
-                }
-                
-            }*/
-            
         }
         task.resume()
         
@@ -486,6 +497,15 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             self.isPlaying = true
             wasPaused = false
         }
+    }
+    
+    func loadAndPlay() {
+        
+        if (!isLivePlaying) {
+            loadAudio(at: bigModel.currentProgramIndex)
+            print(bigModel.currentProgramIndex)
+        }
+        
     }
 
     func updateCurrentTime() {
