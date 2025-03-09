@@ -16,6 +16,7 @@ struct ProgramScreen: View {
     private let userId = "user001"
     @ObservedObject var apiService: APIService = APIService.shared
     @ObservedObject var bigModel: BigModel = BigModel.shared
+    @StateObject private var audioManager = AudioPlayerManager()
     @State private var showPopup: Bool = false
     @State var ipAddress: String = ""
     

@@ -11,7 +11,7 @@ import SwiftUI
 struct GroovyMorningFM_MobileAppApp: App {
     var body: some Scene {
         WindowGroup {
-            GroovyRootView(bigModel: BigModel.shared, danielMorinVersion: true)
+            GroovyRootView(bigModel: BigModel.shared, danielMorinVersion: false)
         }
     }
 }
