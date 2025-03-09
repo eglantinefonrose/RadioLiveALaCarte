@@ -1,24 +1,23 @@
 # RADIO LIVE A LA CARTE
 
-## Objectifs
-- Permettre à des utilisateurs d'écouter les chroniques 
-
-## Etapes du projet
-- Je dois commencer telle chronique à telle heure
-- Savoir à quelle heure commence réellement la chronique
-- Permettre à l'utilisateur d'écouter la radio en live
-
 ## Player
 
 - Le player permet de <strong>naviguer</strong> entre les <strong>programmes</strong> sélectionnées au préalable par l'utilisateur.
 - Les <strong>programmes</strong> correspondent à une <strong>plage horaire</strong> d'une <strong>radio spécifique</strong>, informations qui sont toutes les deux <strong>choisies par l'utilisateur</strong>.
 - Si jamais une émission est en <strong>cours de diffusion</strong>, il est possible de <strong>l'écouter</strong>, cependant l'émission aura un <strong>retard de 10 sec</strong> dû à l'utilisation de <strong>segments</strong> de 10 secondes chacuns.
 
-## Généralités sur l'interface
+## L'application mobile
+
+- L'application mobile permet aux utilisateurs de <strong>créer des programmes</strong> et de <strong>les écouter</strong> par la suite grâce au player de l'<strong>application</strong>.
+- Afin de capturer au mieux les programmes, de l'**intelligence artificielle** est utilisée pour détecter le **début** et la **fin** des programmes, qui sont recadrés ensuite. Afin de ne pas perdre les programmes originaux possiblement **trop raccourcis**, il est possible pour les utilisateurs d'écouter la **version raccourcie** ou la **version originale**.
+[Demo_1_InterfaceGlobale_RadioLiveALaCarte.mov](@docs/assets/Demo_1_RadioLiveALaCarte.mov)
+
+## Généralités sur l'interface (site web)
 
 - À la manière d'une <strong>playlist</strong> sur une application de musique, l'utilisateur a une vision sur les <strong>programmes disponibles à l'écoute</strong> et voit le programme qu'il est entrain d'écouter s'afficher en <strong>gras</strong>.
 
-[Demo_1_InterfaceGlobale_RadioLiveALaCarte.mov](@docs/assets/Demo_1_RadioLiveALaCarte.mov)
+- Visionnez une démonstration de l'aaplication mobile grâce à ce lien :
+https://youtube.com/shorts/tYgbUoxxm8s
 
 ## Création de programme pour l'utilisateur
 
