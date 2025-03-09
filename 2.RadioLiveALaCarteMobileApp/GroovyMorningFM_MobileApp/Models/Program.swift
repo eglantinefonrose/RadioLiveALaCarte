@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Program: Codable, Identifiable {
+class Program: Codable, Identifiable, Equatable {
     
     var id: String = UUID().uuidString
     var radioName: String
@@ -29,6 +29,10 @@ class Program: Codable, Identifiable {
         self.endTimeMinute = endTimeMinute
         self.endTimeSeconds = endTimeSeconds
         self.favIcoURL = favIcoURL
+    }
+    
+    static func == (lhs: Program, rhs: Program) -> Bool {
+        return lhs.id == rhs.id
     }
     
     func isProgramAvailable() -> Bool {

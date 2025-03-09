@@ -4,6 +4,7 @@ import com.proutechos.sandbox.radiolivealacarte.server.model.Program;
 import com.proutechos.sandbox.radiolivealacarte.server.model.UserModel;
 import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteDataStorage;
 import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteUserService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.ia.TrimingWithIAService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.planning.RadioInformationAndPlanningService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RadioRecordingSchedulerService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.streaming.StreamingService;
@@ -126,7 +127,7 @@ public class RadioLiveALaCarteServiceTest {
             RadioLiveALaCarteUserService.getInstance().addUserProgram("user001", programID);
 
             Program justCreatedProgram = RadioLiveALaCarteUserService.getInstance().getProgramByID(programID);
-            RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram);
+            RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram, 0);
 
         } catch (ProutechosBaseException e) {
             e.printStackTrace();
@@ -141,7 +142,7 @@ public class RadioLiveALaCarteServiceTest {
         try {
 
             try {
-                RadioRecordingSchedulerService.getInstance().recordProgram(program);
+                RadioRecordingSchedulerService.getInstance().recordProgram(program, 0);
             }  catch (ProutechosBaseException e) {
                 e.printStackTrace();
             }
@@ -194,7 +195,7 @@ public class RadioLiveALaCarteServiceTest {
             RadioLiveALaCarteUserService.getInstance().addUserProgram("user001", program1ID);
 
             Program justCreatedProgram1 = RadioLiveALaCarteUserService.getInstance().getProgramByID(program1ID);
-            RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram1);
+            RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram1, 0);
 
             Program program2 = new Program("programId", "France Info", 15, 30, 0, 15, 39, 0);
 
@@ -202,7 +203,7 @@ public class RadioLiveALaCarteServiceTest {
             RadioLiveALaCarteUserService.getInstance().addUserProgram("user001", program2ID);
 
             Program justCreatedProgram2 = RadioLiveALaCarteUserService.getInstance().getProgramByID(program2ID);
-            RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram2);
+            RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram2, 0);
 
             System.in.read();
 
@@ -237,6 +238,15 @@ public class RadioLiveALaCarteServiceTest {
     @Test public void deleteProgram() throws Exception {
         try {
             RadioLiveALaCarteDataStorage.deleteProgram("0356e867-b433-4ccb-8ab1-600f50204885");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test public void trim() throws Exception {
+        try {
+            //RadioLiveALaCarteDataStorage.deleteProgram("0356e867-b433-4ccb-8ab1-600f50204885");
+            TrimingWithIAService.trimAudio("/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer/app/src/main/resources/static/media/mp3/output_77a59712-8cd8-41be-a3c1-408afff12abf_12320.mp3", "/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer/app/src/main/resources/static/media/mp3/output_77a59712-8cd8-41be-a3c1-408afff12abf_12320-trimmed.mp3", 0);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

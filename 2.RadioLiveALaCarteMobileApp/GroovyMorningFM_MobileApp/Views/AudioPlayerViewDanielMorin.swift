@@ -15,6 +15,9 @@ struct AudioPlayerViewDanielMorin: View {
     let minHeight: CGFloat = UIScreen.main.bounds.height / 2
     let maxHeight: CGFloat = UIScreen.main.bounds.height - 100
     
+    @State var disliked: Bool = false
+    @State var liked: Bool = false
+    
     var body: some View {
         
         ZStack {
@@ -74,7 +77,8 @@ struct AudioPlayerViewDanielMorin: View {
                         .padding(.horizontal, 20)
                         
                         // Boutons de contrôle
-                        HStack(spacing: 30) {
+                        HStack() {
+                            
                             Button(action: {
                                 audioManager.seek(to: max(audioManager.currentTime - 10, 0)) // Retour de 10 secondes
                             }) {
@@ -82,6 +86,55 @@ struct AudioPlayerViewDanielMorin: View {
                                     .foregroundColor(.white)
                                     .font(.title)
                             }
+                            
+                            Image(systemName: disliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
+                                .foregroundColor(.white)
+                                .onTapGesture {
+                                    
+                                    if (!disliked) {
+                                        if (liked) {
+                                            audioManager.deleteFeedback { result in
+                                                switch result {
+                                                    case .success(let message):
+                                                        print("Succès :", message)
+                                                        liked.toggle()
+                                                    audioManager.giveFeedback(feedback: "Bad") { result in
+                                                        switch result {
+                                                            case .success(let message):
+                                                                print("Succès :", message)
+                                                                disliked.toggle()
+                                                            case .failure(let error):
+                                                                print("Erreur :", error.localizedDescription)
+                                                        }
+                                                    }
+                                                    case .failure(let error):
+                                                        print("Erreur :", error.localizedDescription)
+                                                }
+                                            }
+                                        } else {
+                                            audioManager.giveFeedback(feedback: "Bad") { result in
+                                                switch result {
+                                                    case .success(let message):
+                                                        print("Succès :", message)
+                                                        disliked.toggle()
+                                                    case .failure(let error):
+                                                        print("Erreur :", error.localizedDescription)
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        audioManager.deleteFeedback { result in
+                                            switch result {
+                                                case .success(let message):
+                                                    print("Succès :", message)
+                                                    liked.toggle()
+                                                case .failure(let error):
+                                                    print("Erreur :", error.localizedDescription)
+                                            }
+                                        }
+                                    }
+                                    
+                                }
                             
                             Image(systemName: "backward.end.fill")
                                 .foregroundColor(.white)
@@ -101,6 +154,72 @@ struct AudioPlayerViewDanielMorin: View {
                                 .foregroundColor(.white)
                                 .onTapGesture {
                                     audioManager.nextTrack()
+                                }
+                            
+                            /*Image(systemName: liked ? "hand.thumbsup.fill" : "hand.thumbsup")
+                                .foregroundColor(.white)
+                                .onTapGesture {
+                                    audioManager.giveFeedback(feedback: "Good") { result in
+                                        switch result {
+                                            case .success(let message):
+                                                print("Succès :", message)
+                                                liked.toggle()
+                                                if (disliked) {
+                                                    disliked.toggle()
+                                                }
+                                            case .failure(let error):
+                                                print("Erreur :", error.localizedDescription)
+                                        }
+                                    }
+                                }*/
+                            
+                            Image(systemName: liked ? "hand.thumbsup.fill" : "hand.thumbsup")
+                                .foregroundColor(.white)
+                                .onTapGesture {
+                                    
+                                    if (!liked) {
+                                        if (disliked) {
+                                            audioManager.deleteFeedback { result in
+                                                switch result {
+                                                    case .success(let message):
+                                                        print("Succès :", message)
+                                                        disliked.toggle()
+                                                        audioManager.giveFeedback(feedback: "Good") { result in
+                                                            switch result {
+                                                                case .success(let message):
+                                                                    print("Succès :", message)
+                                                                    liked.toggle()
+                                                                case .failure(let error):
+                                                                    print("Erreur :", error.localizedDescription)
+                                                            }
+                                                        }
+                                                    case .failure(let error):
+                                                        print("Erreur :", error.localizedDescription)
+                                                }
+                                            }
+                                        } else {
+                                            audioManager.giveFeedback(feedback: "Good") { result in
+                                                switch result {
+                                                    case .success(let message):
+                                                        print("Succès :", message)
+                                                        liked.toggle()
+                                                    case .failure(let error):
+                                                        print("Erreur :", error.localizedDescription)
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        audioManager.deleteFeedback { result in
+                                            switch result {
+                                                case .success(let message):
+                                                    print("Succès :", message)
+                                                    liked.toggle()
+                                                case .failure(let error):
+                                                    print("Erreur :", error.localizedDescription)
+                                            }
+                                        }
+                                    }
+                                    
                                 }
                             
                             Button(action: {
@@ -149,6 +268,23 @@ struct AudioPlayerViewDanielMorin: View {
         .onChange(of: bigModel.raw) { oldValue, newValue in
             audioManager.loadAndPlay()
         }
+        .onChange(of: bigModel.programs) { oldValue, newValue in
+            audioManager.getFeedback { result in
+                switch result {
+                case .success(let feedback):
+                    if feedback == "Bad" {
+                        disliked = true
+                    }
+                    if feedback == "Good" {
+                        liked = true
+                    }
+                    print("Feedback reçu : \(feedback)")
+                case .failure(let error):
+                    print("Erreur : \(error.localizedDescription)")
+                }
+            }
+        }
+        
         .onAppear {
             
             BigModel.shared.danielMorinVersion = true
@@ -161,6 +297,7 @@ struct AudioPlayerViewDanielMorin: View {
                     bigModel.programs = fetchedPrograms
                 }
             }
+            
         }
         
     }
