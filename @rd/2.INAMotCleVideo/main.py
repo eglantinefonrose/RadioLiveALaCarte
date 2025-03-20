@@ -52,7 +52,7 @@ def main(video_url):
 
     # Transcribe audio to text
     text = transcribe_audio(audio_path)
-    print(text)
+    #print(text)
 
     # Using model keyphrase-extraction-kbir-inspec to extract keywords
     print(" ------- Using model keyphrase-extraction-kbir-inspec to extract keywords -------")
@@ -63,9 +63,18 @@ def main(video_url):
 
     # Using an LLM with a custom prompt to extract keywords
     print(" ------- Using an LLM with a custom prompt to extract keywords -------")
-    extractor_llm_based = LLMBasedKeywordsExtractor(custom_prompt="Dans le texte suivant, extrait deux types de mots-clés : 2 mots-clés sur le type de vidéo, 3 mots clés sur le sujet traité.")
-    keyphrases = extractor_llm_based.extract_keywords(text)
-    print(keyphrases)
+    extractor_llm_based = LLMBasedKeywordsExtractor(custom_prompt="""
+    Dans le texte suivant, extrait deux types de mots-clés :
+       - 2 mots-clés sur le type de vidéo (Séries et fictions, documentaires, spectacles et concerts, émissions...)
+       - 3 mots clés sur le sujet traité
+    Donne moi une réponse structurée en JSON, sous la forme suivante :
+    {
+        "mots_cles_video": ["...", "..."],
+        "mots_cles_sujet": ["...", "...", "..."]
+    }
+    """)
+    #keyphrases = extractor_llm_based.extract_keywords(text)
+    #print(keyphrases)
 
 # Example usage
 video_url = 'https://media-hub.ina.fr/video/FX2qHyT1cs80A6MYTUFQLyZufFZ/hl3Ww+TydvrCUf44DXd/nBj5A8M2ExDP0Kd04fTjAJBu2FGHVZQ6AKkYdMEAy5ipWVVE+BYUa95UMRZgla1iVuavkiwGZc8t4vRhySFNQaKsF8sTv1I64yy/2Q==/sl_iv/QD+4g/Dm8yqwue0mJ4w8Gg==/sl_hm/QypS76elrNTiKS9bOAE2xtsGkdG11Vs4++5ocCQR4QTpWKb5pQQIdKFgD9qG5NYL3JlJUolo9zBR2OSTJQH7ZA==/sl_e/1743597232'
