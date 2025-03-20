@@ -2,13 +2,8 @@ import requests
 from pytube import YouTube
 from moviepy.editor import VideoFileClip
 import whisper
-from transformers import (
-    TokenClassificationPipeline,
-    AutoModelForTokenClassification,
-    AutoTokenizer,
-)
-from transformers.pipelines import AggregationStrategy
-import numpy as np
+
+from keywordsextractor_keyphrase_extraction_kbir_inspec import KeyphraseExtractionPipeline
 
 def download_video(url, output_path='video.mp4'):
     # Vérifier si c'est une URL de Youtube
@@ -40,28 +35,6 @@ def transcribe_audio(audio_path):
     result = model.transcribe(audio_path)
     return result['text']
 
-# Define keyphrase extraction pipeline
-class KeyphraseExtractionPipeline(TokenClassificationPipeline):
-    def __init__(self, model, *args, **kwargs):
-        super().__init__(
-            # Charge un modèle pré-entraîné pour la classification de tokens
-            # Ici, un token est une unité de texte utilisée par le modèle de traitement du langage
-            model=AutoModelForTokenClassification.from_pretrained(model),
-
-            # Charge le tokenizer correspondant au modèle
-            tokenizer=AutoTokenizer.from_pretrained(model),
-            *args,
-            **kwargs
-        )
-
-    def postprocess(self, all_outputs):
-        results = super().postprocess(
-            all_outputs=all_outputs,
-            aggregation_strategy=AggregationStrategy.SIMPLE,
-        )
-        return np.unique([result.get("word").strip() for result in results])
-
-
 # Classe keyword extractor
 # 1 qui utilise le modèle sur HuggingFace (actuelle)
 # 2 qui utilise un LLM pour lui demander d'extraire des mots clés
@@ -80,9 +53,10 @@ def main(video_url):
     text = transcribe_audio(audio_path)
     print(text)
 
+    # Using model keyphrase-extraction-kbir-inspec to extract keywords
+    print(" ------- Using model keyphrase-extraction-kbir-inspec to extract keywords -------")
     model_name = "ml6team/keyphrase-extraction-kbir-inspec"
     extractor = KeyphraseExtractionPipeline(model=model_name)
-
     keyphrases = extractor(text)
     print(keyphrases)
 
