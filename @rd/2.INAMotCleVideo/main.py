@@ -4,6 +4,7 @@ from moviepy.editor import VideoFileClip
 import whisper
 
 from keywordsextractor_keyphrase_extraction_kbir_inspec import KeyphraseExtractionPipeline
+from keywordsextractor_LLMBasedKeywordsExtractor import LLMBasedKeywordsExtractor
 
 def download_video(url, output_path='video.mp4'):
     # Vérifier si c'est une URL de Youtube
@@ -58,6 +59,12 @@ def main(video_url):
     model_name = "ml6team/keyphrase-extraction-kbir-inspec"
     extractor = KeyphraseExtractionPipeline(model=model_name)
     keyphrases = extractor(text)
+    print(keyphrases)
+
+    # Using an LLM with a custom prompt to extract keywords
+    print(" ------- Using an LLM with a custom prompt to extract keywords -------")
+    extractor_llm_based = LLMBasedKeywordsExtractor(custom_prompt="Dans le texte suivant, extrait deux types de mots-clés : 2 mots-clés sur le type de vidéo, 3 mots clés sur le sujet traité.")
+    keyphrases = extractor_llm_based.extract_keywords(text)
     print(keyphrases)
 
 # Example usage
