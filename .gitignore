@@ -13,3 +13,7 @@ gradlew*
 @rd/0.segmentationProgrammesIntelligente/pythontest001/src/env
 @rd/0.segmentationProgrammesIntelligente/assets/entrainement-frinter-long.wav
 @docs/assets/App-demo.mp4
+@rd/2.INAMotCleVideo/env
+@rd/2.INAMotCleVideo/.idea
+@rd/2.INAMotCleVideo/**/*.mp4
+@rd/2.INAMotCleVideo/**/*.mp3
