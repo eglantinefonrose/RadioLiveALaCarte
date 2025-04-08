@@ -17,3 +17,4 @@ gradlew*
 @rd/2.INAMotCleVideo/.idea
 @rd/2.INAMotCleVideo/**/*.mp4
 @rd/2.INAMotCleVideo/**/*.mp3
+@rd/2.INAMotCleVideo/__pycache__
