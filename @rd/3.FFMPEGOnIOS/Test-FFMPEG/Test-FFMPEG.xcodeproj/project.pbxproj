@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		70EA75562DA7A841007A13C1 /* FFmpeg-iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 70EA75552DA7A841007A13C1 /* FFmpeg-iOS */; };
 		70EA75582DA7A841007A13C1 /* ffmpeg-ios in Frameworks */ = {isa = PBXBuildFile; productRef = 70EA75572DA7A841007A13C1 /* ffmpeg-ios */; };
+		70EA755C2DA7BE7E007A13C1 /* silent.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 70EA755B2DA7BE7E007A13C1 /* silent.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,11 +33,25 @@
 		70EA75272DA7A5CA007A13C1 /* Test-FFMPEG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Test-FFMPEG.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		70EA75372DA7A5CB007A13C1 /* Test-FFMPEGTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Test-FFMPEGTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		70EA75412DA7A5CC007A13C1 /* Test-FFMPEGUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Test-FFMPEGUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		70EA755B2DA7BE7E007A13C1 /* silent.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silent.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		70EA755A2DA7B991007A13C1 /* Exceptions for "Test-FFMPEG" folder in "Test-FFMPEG" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 70EA75262DA7A5CA007A13C1 /* Test-FFMPEG */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		70EA75292DA7A5CA007A13C1 /* Test-FFMPEG */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				70EA755A2DA7B991007A13C1 /* Exceptions for "Test-FFMPEG" folder in "Test-FFMPEG" target */,
+			);
 			path = "Test-FFMPEG";
 			sourceTree = "<group>";
 		};
@@ -82,6 +97,7 @@
 		70EA751E2DA7A5CA007A13C1 = {
 			isa = PBXGroup;
 			children = (
+				70EA755B2DA7BE7E007A13C1 /* silent.mp3 */,
 				70EA75292DA7A5CA007A13C1 /* Test-FFMPEG */,
 				70EA753A2DA7A5CB007A13C1 /* Test-FFMPEGTests */,
 				70EA75442DA7A5CC007A13C1 /* Test-FFMPEGUITests */,
@@ -224,6 +240,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70EA755C2DA7BE7E007A13C1 /* silent.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -333,7 +350,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -390,7 +407,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -411,11 +428,13 @@
 				DEVELOPMENT_TEAM = 27DU3FB9N5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Test-FFMPEG/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -440,11 +459,13 @@
 				DEVELOPMENT_TEAM = 27DU3FB9N5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Test-FFMPEG/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
