@@ -68,7 +68,7 @@ def detect_transitions(file_path, threshold=0.5, hop_size=1.0):
 
 # Exemple d'utilisation
 if __name__ == "__main__":
-    audio_file = "/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer/app/src/main/resources/static/media/mp3/output_77a59712-8cd8-41be-a3c1-408afff12abf_12320.mp3"  # Remplacez par votre fichier
+    audio_file = "/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/@rd/0.segmentationProgrammesIntelligente/assets/France-inter-jingle-long.mp3"  # Remplacez par votre fichier
     print(detect_transitions(audio_file, threshold=0.3))
 
 #"http://127.0.0.1:5000/getTimestampsDanielMorin?output_name=/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer/app/src/main/resources/static/media/mp3/output_83220994-2616-4fd2-96e8-0d10965704c8_11490.mp3"  # Remplacez par votre fichier
