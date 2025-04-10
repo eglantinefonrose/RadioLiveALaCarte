@@ -59,28 +59,28 @@ struct ContentView: View {
                     .padding()
             }
         }
-        /*.onAppear {
+        .onAppear {
             // Configurer la minuterie pour 10h31
             let calendar = Calendar.current
             let currentDate = Date()
-            let targetTime = calendar.date(bySettingHour: 14, minute: 59, second: 30, of: currentDate)!
+            let targetTime = calendar.date(bySettingHour: 17, minute: 0, second: 0, of: currentDate)!
 
             let timeInterval = targetTime.timeIntervalSince(currentDate)
 
             // Si l'heure cible est déjà passée aujourd'hui, ajuste pour demain
             if timeInterval < 0 {
                 let nextDay = calendar.date(byAdding: .day, value: 1, to: currentDate)!
-                let newTargetTime = calendar.date(bySettingHour: 14, minute: 17, second: 0, of: nextDay)!
+                let newTargetTime = calendar.date(bySettingHour: 17, minute: 1, second: 0, of: nextDay)!
                 startTimer(for: newTargetTime)
             } else {
                 startTimer(for: targetTime)
             }
             
-            listAppFiles()
+            //listAppFiles()
             
-        }*/
+        }
         
-        VStack(spacing: 20) {
+        /*VStack(spacing: 20) {
             Text("🎧 Écouter l'enregistrement")
                 .font(.title2)
 
@@ -99,11 +99,11 @@ struct ContentView: View {
         }
         .onAppear {
             prepareAudio()
-        }
+        }*/
         
     }
     
-    func prepareAudio() {
+    /*func prepareAudio() {
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let fileURL = documentsURL.appendingPathComponent(fileName)
 
@@ -135,7 +135,7 @@ struct ContentView: View {
         }
 
         isPlaying.toggle()
-    }
+    }*/
 
     private func startTimer(for targetTime: Date) {
         let timer = Timer.scheduledTimer(withTimeInterval: targetTime.timeIntervalSinceNow, repeats: false) { _ in
@@ -164,7 +164,7 @@ struct ContentView: View {
     }
 }
 
-func getDocumentsDirectory() -> URL {
+/*func getDocumentsDirectory() -> URL {
     return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
 }
 
@@ -185,7 +185,7 @@ func listAppFiles() {
     } catch {
         print("❌ Erreur lors de la lecture du dossier Documents: \(error)")
     }
-}
+}*/
 
 
 

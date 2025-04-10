@@ -356,7 +356,7 @@ public class RadioLiveALaCarteResource {
             throw e;
         }
 
-    }*/
+    }
 
     @POST
     @Path("/deleteFeedback/programID/{programID}")
@@ -382,6 +382,20 @@ public class RadioLiveALaCarteResource {
             throw e;
         }
 
-    }*/
+    }
+
+    //public String getURLByName(String name) throws Exception
+    @GET
+    @Path("/getURLByName/name/{name}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getURLByName(@PathParam("name") String name)  throws Exception {
+
+        try {
+            return RadioInformationAndPlanningService.getInstance().getURLByName(name);
+        } catch (ProutechosBaseException e) {
+            throw e;
+        }
+
+    }
 
 }

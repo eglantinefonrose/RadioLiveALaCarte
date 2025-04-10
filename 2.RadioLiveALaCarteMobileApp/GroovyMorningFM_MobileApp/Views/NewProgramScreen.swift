@@ -172,7 +172,7 @@ struct NewProgramScreen: View {
                 Button(action: {
                     
                     if (ProgramManager.shared.estDansLeFutur(heure: hour1, minute: minute1, seconde: second1) && (radioName != "")) {
-                        APIService.shared.validerHoraire(radioName: radioName, startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, endTimeHour: hour2, endTimeMinute: minute2, endTimeSeconds: second2) { result in
+                        /*APIService.shared.validerHoraire(radioName: radioName, startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, endTimeHour: hour2, endTimeMinute: minute2, endTimeSeconds: second2) { result in
                             
                             switch result {
                                 case .success(let message):
@@ -183,7 +183,23 @@ struct NewProgramScreen: View {
                                     bigModel.currentView = .ProgramScreen
                             }
                             
+                        }*/
+                        
+                        let calendar = Calendar.current
+                        let currentDate = Date()
+                        let targetTime = calendar.date(bySettingHour: 17, minute:20, second: 30, of: currentDate)!
+
+                        let timeInterval = targetTime.timeIntervalSince(currentDate)
+
+                        // Si l'heure cible est déjà passée aujourd'hui, ajuste pour demain
+                        if timeInterval < 0 {
+                            let nextDay = calendar.date(byAdding: .day, value: 1, to: currentDate)!
+                            let newTargetTime = calendar.date(bySettingHour: 17, minute: 20, second: 30, of: nextDay)!
+                            RecordingService.shared.startTimer(for: newTargetTime, radioName: "franceinter", duration: 10)
+                        } else {
+                            RecordingService.shared.startTimer(for: targetTime, radioName: "franceinter", duration: 10)
                         }
+                        
                     } else {
                         print("radio name = \(radioName)")
                         print("Dans le futur")

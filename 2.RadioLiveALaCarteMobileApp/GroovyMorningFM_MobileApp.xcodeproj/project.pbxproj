@@ -14,6 +14,10 @@
 		7019FEE42D4F90B2005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7019FEE32D4F90B2005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3 */; };
 		7019FEE62D4F90D9005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7019FEE52D4F90D9005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3 */; };
 		704F64282D6E016D000C5556 /* AudioPlayerViewDanielMorin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704F64272D6E016D000C5556 /* AudioPlayerViewDanielMorin.swift */; };
+		70639F7B2DA805F800E20060 /* RecordingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70639F7A2DA805F800E20060 /* RecordingService.swift */; };
+		70639F7E2DA8087E00E20060 /* FFmpeg-iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 70639F7D2DA8087E00E20060 /* FFmpeg-iOS */; };
+		70639F802DA8087E00E20060 /* ffmpeg-ios in Frameworks */ = {isa = PBXBuildFile; productRef = 70639F7F2DA8087E00E20060 /* ffmpeg-ios */; };
+		70639F842DA80C4A00E20060 /* SilentAudioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70639F832DA80C4A00E20060 /* SilentAudioManager.swift */; };
 		7074574F2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7074574E2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift */; };
 		707457512D4AB236000DC5EC /* NewProgramScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707457502D4AB236000DC5EC /* NewProgramScreen.swift */; };
 		707457532D4AB237000DC5EC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 707457522D4AB237000DC5EC /* Assets.xcassets */; };
@@ -57,6 +61,10 @@
 		7019FEE32D4F90B2005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3"; sourceTree = "<group>"; };
 		7019FEE52D4F90D9005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3"; sourceTree = "<group>"; };
 		704F64272D6E016D000C5556 /* AudioPlayerViewDanielMorin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AudioPlayerViewDanielMorin.swift; path = GroovyMorningFM_MobileApp/Views/AudioPlayerViewDanielMorin.swift; sourceTree = SOURCE_ROOT; };
+		70639F7A2DA805F800E20060 /* RecordingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingService.swift; sourceTree = "<group>"; };
+		70639F812DA80BCC00E20060 /* silent.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silent.mp3; sourceTree = "<group>"; };
+		70639F832DA80C4A00E20060 /* SilentAudioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SilentAudioManager.swift; sourceTree = "<group>"; };
+		70639F852DA80E3B00E20060 /* GroovyMorningFM-MobileApp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GroovyMorningFM-MobileApp-Info.plist"; sourceTree = SOURCE_ROOT; };
 		7074574B2D4AB236000DC5EC /* GroovyMorningFM_MobileApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GroovyMorningFM_MobileApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7074574E2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroovyMorningFM_MobileAppApp.swift; sourceTree = "<group>"; };
 		707457502D4AB236000DC5EC /* NewProgramScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewProgramScreen.swift; sourceTree = "<group>"; };
@@ -84,6 +92,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70639F7E2DA8087E00E20060 /* FFmpeg-iOS in Frameworks */,
+				70639F802DA8087E00E20060 /* ffmpeg-ios in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,6 +133,8 @@
 				70D3B9462D5BB71B00BFF6F7 /* AudioPlayerManager.swift */,
 				7091436F2D639DB200D3C3A9 /* BigModel.swift */,
 				709440552D6D310200907894 /* ProgramManager.swift */,
+				70639F7A2DA805F800E20060 /* RecordingService.swift */,
+				70639F832DA80C4A00E20060 /* SilentAudioManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -145,6 +157,7 @@
 				7074575F2D4AB237000DC5EC /* GroovyMorningFM_MobileAppTests */,
 				707457692D4AB237000DC5EC /* GroovyMorningFM_MobileAppUITests */,
 				7074574C2D4AB236000DC5EC /* Products */,
+				70639F812DA80BCC00E20060 /* silent.mp3 */,
 			);
 			sourceTree = "<group>";
 		};
@@ -161,6 +174,7 @@
 		7074574D2D4AB236000DC5EC /* GroovyMorningFM_MobileApp */ = {
 			isa = PBXGroup;
 			children = (
+				70639F852DA80E3B00E20060 /* GroovyMorningFM-MobileApp-Info.plist */,
 				7007640D2D4BEEAE00411F53 /* Services */,
 				7007640E2D4BEEBE00411F53 /* Models */,
 				7007640B2D4B5D4200411F53 /* Views */,
@@ -297,6 +311,9 @@
 				Base,
 			);
 			mainGroup = 707457422D4AB236000DC5EC;
+			packageReferences = (
+				70639F7C2DA8087E00E20060 /* XCRemoteSwiftPackageReference "FFmpeg-iOS" */,
+			);
 			productRefGroup = 7074574C2D4AB236000DC5EC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -352,11 +369,13 @@
 				709440562D6D310200907894 /* ProgramManager.swift in Sources */,
 				700764022D4ACFD900411F53 /* APIService.swift in Sources */,
 				7074574F2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift in Sources */,
+				70639F842DA80C4A00E20060 /* SilentAudioManager.swift in Sources */,
 				7091436E2D6394C100D3C3A9 /* GroovyRootView.swift in Sources */,
 				70D3B9472D5BB71B00BFF6F7 /* AudioPlayerManager.swift in Sources */,
 				70983FDB2D6B7C2D00B01BBF /* LightenedRadioStationAndAmountOfResponses.swift in Sources */,
 				70D3B9492D5FE73600BFF6F7 /* RecordName.swift in Sources */,
 				708366022D57AB8200DF1AB6 /* AudioPlayerView.swift in Sources */,
+				70639F7B2DA805F800E20060 /* RecordingService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -526,11 +545,13 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "GroovyMorningFM-MobileApp-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -556,11 +577,13 @@
 				DEVELOPMENT_TEAM = 27DU3FB9N5;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "GroovyMorningFM-MobileApp-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -686,6 +709,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		70639F7C2DA8087E00E20060 /* XCRemoteSwiftPackageReference "FFmpeg-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kewlbear/FFmpeg-iOS.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.5;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		70639F7D2DA8087E00E20060 /* FFmpeg-iOS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 70639F7C2DA8087E00E20060 /* XCRemoteSwiftPackageReference "FFmpeg-iOS" */;
+			productName = "FFmpeg-iOS";
+		};
+		70639F7F2DA8087E00E20060 /* ffmpeg-ios */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 70639F7C2DA8087E00E20060 /* XCRemoteSwiftPackageReference "FFmpeg-iOS" */;
+			productName = "ffmpeg-ios";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 707457432D4AB236000DC5EC /* Project object */;
 }
