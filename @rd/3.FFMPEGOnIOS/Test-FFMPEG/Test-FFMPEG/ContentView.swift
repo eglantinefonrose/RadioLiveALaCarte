@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import FFmpegSupport
 
 struct ContentView: View {
     var body: some View {
@@ -14,6 +15,9 @@ struct ContentView: View {
                 .imageScale(.large)
                 .foregroundStyle(.tint)
             Text("Hello, world!")
+                .onTapGesture {
+                    ffmpeg(["ffmpeg", "-i", "/Users/eglantine/Desktop/0331.mp4", "/Users/eglantine/Desktop/ffmpeg-test-10-4-2025.mp4"])
+                }
         }
         .padding()
     }
