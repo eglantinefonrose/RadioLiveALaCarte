@@ -1,0 +1,620 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		70EA75562DA7A841007A13C1 /* FFmpeg-iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 70EA75552DA7A841007A13C1 /* FFmpeg-iOS */; };
+		70EA75582DA7A841007A13C1 /* ffmpeg-ios in Frameworks */ = {isa = PBXBuildFile; productRef = 70EA75572DA7A841007A13C1 /* ffmpeg-ios */; };
+		70EA755C2DA7BE7E007A13C1 /* silent.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 70EA755B2DA7BE7E007A13C1 /* silent.mp3 */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		70EA75382DA7A5CB007A13C1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70EA751F2DA7A5CA007A13C1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70EA75262DA7A5CA007A13C1;
+			remoteInfo = "Test-FFMPEG";
+		};
+		70EA75422DA7A5CC007A13C1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70EA751F2DA7A5CA007A13C1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70EA75262DA7A5CA007A13C1;
+			remoteInfo = "Test-FFMPEG";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		70EA75272DA7A5CA007A13C1 /* Test-FFMPEG.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Test-FFMPEG.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		70EA75372DA7A5CB007A13C1 /* Test-FFMPEGTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Test-FFMPEGTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		70EA75412DA7A5CC007A13C1 /* Test-FFMPEGUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Test-FFMPEGUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		70EA755B2DA7BE7E007A13C1 /* silent.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silent.mp3; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		70EA755A2DA7B991007A13C1 /* Exceptions for "Test-FFMPEG" folder in "Test-FFMPEG" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 70EA75262DA7A5CA007A13C1 /* Test-FFMPEG */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		70EA75292DA7A5CA007A13C1 /* Test-FFMPEG */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				70EA755A2DA7B991007A13C1 /* Exceptions for "Test-FFMPEG" folder in "Test-FFMPEG" target */,
+			);
+			path = "Test-FFMPEG";
+			sourceTree = "<group>";
+		};
+		70EA753A2DA7A5CB007A13C1 /* Test-FFMPEGTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Test-FFMPEGTests";
+			sourceTree = "<group>";
+		};
+		70EA75442DA7A5CC007A13C1 /* Test-FFMPEGUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "Test-FFMPEGUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		70EA75242DA7A5CA007A13C1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70EA75562DA7A841007A13C1 /* FFmpeg-iOS in Frameworks */,
+				70EA75582DA7A841007A13C1 /* ffmpeg-ios in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70EA75342DA7A5CB007A13C1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70EA753E2DA7A5CC007A13C1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		70EA751E2DA7A5CA007A13C1 = {
+			isa = PBXGroup;
+			children = (
+				70EA755B2DA7BE7E007A13C1 /* silent.mp3 */,
+				70EA75292DA7A5CA007A13C1 /* Test-FFMPEG */,
+				70EA753A2DA7A5CB007A13C1 /* Test-FFMPEGTests */,
+				70EA75442DA7A5CC007A13C1 /* Test-FFMPEGUITests */,
+				70EA75282DA7A5CA007A13C1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		70EA75282DA7A5CA007A13C1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				70EA75272DA7A5CA007A13C1 /* Test-FFMPEG.app */,
+				70EA75372DA7A5CB007A13C1 /* Test-FFMPEGTests.xctest */,
+				70EA75412DA7A5CC007A13C1 /* Test-FFMPEGUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		70EA75262DA7A5CA007A13C1 /* Test-FFMPEG */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 70EA754B2DA7A5CC007A13C1 /* Build configuration list for PBXNativeTarget "Test-FFMPEG" */;
+			buildPhases = (
+				70EA75232DA7A5CA007A13C1 /* Sources */,
+				70EA75242DA7A5CA007A13C1 /* Frameworks */,
+				70EA75252DA7A5CA007A13C1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				70EA75292DA7A5CA007A13C1 /* Test-FFMPEG */,
+			);
+			name = "Test-FFMPEG";
+			packageProductDependencies = (
+				70EA75552DA7A841007A13C1 /* FFmpeg-iOS */,
+				70EA75572DA7A841007A13C1 /* ffmpeg-ios */,
+			);
+			productName = "Test-FFMPEG";
+			productReference = 70EA75272DA7A5CA007A13C1 /* Test-FFMPEG.app */;
+			productType = "com.apple.product-type.application";
+		};
+		70EA75362DA7A5CB007A13C1 /* Test-FFMPEGTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 70EA754E2DA7A5CC007A13C1 /* Build configuration list for PBXNativeTarget "Test-FFMPEGTests" */;
+			buildPhases = (
+				70EA75332DA7A5CB007A13C1 /* Sources */,
+				70EA75342DA7A5CB007A13C1 /* Frameworks */,
+				70EA75352DA7A5CB007A13C1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				70EA75392DA7A5CB007A13C1 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				70EA753A2DA7A5CB007A13C1 /* Test-FFMPEGTests */,
+			);
+			name = "Test-FFMPEGTests";
+			packageProductDependencies = (
+			);
+			productName = "Test-FFMPEGTests";
+			productReference = 70EA75372DA7A5CB007A13C1 /* Test-FFMPEGTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		70EA75402DA7A5CC007A13C1 /* Test-FFMPEGUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 70EA75512DA7A5CC007A13C1 /* Build configuration list for PBXNativeTarget "Test-FFMPEGUITests" */;
+			buildPhases = (
+				70EA753D2DA7A5CC007A13C1 /* Sources */,
+				70EA753E2DA7A5CC007A13C1 /* Frameworks */,
+				70EA753F2DA7A5CC007A13C1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				70EA75432DA7A5CC007A13C1 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				70EA75442DA7A5CC007A13C1 /* Test-FFMPEGUITests */,
+			);
+			name = "Test-FFMPEGUITests";
+			packageProductDependencies = (
+			);
+			productName = "Test-FFMPEGUITests";
+			productReference = 70EA75412DA7A5CC007A13C1 /* Test-FFMPEGUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		70EA751F2DA7A5CA007A13C1 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1620;
+				LastUpgradeCheck = 1620;
+				TargetAttributes = {
+					70EA75262DA7A5CA007A13C1 = {
+						CreatedOnToolsVersion = 16.2;
+					};
+					70EA75362DA7A5CB007A13C1 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 70EA75262DA7A5CA007A13C1;
+					};
+					70EA75402DA7A5CC007A13C1 = {
+						CreatedOnToolsVersion = 16.2;
+						TestTargetID = 70EA75262DA7A5CA007A13C1;
+					};
+				};
+			};
+			buildConfigurationList = 70EA75222DA7A5CA007A13C1 /* Build configuration list for PBXProject "Test-FFMPEG" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 70EA751E2DA7A5CA007A13C1;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				70EA75542DA7A841007A13C1 /* XCRemoteSwiftPackageReference "FFmpeg-iOS" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 70EA75282DA7A5CA007A13C1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				70EA75262DA7A5CA007A13C1 /* Test-FFMPEG */,
+				70EA75362DA7A5CB007A13C1 /* Test-FFMPEGTests */,
+				70EA75402DA7A5CC007A13C1 /* Test-FFMPEGUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		70EA75252DA7A5CA007A13C1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70EA755C2DA7BE7E007A13C1 /* silent.mp3 in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70EA75352DA7A5CB007A13C1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70EA753F2DA7A5CC007A13C1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		70EA75232DA7A5CA007A13C1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70EA75332DA7A5CB007A13C1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70EA753D2DA7A5CC007A13C1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		70EA75392DA7A5CB007A13C1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70EA75262DA7A5CA007A13C1 /* Test-FFMPEG */;
+			targetProxy = 70EA75382DA7A5CB007A13C1 /* PBXContainerItemProxy */;
+		};
+		70EA75432DA7A5CC007A13C1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70EA75262DA7A5CA007A13C1 /* Test-FFMPEG */;
+			targetProxy = 70EA75422DA7A5CC007A13C1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		70EA75492DA7A5CC007A13C1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		70EA754A2DA7A5CC007A13C1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		70EA754C2DA7A5CC007A13C1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Test-FFMPEG/Preview Content\"";
+				DEVELOPMENT_TEAM = 27DU3FB9N5;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Test-FFMPEG/Info.plist";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.proutechos.sandbox.screentimeapis.Test-FFMPEG";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		70EA754D2DA7A5CC007A13C1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Test-FFMPEG/Preview Content\"";
+				DEVELOPMENT_TEAM = 27DU3FB9N5;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Test-FFMPEG/Info.plist";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.proutechos.sandbox.screentimeapis.Test-FFMPEG";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		70EA754F2DA7A5CC007A13C1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 27DU3FB9N5;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.proutechos.sandbox.screentimeapis.Test-FFMPEGTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Test-FFMPEG.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Test-FFMPEG";
+			};
+			name = Debug;
+		};
+		70EA75502DA7A5CC007A13C1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 27DU3FB9N5;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.proutechos.sandbox.screentimeapis.Test-FFMPEGTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Test-FFMPEG.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Test-FFMPEG";
+			};
+			name = Release;
+		};
+		70EA75522DA7A5CC007A13C1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 27DU3FB9N5;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.proutechos.sandbox.screentimeapis.Test-FFMPEGUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Test-FFMPEG";
+			};
+			name = Debug;
+		};
+		70EA75532DA7A5CC007A13C1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 27DU3FB9N5;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.proutechos.sandbox.screentimeapis.Test-FFMPEGUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Test-FFMPEG";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		70EA75222DA7A5CA007A13C1 /* Build configuration list for PBXProject "Test-FFMPEG" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70EA75492DA7A5CC007A13C1 /* Debug */,
+				70EA754A2DA7A5CC007A13C1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		70EA754B2DA7A5CC007A13C1 /* Build configuration list for PBXNativeTarget "Test-FFMPEG" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70EA754C2DA7A5CC007A13C1 /* Debug */,
+				70EA754D2DA7A5CC007A13C1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		70EA754E2DA7A5CC007A13C1 /* Build configuration list for PBXNativeTarget "Test-FFMPEGTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70EA754F2DA7A5CC007A13C1 /* Debug */,
+				70EA75502DA7A5CC007A13C1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		70EA75512DA7A5CC007A13C1 /* Build configuration list for PBXNativeTarget "Test-FFMPEGUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70EA75522DA7A5CC007A13C1 /* Debug */,
+				70EA75532DA7A5CC007A13C1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		70EA75542DA7A841007A13C1 /* XCRemoteSwiftPackageReference "FFmpeg-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kewlbear/FFmpeg-iOS.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.5;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		70EA75552DA7A841007A13C1 /* FFmpeg-iOS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 70EA75542DA7A841007A13C1 /* XCRemoteSwiftPackageReference "FFmpeg-iOS" */;
+			productName = "FFmpeg-iOS";
+		};
+		70EA75572DA7A841007A13C1 /* ffmpeg-ios */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 70EA75542DA7A841007A13C1 /* XCRemoteSwiftPackageReference "FFmpeg-iOS" */;
+			productName = "ffmpeg-ios";
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 70EA751F2DA7A5CA007A13C1 /* Project object */;
+}
