@@ -41,7 +41,8 @@ struct ContentView: View {
     @State private var isProcessing = false
     
     @State private var isPlaying = false
-    let fileName = "franceinter.mp3" // Ton fichier enregistré
+    @State private var durationText = "Durée : --:--"
+    let fileName = "franceinter_0002.mp3" // Ton fichier enregistré
 
     var body: some View {
         
@@ -62,7 +63,7 @@ struct ContentView: View {
             // Configurer la minuterie pour 10h31
             let calendar = Calendar.current
             let currentDate = Date()
-            let targetTime = calendar.date(bySettingHour: 14, minute: 28, second: 30, of: currentDate)!
+            let targetTime = calendar.date(bySettingHour: 14, minute: 59, second: 30, of: currentDate)!
 
             let timeInterval = targetTime.timeIntervalSince(currentDate)
 
@@ -80,21 +81,25 @@ struct ContentView: View {
         }*/
         
         VStack(spacing: 20) {
-                    Text("🎧 Écouter l'enregistrement")
-                        .font(.title2)
+            Text("🎧 Écouter l'enregistrement")
+                .font(.title2)
 
-                    Button(action: togglePlayback) {
-                        Text(isPlaying ? "⏸ Pause" : "▶️ Play")
-                            .font(.title)
-                            .padding()
-                            .background(Color.blue.opacity(0.8))
-                            .foregroundColor(.white)
-                            .cornerRadius(12)
-                    }
-                }
-                .onAppear {
-                    prepareAudio()
-                }
+            Text(durationText)
+                .font(.subheadline)
+                .foregroundColor(.gray)
+
+            Button(action: togglePlayback) {
+                Text(isPlaying ? "⏸ Pause" : "▶️ Play")
+                    .font(.title)
+                    .padding()
+                    .background(Color.blue.opacity(0.8))
+                    .foregroundColor(.white)
+                    .cornerRadius(12)
+            }
+        }
+        .onAppear {
+            prepareAudio()
+        }
         
     }
     
@@ -102,12 +107,23 @@ struct ContentView: View {
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let fileURL = documentsURL.appendingPathComponent(fileName)
 
-        if FileManager.default.fileExists(atPath: fileURL.path) {
+            guard FileManager.default.fileExists(atPath: fileURL.path) else {
+                print("❌ Fichier non trouvé : \(fileName)")
+                return
+            }
+
+            let asset = AVAsset(url: fileURL)
+            let duration = asset.duration
+            let durationInSeconds = CMTimeGetSeconds(duration)
+
+            if durationInSeconds.isFinite {
+                let minutes = Int(durationInSeconds) / 60
+                let seconds = Int(durationInSeconds) % 60
+                durationText = String(format: "Durée : %02d:%02d", minutes, seconds)
+            }
+
             audioPlayer = AVPlayer(url: fileURL)
-        } else {
-            print("❌ Fichier non trouvé : \(fileName)")
         }
-    }
 
     func togglePlayback() {
         guard let player = audioPlayer else { return }
@@ -134,12 +150,12 @@ struct ContentView: View {
         // Commande FFMPEG à exécuter
         
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let outputURL = documentsDirectory.appendingPathComponent("franceinter.mp3")
+        let outputURL = documentsDirectory.appendingPathComponent("franceinter_0002.mp3")
 
         let ffmpegCommand = [
             "ffmpeg",
             "-i", "http://direct.franceinter.fr/live/franceinter-midfi.mp3",
-            "-t", "60",
+            "-t", "10",
             "-c", "copy",
             outputURL.path
         ]
