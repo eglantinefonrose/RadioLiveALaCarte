@@ -187,7 +187,7 @@ struct NewProgramScreen: View {
                         
                         let calendar = Calendar.current
                         let currentDate = Date()
-                        let targetTime = calendar.date(bySettingHour: 17, minute:20, second: 30, of: currentDate)!
+                        let targetTime = calendar.date(bySettingHour: hour1, minute: minute1, second: second1, of: currentDate)!
 
                         let timeInterval = targetTime.timeIntervalSince(currentDate)
 
@@ -195,9 +195,9 @@ struct NewProgramScreen: View {
                         if timeInterval < 0 {
                             let nextDay = calendar.date(byAdding: .day, value: 1, to: currentDate)!
                             let newTargetTime = calendar.date(bySettingHour: 17, minute: 20, second: 30, of: nextDay)!
-                            RecordingService.shared.startTimer(for: newTargetTime, radioName: "franceinter", duration: 10)
+                            RecordingService.shared.startTimer(for: newTargetTime, radioName: "franceinter", startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1)
                         } else {
-                            RecordingService.shared.startTimer(for: targetTime, radioName: "franceinter", duration: 10)
+                            RecordingService.shared.startTimer(for: targetTime, radioName: "franceinter", startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1)
                         }
                         
                     } else {

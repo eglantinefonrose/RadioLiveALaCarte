@@ -158,7 +158,7 @@ public class RadioInformationAndPlanningService {
             List<RadioStation> stations = objectMapper.readValue(jsonString, new TypeReference<List<RadioStation>>() {
             });
 
-            return stations.get(0).getUrl_resolved();
+            return stations.get(0).getUrl();
 
         } catch (Exception e) {
             throw (e);

@@ -26,7 +26,7 @@ struct ProgramScreen: View {
     
     @State private var isPlaying = false
     @State private var durationText = "Durée : --:--"
-    let fileName = "franceinter_ECF331B9-FCEF-4B99-B44A-8E2DDD37667D.mp3" // Ton fichier enregistré
+    let fileName = "prout_480408-4.m4a" // Ton fichier enregistré
     
     var body: some View {
         
@@ -228,20 +228,27 @@ struct ProgramScreen: View {
         let documentsURL = getDocumentsDirectory()
 
         do {
-            let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
-            
+            let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: [.fileSizeKey])
+
             if fileURLs.isEmpty {
                 print("📁 Aucun fichier trouvé dans Documents.")
             } else {
                 print("📁 Fichiers dans Documents:")
                 for fileURL in fileURLs {
-                    print("📄 \(fileURL.lastPathComponent) -> \(fileURL.path)")
+                    do {
+                        let resourceValues = try fileURL.resourceValues(forKeys: [.fileSizeKey])
+                        let fileSize = resourceValues.fileSize ?? 0
+                        print("📄 \(fileURL.lastPathComponent) -> \(fileURL.path) (\(fileSize) octets)")
+                    } catch {
+                        print("⚠️ Impossible de lire la taille de \(fileURL.lastPathComponent): \(error)")
+                    }
                 }
             }
         } catch {
             print("❌ Erreur lors de la lecture du dossier Documents: \(error)")
         }
     }
+
     
     func prepareAudio() {
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]

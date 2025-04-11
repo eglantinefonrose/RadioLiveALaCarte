@@ -14,15 +14,16 @@ class RecordingService {
     
     static let shared = RecordingService()
     
-    func startTimer(for targetTime: Date, radioName: String, duration: Int) {
+    func startTimer(for targetTime: Date, radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int) {
         let timer = Timer.scheduledTimer(withTimeInterval: targetTime.timeIntervalSinceNow, repeats: false) { _ in
-            self.recordRadio(radioName: radioName, duration: duration)
+            self.recordRadio(radioName: radioName, startTimeHour: startTimeHour, startTimeMinute: startTimeMinute, startTimeSeconds: startTimeSeconds)
         }
         RunLoop.current.add(timer, forMode: .common)
     }
     
-    private func recordRadio(radioName: String, duration: Int) {
-        /*let urlString = "http://localhost:8287/api/radio/getURLByName/name/\(radioName)"
+    private func recordRadio(radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int) {
+        
+        let urlString = "http://\(BigModel.shared.ipAdress):8287/api/radio/getURLByName/name/\(radioName)"
         
         guard let url = URL(string: urlString) else {
             print("URL invalide.")
@@ -40,24 +41,26 @@ class RecordingService {
                   let streamURL = URL(string: streamURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
                 print("Réponse invalide.")
                 return
-            }*/
+            }
             
             let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-            let uuid = UUID().uuidString
-            let outputURL = documentsDirectory.appendingPathComponent("franceinter_\(uuid).mp3")
+            let outputURL = documentsDirectory.appendingPathComponent("prout_480408-4.m4a")
 
             let ffmpegCommand = [
                 "ffmpeg",
-                "-i", "http://direct.franceinter.fr/live/franceinter-midfi.mp3",
-                "-t", "\(duration)",
-                "-c", "copy",
-                outputURL.path
+                "-t", "10",
+                "-i", "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance",
+                "-c:a", "aac",
+                "-b:a", "128k",
+                "-vn",
+                "\(outputURL.path)"
             ]
             
             ffmpeg(ffmpegCommand)
-        /*}
+            
+        }
         
-        task.resume()*/
+        task.resume()
     }
     
 }
