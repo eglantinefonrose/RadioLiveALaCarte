@@ -314,6 +314,30 @@ public class RadioLiveALaCarteResource {
 
     }
 
+    /**
+     * curl -s -X GET "http://localhost:8287/api/radio/createProgram/radioName/FranceInter/startTimeHour/15/startTimeMinute/31/startTimeSeconds/0/endTimeHour/15/endTimeMinute/33/endTimeSeconds/0/userID/aa768288-7621-49c8-99bd-c33c6fc02cc5"
+     * @return
+     */
+    @GET
+    @Path("/createProgram/radioName/{radioName}/startTimeHour/{startTimeHour}/startTimeMinute/{startTimeMinute}/startTimeSeconds/{startTimeSeconds}/endTimeHour/{endTimeHour}/endTimeMinute/{endTimeMinute}/endTimeSeconds/{endTimeSeconds}/userID/{userID}/danielMorinVersion/{danielMorinVersion}")
+    public String createProgram(@PathParam("radioName") String radioName, @PathParam("startTimeHour") int startTimeHour, @PathParam("startTimeMinute") int startTimeMinute, @PathParam("startTimeSeconds") int startTimeSeconds, @PathParam("endTimeHour") int endTimeHour, @PathParam("endTimeMinute") int endTimeMinute, @PathParam("endTimeSeconds") int endTimeSeconds, @PathParam("userID") String userID, @PathParam("danielMorinVersion") Integer danielMorinVersion) throws ProutechosBaseException {
+
+        try {
+
+            Program program = new Program("programId", radioName, startTimeHour, startTimeMinute, startTimeSeconds, endTimeHour, endTimeMinute, endTimeSeconds);
+
+            String programID = RadioLiveALaCarteUserService.getInstance().createProgram(program);
+            RadioLiveALaCarteUserService.getInstance().addUserProgram(userID, programID);
+            return programID;
+
+        } catch (ProutechosBaseException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     @GET
     @Path("/concateneFile/baseName/{baseName}")
     @Produces(MediaType.APPLICATION_JSON)

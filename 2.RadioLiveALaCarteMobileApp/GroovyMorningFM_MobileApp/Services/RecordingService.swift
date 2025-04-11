@@ -14,14 +14,17 @@ class RecordingService {
     
     static let shared = RecordingService()
     
-    func startTimer(for targetTime: Date, radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int) {
+    func startTimer(for targetTime: Date, radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, outputName: String) {
+        
+        print("horaire : \(startTimeHour), \(startTimeMinute), \(startTimeSeconds)")
+        
         let timer = Timer.scheduledTimer(withTimeInterval: targetTime.timeIntervalSinceNow, repeats: false) { _ in
-            self.recordRadio(radioName: radioName, startTimeHour: startTimeHour, startTimeMinute: startTimeMinute, startTimeSeconds: startTimeSeconds)
+            self.recordRadio(radioName: radioName, startTimeHour: startTimeHour, startTimeMinute: startTimeMinute, startTimeSeconds: startTimeSeconds, outputName: outputName)
         }
         RunLoop.current.add(timer, forMode: .common)
     }
     
-    private func recordRadio(radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int) {
+    private func recordRadio(radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, outputName: String) {
         
         let urlString = "http://\(BigModel.shared.ipAdress):8287/api/radio/getURLByName/name/\(radioName)"
         
@@ -44,7 +47,7 @@ class RecordingService {
             }
             
             let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-            let outputURL = documentsDirectory.appendingPathComponent("prout_480408-5.m4a")
+            let outputURL = documentsDirectory.appendingPathComponent("\(outputName).m4a")
             
             print("streamURLString = \(streamURLString)")
 

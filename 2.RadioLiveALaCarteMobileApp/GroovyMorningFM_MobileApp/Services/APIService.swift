@@ -23,8 +23,7 @@ class APIService: ObservableObject {
         completion: @escaping (Result<String, Error>) -> Void
     ) {
         // Construction correcte de l'URL
-        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createAndRecordProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeMinute)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001/danielMorinVersion/0"
-        print(urlString)
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeMinute)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001/danielMorinVersion/0"
         
         // Vérification de l'URL valide
         guard let url = URL(string: urlString) else {
@@ -60,6 +59,67 @@ class APIService: ObservableObject {
             }
         }.resume()
     }
+    
+    
+    /*func createProgram(
+        radioName: String,
+        startTimeHour: Int,
+        startTimeMinute: Int,
+        startTimeSeconds: Int,
+        endTimeHour: Int,
+        endTimeMinute: Int,
+        endTimeSeconds: Int,
+        completion: @escaping (Result<String, Error>) -> Void
+    ) {
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeMinute)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001/danielMorinVersion/0"
+        
+        guard let url = URL(string: urlString) else {
+            completion(.failure(URLError(.badURL)))
+            return
+        }
+
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+
+            guard let data = data, let responseString = String(data: data, encoding: .utf8) else {
+                completion(.failure(URLError(.cannotDecodeContentData)))
+                return
+            }
+
+            completion(.success(responseString))
+        }
+
+        task.resume()
+    }*/
+    
+    func createProgram(
+        radioName: String,
+        startTimeHour: Int,
+        startTimeMinute: Int,
+        startTimeSeconds: Int,
+        endTimeHour: Int,
+        endTimeMinute: Int,
+        endTimeSeconds: Int
+    ) async throws -> String {
+        
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeMinute)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001/danielMorinVersion/0"
+        
+        guard let url = URL(string: urlString) else {
+            throw URLError(.badURL)
+        }
+        
+        let (data, _) = try await URLSession.shared.data(from: url)
+        
+        if let responseString = String(data: data, encoding: .utf8) {
+            return responseString
+        } else {
+            throw URLError(.cannotDecodeContentData)
+        }
+    }
+
 
     
     func creerHoraireDanielMorin() {

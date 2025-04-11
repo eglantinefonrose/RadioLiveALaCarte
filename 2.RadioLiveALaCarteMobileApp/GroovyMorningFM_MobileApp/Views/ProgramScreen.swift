@@ -26,7 +26,7 @@ struct ProgramScreen: View {
     
     @State private var isPlaying = false
     @State private var durationText = "Durée : --:--"
-    let fileName = "prout_480408-5.m4a" // Ton fichier enregistré
+    let fileName = "bb777e65-c46a-42fd-bf81-230aed356e60.m4a" // Ton fichier enregistré
     
     var body: some View {
         
