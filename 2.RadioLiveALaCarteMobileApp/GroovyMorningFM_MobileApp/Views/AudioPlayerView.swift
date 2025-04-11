@@ -42,7 +42,7 @@ struct AudioPlayerView: View {
                 
                 VStack {
                     
-                    if (audioManager.areThereAnyAudiosAvailable()) {
+                    //if (audioManager.areThereAnyAudiosAvailable()) {
                         
                         // Barre de progression du temps de lecture
                         Slider(value: $audioManager.currentTime, in: 0...audioManager.duration, onEditingChanged: { isEditing in
@@ -101,9 +101,9 @@ struct AudioPlayerView: View {
                         }
                         .padding()
                         
-                    } else {
+                    /*} else {
                         Text("No programs are available today")
-                    }
+                    }*/
                     
                 }
                 
