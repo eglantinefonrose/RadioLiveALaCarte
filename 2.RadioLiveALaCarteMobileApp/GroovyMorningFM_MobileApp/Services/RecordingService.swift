@@ -44,12 +44,14 @@ class RecordingService {
             }
             
             let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-            let outputURL = documentsDirectory.appendingPathComponent("prout_480408-4.m4a")
+            let outputURL = documentsDirectory.appendingPathComponent("prout_480408-5.m4a")
+            
+            print("streamURLString = \(streamURLString)")
 
             let ffmpegCommand = [
                 "ffmpeg",
                 "-t", "10",
-                "-i", "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance",
+                "-i", "\(streamURLString)",
                 "-c:a", "aac",
                 "-b:a", "128k",
                 "-vn",
