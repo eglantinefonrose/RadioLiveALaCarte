@@ -19,7 +19,8 @@ struct GroovyRootView: View {
                 ProgramScreen()
             }
             if (BigModel.shared.currentView == .AudioPlayerView) {
-                AudioPlayerView()
+                //AudioPlayerView()
+                AudioPlayerView_2237()
             }
             if (BigModel.shared.currentView == .NewProgramScreen) {
                 NewProgramScreen()

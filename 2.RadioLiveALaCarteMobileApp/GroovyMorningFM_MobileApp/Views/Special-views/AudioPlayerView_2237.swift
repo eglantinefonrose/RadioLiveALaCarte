@@ -70,6 +70,15 @@ struct AudioPlayerView_2237: View {
                     playTrack(at: index)
                 }
             }
+            
+            Button("Supprimer tous les fichiers") {
+                for (index, _) in audioFiles.enumerated().reversed() {
+                    deleteAudioFile(at: index)
+                }
+            }
+            .foregroundColor(.red)
+
+            
         }
         .padding()
         .onAppear(perform: loadAudioFiles)
@@ -111,5 +120,25 @@ struct AudioPlayerView_2237: View {
         guard let index = currentIndex, index > 0 else { return }
         playTrack(at: index - 1)
     }
+    
+    private func deleteAudioFile(at index: Int) {
+        let fileName = audioFiles[index]
+        let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent(fileName)
+
+        do {
+            try FileManager.default.removeItem(at: fileURL)
+            audioFiles.remove(at: index)
+            if currentIndex == index {
+                audioPlayer.stop()
+                currentIndex = nil
+            } else if let current = currentIndex, current > index {
+                currentIndex = current - 1
+            }
+        } catch {
+            print("Erreur lors de la suppression du fichier : \(error.localizedDescription)")
+        }
+    }
+
+    
 }
 
