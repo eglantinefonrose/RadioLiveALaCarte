@@ -19,7 +19,7 @@ class RecordingService {
         print("horaire : \(startTimeHour), \(startTimeMinute), \(startTimeSeconds)")
         
         let timer = Timer.scheduledTimer(withTimeInterval: targetTime.timeIntervalSinceNow, repeats: false) { _ in
-            self.recordRadio(radioName: radioName, startTimeHour: startTimeHour, startTimeMinute: startTimeMinute, startTimeSeconds: startTimeSeconds, outputName: outputName)
+            self.recordRadio(radioName: radioName, startTimeHour: startTimeHour, startTimeMinute: startTimeMinute, startTimeSeconds: startTimeSeconds, outputName: "test_criveli")
         }
         RunLoop.current.add(timer, forMode: .common)
     }
@@ -63,8 +63,9 @@ class RecordingService {
                 "\(outputURL.path)"                // Fichier de sortie (avec modèle de nom)
             ]
 
-            ffmpeg(ffmpegCommand)
-
+            DispatchQueue.global(qos: .userInitiated).async {
+                ffmpeg(ffmpegCommand)
+            }
             
         }
         
