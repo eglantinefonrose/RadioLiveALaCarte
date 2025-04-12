@@ -10,7 +10,7 @@ import Combine
 
 // Daniel Morin : 6h56 à 7h
 
-class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
+class AudioPlayer2215: NSObject, AVAudioPlayerDelegate, ObservableObject {
     
     var audioPlayer: AVAudioPlayer?
     
@@ -633,3 +633,6 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
 extension Notification.Name {
     static let ipAddressUpdated = Notification.Name("ipAddressUpdated")
 }
+
+
+

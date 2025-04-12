@@ -171,26 +171,45 @@ struct NewProgramScreen: View {
                 
                 Button(action: {
                     
-                    if (ProgramManager.shared.estDansLeFutur(heure: hour1, minute: minute1, seconde: second1) && (radioName != "")) {
-                        APIService.shared.validerHoraire(radioName: radioName, startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, endTimeHour: hour2, endTimeMinute: minute2, endTimeSeconds: second2) { result in
-                            
-                            switch result {
-                                case .success(let message):
-                                    print("Succès :", message)
-                                    bigModel.currentView = .ProgramScreen
-                                case .failure(let error):
-                                    print("Erreur :", error.localizedDescription)
-                                    bigModel.currentView = .ProgramScreen
+                    Task {
+                        do {
+                            let response = try await APIService.shared.createProgram(
+                                radioName: radioName,
+                                startTimeHour: hour1,
+                                startTimeMinute: minute1,
+                                startTimeSeconds: second1,
+                                endTimeHour: hour2,
+                                endTimeMinute: minute2,
+                                endTimeSeconds: second2
+                            )
+                            print("Réponse du serveur : \(response)")
+                            if (ProgramManager.shared.estDansLeFutur(heure: hour1, minute: minute1, seconde: second1) && (radioName != "")) {
+                                
+                                let calendar = Calendar.current
+                                let currentDate = Date()
+                                let targetTime = calendar.date(bySettingHour: hour1, minute: minute1, second: second1, of: currentDate)!
+
+                                let timeInterval = targetTime.timeIntervalSince(currentDate)
+
+                                // Si l'heure cible est déjà passée aujourd'hui, ajuste pour demain
+                                if timeInterval < 0 {
+                                    let nextDay = calendar.date(byAdding: .day, value: 1, to: currentDate)!
+                                    let newTargetTime = calendar.date(bySettingHour: hour1, minute: minute1, second: second1, of: nextDay)!
+                                    
+                                    RecordingService.shared.startTimer(for: newTargetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, outputName: response)
+                                } else {
+                                    RecordingService.shared.startTimer(for: targetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, outputName: response)
+                                }
+                                
+                            } else {
+                                print("radio name = \(radioName)")
+                                print("Dans le futur")
                             }
-                            
+                        } catch {
+                            print("Erreur : \(error)")
                         }
-                    } else {
-                        print("radio name = \(radioName)")
-                        print("Dans le futur")
                     }
-                    
-                    // estDansLeFutur(heure: hour1, minute: minute1, seconde: second1)
-                    
+                                        
                     if (ProgramManager.shared.estDansLeFutur(heure: hour1, minute: minute1, seconde: second1)) {
                         print("L'horaire est déjà passée dans la journée")
                     }
