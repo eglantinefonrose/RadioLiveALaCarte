@@ -47,24 +47,24 @@ class RecordingService {
             }
             
             let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-            let outputURL = documentsDirectory.appendingPathComponent("\(outputName)_%03d.m4a")
+            let outputURL = documentsDirectory.appendingPathComponent("\(outputName).mp4")
 
             print("streamURLString = \(streamURLString)")
-
+            
             let ffmpegCommand = [
                 "ffmpeg",
-                "-t", "180",                        // Durée totale d'enregistrement
-                "-i", "\(streamURLString)",         // Source du flux
-                "-c:a", "aac",                      // Codec audio
-                "-b:a", "128k",                     // Bitrate audio
-                "-vn",                              // Pas de vidéo
-                "-f", "segment",                    // Format segmenté
-                "-segment_time", "10",             // Durée de chaque segment
-                "\(outputURL.path)"                // Fichier de sortie (avec modèle de nom)
+                "-i", "\(streamURLString)",
+                "-t", "30",
+                "-map", "0:a",
+                "-c:a", "aac",
+                "-b:a", "128k",
+                "-f", "tee",
+                "[f=mp4]\(outputURL.absoluteString)|[f=segment:segment_time=5:reset_timestamps=1]\(documentsDirectory.path)/\(outputName)_%03d.mp4"
             ]
 
-            ffmpeg(ffmpegCommand)
-
+            DispatchQueue.global(qos: .userInitiated).async {
+                ffmpeg(ffmpegCommand)
+            }
             
         }
         

@@ -31,6 +31,9 @@ struct GroovyRootView: View {
             if (BigModel.shared.currentView == .DanielMorin) {
                 AudioPlayerViewDanielMorin()
             }
+            if (BigModel.shared.currentView == .TestLivePlayer) {
+                TestFFMPEGConcatene()
+            }
         }.onAppear {
             if (danielMorinVersion) {
                 bigModel.currentView = .DanielMorin
@@ -46,4 +49,5 @@ enum GroovyView {
     case NewProgramScreen
     case IpAdressView
     case DanielMorin
+    case TestLivePlayer
 }

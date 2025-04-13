@@ -169,6 +169,11 @@ struct NewProgramScreen: View {
                     
                 }
                 
+                Text("Go to the player")
+                    .onTapGesture {
+                        bigModel.currentView = .TestLivePlayer
+                    }
+                
                 Button(action: {
                     
                     Task {
