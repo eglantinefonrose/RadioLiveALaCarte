@@ -5,7 +5,8 @@ import AVFoundation
 import Combine
 
 class AudioPlayerManagerSandbox: ObservableObject {
-    private var player: AVPlayer?
+    
+    var player: AVPlayer?
     private var audioURLs: [URL] = []
     private var durations: [Double] = []
     private var currentIndex: Int = 0
@@ -16,6 +17,8 @@ class AudioPlayerManagerSandbox: ObservableObject {
     @Published var totalDuration: Double = 0.0
     
     private var timeObserverPlayer: AVPlayer?
+    @Published var isPlaying: Bool = false
+    var firstPlay: Bool = true
 
     func loadAndPlay() {
         guard let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
@@ -94,38 +97,6 @@ class AudioPlayerManagerSandbox: ObservableObject {
 
         startTrackingProgress()
     }
-    
-    /*func loadAndPlay() {
-     guard let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
-         print("Impossible d'accéder au dossier Documents")
-         return
-     }
-
-     do {
-         let allFiles = try FileManager.default.contentsOfDirectory(atPath: documentsURL.path)
-
-         let sortedAudioFiles = allFiles
-             .filter { $0.hasPrefix("test_criveli_") && $0.hasSuffix(".mp4") }
-             .sorted {
-                 let number1 = Int($0.replacingOccurrences(of: "test_criveli_", with: "").replacingOccurrences(of: ".mp4", with: "")) ?? 0
-                 let number2 = Int($1.replacingOccurrences(of: "test_criveli_", with: "").replacingOccurrences(of: ".mp4", with: "")) ?? 0
-                 return number1 < number2
-             }
-
-         audioURLs = sortedAudioFiles.map { documentsURL.appendingPathComponent($0) }
-         currentIndex = 0
-         durations = Array(repeating: 0.0, count: audioURLs.count)
-
-         // Charger les durées AVANT de jouer (asynchrone)
-         preloadDurations { [weak self] in
-             self?.totalDuration = self?.durations.reduce(0, +) ?? 0.0
-             self?.playCurrentAudio()
-         }
-
-     } catch {
-         print("Erreur lors du chargement des fichiers : \(error.localizedDescription)")
-     }
- }*/
     
     func load() {
         
@@ -252,6 +223,65 @@ class AudioPlayerManagerSandbox: ObservableObject {
         // Associer le token à l’instance de player active
         timeObserverPlayer = player
     }
+    
+    func seekTo(time targetTime: Double) {
+        guard totalDuration > 0, !audioURLs.isEmpty else { return }
+
+        // Trouver le fichier et le temps local dans ce fichier
+        var accumulated = 0.0
+        var targetIndex = 0
+
+        for (index, duration) in durations.enumerated() {
+            if accumulated + duration >= targetTime {
+                targetIndex = index
+                break
+            }
+            accumulated += duration
+        }
+
+        let seekTimeInFile = targetTime - accumulated
+        currentIndex = targetIndex
+
+        let fileURL = audioURLs[targetIndex]
+        let item = AVPlayerItem(url: fileURL)
+
+        player?.pause()
+        NotificationCenter.default.removeObserver(self)
+
+        player = AVPlayer(playerItem: item)
+        player?.seek(to: CMTime(seconds: seekTimeInFile, preferredTimescale: 600)) { [weak self] _ in
+            self?.player?.play()
+            self?.startTrackingProgress()
+        }
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(playerDidFinishPlaying),
+                                               name: .AVPlayerItemDidPlayToEndTime,
+                                               object: item)
+    }
+
+    func togglePlayPause() {
+        
+        if self.isPlaying {
+            player!.pause()
+            isPlaying = false
+            return
+        }
+        
+        if (!self.isPlaying) {
+            if (firstPlay) {
+                loadAndPlay()
+                firstPlay = false
+                isPlaying = true
+                return
+            } else {
+                player!.play()
+                isPlaying = true
+                return
+            }
+        }
+        
+    }
 
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -266,54 +296,73 @@ class AudioPlayerManagerSandbox: ObservableObject {
 
 struct SandboxPlayerEnchainement: View {
     
-    @StateObject private var audioPlayer = AudioPlayerManagerSandbox()
-    @State var currentIndex: Int = 0
-    
-    var body: some View {
-        
-            VStack {
-                
-                Text("Lancer l'enregistrement")
-                    .onTapGesture {
-                        let outputName: String = "test_criveli"
-                        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-                        let outputURL = documentsDirectory.appendingPathComponent("\(outputName).mp4")
-                        
-                        let ffmpegCommand = [
-                            "ffmpeg",
-                            "-i", "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance",
-                            "-t", "50",
-                            "-map", "0:a",
-                            "-c:a", "aac",
-                            "-b:a", "128k",
-                            "-f", "tee",
-                            "[f=mp4]\(outputURL.absoluteString)|[f=segment:segment_time=5:reset_timestamps=1]\(documentsDirectory.path)/\(outputName)_%03d.mp4"
-                        ]
+    @StateObject private var manager = AudioPlayerManagerSandbox()
+        @State private var isDragging = false
+        @State private var dragProgress: Double = 0.0
 
-                        DispatchQueue.global(qos: .userInitiated).async {
-                            ffmpeg(ffmpegCommand)
-                        }
+        var body: some View {
+            
+            Text("Lancer l'enregistrement")
+                .onTapGesture {
+                    let outputName: String = "test_criveli"
+                    let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+                    let outputURL = documentsDirectory.appendingPathComponent("\(outputName).mp4")
+                    
+                    let ffmpegCommand = [
+                        "ffmpeg",
+                        "-i", "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance",
+                        "-t", "50",
+                        "-map", "0:a",
+                        "-c:a", "aac",
+                        "-b:a", "128k",
+                        "-f", "tee",
+                        "[f=mp4]\(outputURL.absoluteString)|[f=segment:segment_time=5:reset_timestamps=1]\(documentsDirectory.path)/\(outputName)_%03d.mp4"
+                    ]
+
+                    DispatchQueue.global(qos: .userInitiated).async {
+                        ffmpeg(ffmpegCommand)
                     }
-                
-                Text("Lecteur audio Criveli")
-                    .font(.title)
-                    .padding()
+                }
+            
+            VStack(spacing: 16) {
+                Slider(value: Binding(get: {
+                    isDragging ? dragProgress : manager.progress
+                }, set: { newValue in
+                    isDragging = true
+                    dragProgress = newValue
+                }), in: 0...1, onEditingChanged: { editing in
+                    if !editing {
+                        let seekTime = dragProgress * manager.totalDuration
+                        manager.seekTo(time: seekTime)
+                        isDragging = false
+                    }
+                })
 
+                Text("\(formatTime(seconds: isDragging ? dragProgress * manager.totalDuration : manager.currentTime)) / \(formatTime(seconds: manager.totalDuration))")
+
+                /*Text("Play")
+                    .onTapGesture {
+                        manager.loadAndPlay()
+                    }*/
+                
                 Button(action: {
-                    audioPlayer.loadAndPlay()
+                    manager.togglePlayPause()
                 }) {
-                    Text("▶️ Lancer la lecture")
-                        .font(.headline)
+                    Image(systemName: manager.isPlaying ? "pause.fill" : "play.fill")
+                        .resizable()
+                        .frame(width: 30, height: 30)
                         .padding()
-                        .background(Color.blue.opacity(0.7))
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
                 }
                 
-                ProgressView(value: audioPlayer.progress)
-                Text("\(Int(audioPlayer.currentTime)) / \(Int(audioPlayer.totalDuration)) sec")
-                
             }
+            .padding()
+            
+        }
+
+        func formatTime(seconds: Double) -> String {
+            let minutes = Int(seconds) / 60
+            let seconds = Int(seconds) % 60
+            return String(format: "%02d:%02d", minutes, seconds)
         }
     
 }
