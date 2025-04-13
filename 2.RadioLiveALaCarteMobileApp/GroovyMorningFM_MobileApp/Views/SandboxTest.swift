@@ -16,64 +16,26 @@ struct SandboxTest: View {
     
     var body: some View {
         Text("Hello")
-            .onAppear {
-                
-                /*loadAudioFiles()
-                print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0])
-                print(audioFiles[0])
-                
-                listAppFiles()*/
+            .onTapGesture {
                 
                 let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-                let inputURL = documentsDirectory.appendingPathComponent("2aa62cd2-e121-4e48-9c5e-4e0d7bda828a_000.m4a")
-                let outputURL = documentsDirectory.appendingPathComponent("output.m4a") // Le fichier de sortie que tu veux
-
-                print(outputURL)
-
-                let ffmpegCommand = [
+                let outputURL1 = documentsDirectory.appendingPathComponent("prout_480408-51.mp4")
+                
+                let ffmpegCommand1 = [
                     "ffmpeg",
-                    "-i", "\(inputURL)",
-                    "\(outputURL)" // Ajoute le fichier de sortie ici
+                    "-i", "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance",
+                    "-t", "30",
+                    "-map", "0:a",
+                    "-c:a", "aac",
+                    "-b:a", "128k",
+                    "-f", "tee",
+                    "[f=mp4]\(outputURL1.absoluteString)|[f=segment:segment_time=5:reset_timestamps=1]\(documentsDirectory.path)/segment_%03d.mp4"
                 ]
-                
-                DispatchQueue.global(qos: .userInitiated).async {
-                    ffmpeg(ffmpegCommand)
-                }
-                
-            }
-    }
-    
-    func getDocumentsDirectory() -> URL {
-        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    }
-    
-    func listAppFiles() {
-        let documentsURL = getDocumentsDirectory()
 
-        do {
-            let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: [.fileSizeKey])
-
-            if fileURLs.isEmpty {
-                print("📁 Aucun fichier trouvé dans Documents.")
-            } else {
-                print("📁 Fichiers dans Documents:")
-                for fileURL in fileURLs {
-                    do {
-                        let resourceValues = try fileURL.resourceValues(forKeys: [.fileSizeKey])
-                        let fileSize = resourceValues.fileSize ?? 0
-                        print("📄 \(fileURL.lastPathComponent) -> \(fileURL.path) (\(fileSize) octets)")
-                    } catch {
-                        print("⚠️ Impossible de lire la taille de \(fileURL.lastPathComponent): \(error)")
-                    }
-                }
-            }
-        } catch {
-            print("❌ Erreur lors de la lecture du dossier Documents: \(error)")
+                ffmpeg(ffmpegCommand1)
+                
         }
     }
-        
-    
-    
 }
 
 #Preview {
