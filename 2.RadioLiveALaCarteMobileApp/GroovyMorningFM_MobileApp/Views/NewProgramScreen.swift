@@ -201,9 +201,9 @@ struct NewProgramScreen: View {
                                     let nextDay = calendar.date(byAdding: .day, value: 1, to: currentDate)!
                                     let newTargetTime = calendar.date(bySettingHour: hour1, minute: minute1, second: second1, of: nextDay)!
                                     
-                                    RecordingService.shared.startTimer(for: newTargetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, outputName: response)
+                                    RecordingService.shared.startTimer(for: newTargetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, outputName: "test_criveli")
                                 } else {
-                                    RecordingService.shared.startTimer(for: targetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, outputName: response)
+                                    RecordingService.shared.startTimer(for: targetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, outputName: "test_criveli")
                                 }
                                 
                             } else {

@@ -32,7 +32,7 @@ struct GroovyRootView: View {
                 AudioPlayerViewDanielMorin()
             }
             if (BigModel.shared.currentView == .TestLivePlayer) {
-                TestFFMPEGConcatene()
+                SandboxPlayerEnchainement()
             }
         }.onAppear {
             if (danielMorinVersion) {

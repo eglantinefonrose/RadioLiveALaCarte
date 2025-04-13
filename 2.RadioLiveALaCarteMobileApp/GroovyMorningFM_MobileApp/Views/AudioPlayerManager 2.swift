@@ -31,7 +31,7 @@ class AudioManagerTest: NSObject, AVAudioPlayerDelegate, ObservableObject {
 
         override init() {
             super.init()
-            self.startMonitoring()
+            //self.startMonitoring()
         }
 
         func startMonitoring() {
@@ -77,7 +77,7 @@ class AudioManagerTest: NSObject, AVAudioPlayerDelegate, ObservableObject {
                 do {
                     
                     let files = try self.fileManager.contentsOfDirectory(at: self.documentsDirectory, includingPropertiesForKeys: nil)
-                        .filter { $0.lastPathComponent.hasPrefix("\(self.outputName)_") && $0.pathExtension == "m4a" }
+                        .filter { $0.lastPathComponent.hasPrefix("\(self.outputName)_") && $0.pathExtension == "mp4" }
                         .sorted(by: { $0.lastPathComponent < $1.lastPathComponent })
 
                     guard !files.isEmpty else {

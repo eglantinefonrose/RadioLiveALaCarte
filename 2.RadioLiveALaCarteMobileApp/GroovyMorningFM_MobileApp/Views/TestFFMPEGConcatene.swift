@@ -15,14 +15,13 @@ struct TestFFMPEGConcatene: View {
     var body: some View {
         
         VStack {
-            /*Button(audioManager.isPlaying ? "Stop" : "Play") {
+            Button(audioManager.isPlaying ? "Stop" : "Play") {
                 if audioManager.isPlaying {
                     audioManager.stop()
                 } else {
                     audioManager.concatenateAndPlay()
                 }
-            }*/
-            Text("r")
+            }
         }
         .padding()
         

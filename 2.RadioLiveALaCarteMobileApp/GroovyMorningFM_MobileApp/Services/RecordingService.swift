@@ -54,7 +54,7 @@ class RecordingService {
             let ffmpegCommand = [
                 "ffmpeg",
                 "-i", "\(streamURLString)",
-                "-t", "30",
+                "-t", "50",
                 "-map", "0:a",
                 "-c:a", "aac",
                 "-b:a", "128k",
