@@ -18,8 +18,9 @@ class MulitpleAudioPlayerManager: ObservableObject {
     @Published var duration: Double = 1
     @Published var isPlaying: Bool = false
     @Published var currentTrackIndex: Int = 0
+    private let bigModel: BigModel = BigModel.shared
     
-    private let fileNames = ["test_criveli.mp4", "test_criveli_2.mp4"]
+    private let fileNames = ["test_dino.mp4", "miamiam.mp4"]
     private var playerItems: [AVPlayerItem] = []
 
     init() {
@@ -110,6 +111,8 @@ class MulitpleAudioPlayerManager: ObservableObject {
     func nextTrack() {
         if currentTrackIndex < playerItems.count - 1 {
             playTrack(at: currentTrackIndex + 1)
+        } else {
+            bigModel.currentView = .TestLivePlayer
         }
     }
 
@@ -123,6 +126,8 @@ class MulitpleAudioPlayerManager: ObservableObject {
 }
 
 struct MultipleAudiosPlayer: View {
+    
+    @ObservedObject var bigModel: BigModel = BigModel.shared
     @StateObject private var playerManager = MulitpleAudioPlayerManager()
     
     var body: some View {

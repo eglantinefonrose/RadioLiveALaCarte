@@ -34,6 +34,10 @@ struct GroovyRootView: View {
             if (BigModel.shared.currentView == .TestLivePlayer) {
                 SandboxPlayerEnchainement()
             }
+            if (BigModel.shared.currentView == .MultipleAudiosPlayer) {
+                MultipleAudiosPlayer()
+            }
+            
         }.onAppear {
             if (danielMorinVersion) {
                 bigModel.currentView = .DanielMorin
@@ -50,4 +54,5 @@ enum GroovyView {
     case IpAdressView
     case DanielMorin
     case TestLivePlayer
+    case MultipleAudiosPlayer
 }

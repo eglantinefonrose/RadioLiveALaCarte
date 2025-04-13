@@ -171,7 +171,7 @@ struct NewProgramScreen: View {
                 
                 Text("Go to the player")
                     .onTapGesture {
-                        bigModel.currentView = .TestLivePlayer
+                        bigModel.currentView = .MultipleAudiosPlayer
                     }
                 
                 Button(action: {

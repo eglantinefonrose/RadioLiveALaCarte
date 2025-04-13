@@ -299,6 +299,7 @@ struct SandboxPlayerEnchainement: View {
     @StateObject private var manager = AudioPlayerManagerSandbox()
         @State private var isDragging = false
         @State private var dragProgress: Double = 0.0
+    @ObservedObject var bigModel: BigModel = BigModel.shared
 
         var body: some View {
             
@@ -322,6 +323,12 @@ struct SandboxPlayerEnchainement: View {
                     DispatchQueue.global(qos: .userInitiated).async {
                         ffmpeg(ffmpegCommand)
                     }
+                }
+            
+            Text("Retour au player classique")
+                .foregroundStyle(.blue)
+                .onTapGesture {
+                    bigModel.currentView = .MultipleAudiosPlayer
                 }
             
             VStack(spacing: 16) {
