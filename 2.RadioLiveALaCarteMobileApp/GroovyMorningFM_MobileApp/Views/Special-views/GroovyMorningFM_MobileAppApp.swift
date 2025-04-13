@@ -11,8 +11,8 @@ import SwiftUI
 struct GroovyMorningFM_MobileAppApp: App {
     var body: some Scene {
         WindowGroup {
-            //GroovyRootView(bigModel: BigModel.shared, danielMorinVersion: false)
-            SandboxTest()
+            GroovyRootView(bigModel: BigModel.shared, danielMorinVersion: false)
+            //SandboxTest()
         }
     }
 }
