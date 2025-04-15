@@ -19,7 +19,15 @@ class AudioPlayerManagerSandbox: ObservableObject {
     private var timeObserverPlayer: AVPlayer?
     @Published var isPlaying: Bool = false
     var firstPlay: Bool = true
+    
+    var filePrefix: String = ""
+    
+    let bigModel: BigModel = BigModel.shared
 
+    init() {
+        filePrefix = bigModel.liveProgramsNames[0]
+    }
+    
     func loadAndPlay() {
         guard let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else {
             print("Impossible d'accéder au dossier Documents")
@@ -29,23 +37,27 @@ class AudioPlayerManagerSandbox: ObservableObject {
         do {
             let allFiles = try FileManager.default.contentsOfDirectory(atPath: documentsURL.path)
 
-            let sortedAudioFiles = allFiles
-                .filter { $0.hasPrefix("test_criveli_") && $0.hasSuffix(".mp4") }
-                .sorted {
-                    let number1 = Int($0.replacingOccurrences(of: "test_criveli_", with: "").replacingOccurrences(of: ".mp4", with: "")) ?? 0
-                    let number2 = Int($1.replacingOccurrences(of: "test_criveli_", with: "").replacingOccurrences(of: ".mp4", with: "")) ?? 0
-                    return number1 < number2
+            //if (!bigModel.liveProgramsNames.isEmpty) {
+                
+                let sortedAudioFiles = allFiles
+                    .filter { $0.hasPrefix("\(filePrefix)_") && $0.hasSuffix(".mp4") }
+                    .sorted {
+                        let number1 = Int($0.replacingOccurrences(of: "\(filePrefix)_", with: "").replacingOccurrences(of: ".mp4", with: "")) ?? 0
+                        let number2 = Int($1.replacingOccurrences(of: "\(filePrefix)_", with: "").replacingOccurrences(of: ".mp4", with: "")) ?? 0
+                        return number1 < number2
+                    }
+
+                audioURLs = sortedAudioFiles.map { documentsURL.appendingPathComponent($0) }
+                currentIndex = 0
+                durations = Array(repeating: 0.0, count: audioURLs.count)
+
+                // Charger les durées AVANT de jouer (asynchrone)
+                preloadDurations { [weak self] in
+                    self?.totalDuration = self?.durations.reduce(0, +) ?? 0.0
+                    self?.playCurrentAudio()
                 }
-
-            audioURLs = sortedAudioFiles.map { documentsURL.appendingPathComponent($0) }
-            currentIndex = 0
-            durations = Array(repeating: 0.0, count: audioURLs.count)
-
-            // Charger les durées AVANT de jouer (asynchrone)
-            preloadDurations { [weak self] in
-                self?.totalDuration = self?.durations.reduce(0, +) ?? 0.0
-                self?.playCurrentAudio()
-            }
+                
+            //}
 
         } catch {
             print("Erreur lors du chargement des fichiers : \(error.localizedDescription)")
@@ -109,10 +121,10 @@ class AudioPlayerManagerSandbox: ObservableObject {
             let allFiles = try FileManager.default.contentsOfDirectory(atPath: documentsURL.path)
 
             let sortedAudioFiles = allFiles
-                .filter { $0.hasPrefix("test_criveli_") && $0.hasSuffix(".mp4") }
+                .filter { $0.hasPrefix("\(filePrefix)_") && $0.hasSuffix(".mp4") }
                 .sorted {
-                    let number1 = Int($0.replacingOccurrences(of: "test_criveli_", with: "").replacingOccurrences(of: ".mp4", with: "")) ?? 0
-                    let number2 = Int($1.replacingOccurrences(of: "test_criveli_", with: "").replacingOccurrences(of: ".mp4", with: "")) ?? 0
+                    let number1 = Int($0.replacingOccurrences(of: "\(filePrefix)_", with: "").replacingOccurrences(of: ".mp4", with: "")) ?? 0
+                    let number2 = Int($1.replacingOccurrences(of: "\(filePrefix)_", with: "").replacingOccurrences(of: ".mp4", with: "")) ?? 0
                     return number1 < number2
                 }
 
@@ -140,10 +152,10 @@ class AudioPlayerManagerSandbox: ObservableObject {
             let allFiles = try FileManager.default.contentsOfDirectory(atPath: documentsURL.path)
 
             let sortedAudioFiles = allFiles
-                .filter { $0.hasPrefix("test_criveli_") && $0.hasSuffix(".mp4") }
+                .filter { $0.hasPrefix("\(filePrefix)_") && $0.hasSuffix(".mp4") }
                 .sorted {
-                    let number1 = Int($0.replacingOccurrences(of: "test_criveli_", with: "").replacingOccurrences(of: ".mp4", with: "")) ?? 0
-                    let number2 = Int($1.replacingOccurrences(of: "test_criveli_", with: "").replacingOccurrences(of: ".mp4", with: "")) ?? 0
+                    let number1 = Int($0.replacingOccurrences(of: "\(filePrefix)_", with: "").replacingOccurrences(of: ".mp4", with: "")) ?? 0
+                    let number2 = Int($1.replacingOccurrences(of: "\(filePrefix)_", with: "").replacingOccurrences(of: ".mp4", with: "")) ?? 0
                     return number1 < number2
                 }
 
@@ -297,8 +309,9 @@ class AudioPlayerManagerSandbox: ObservableObject {
 struct SandboxPlayerEnchainement: View {
     
     @StateObject private var manager = AudioPlayerManagerSandbox()
-        @State private var isDragging = false
-        @State private var dragProgress: Double = 0.0
+    @State private var isDragging = false
+    @State private var dragProgress: Double = 0.0
+    @ObservedObject var bigModel: BigModel = BigModel.shared
 
         var body: some View {
             
@@ -322,6 +335,12 @@ struct SandboxPlayerEnchainement: View {
                     DispatchQueue.global(qos: .userInitiated).async {
                         ffmpeg(ffmpegCommand)
                     }
+                }
+            
+            Text("Retour au player classique")
+                .foregroundStyle(.blue)
+                .onTapGesture {
+                    bigModel.currentView = .MultipleAudiosPlayer
                 }
             
             VStack(spacing: 16) {

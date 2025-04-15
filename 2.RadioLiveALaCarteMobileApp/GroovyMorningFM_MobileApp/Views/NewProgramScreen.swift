@@ -33,6 +33,8 @@ struct NewProgramScreen: View {
     let hours = Array(0...23)
     let minutesAndSeconds = Array(0...59)
     
+    private let userId = "user001"
+    
     var body: some View {
         VStack {
             
@@ -171,7 +173,12 @@ struct NewProgramScreen: View {
                 
                 Text("Go to the player")
                     .onTapGesture {
-                        bigModel.currentView = .TestLivePlayer
+                        Task {
+                            let fetchedPrograms = await apiService.fetchPrograms(for: userId)
+                            bigModel.programs = fetchedPrograms
+                            bigModel.generateUrls()
+                        }
+                        bigModel.currentView = .MultipleAudiosPlayer
                     }
                 
                 Button(action: {
@@ -187,7 +194,9 @@ struct NewProgramScreen: View {
                                 endTimeMinute: minute2,
                                 endTimeSeconds: second2
                             )
+                            
                             print("Réponse du serveur : \(response)")
+                            
                             if (ProgramManager.shared.estDansLeFutur(heure: hour1, minute: minute1, seconde: second1) && (radioName != "")) {
                                 
                                 let calendar = Calendar.current
@@ -201,9 +210,9 @@ struct NewProgramScreen: View {
                                     let nextDay = calendar.date(byAdding: .day, value: 1, to: currentDate)!
                                     let newTargetTime = calendar.date(bySettingHour: hour1, minute: minute1, second: second1, of: nextDay)!
                                     
-                                    RecordingService.shared.startTimer(for: newTargetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, outputName: "test_criveli")
+                                    RecordingService.shared.startTimer(for: newTargetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, outputName: response)
                                 } else {
-                                    RecordingService.shared.startTimer(for: targetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, outputName: "test_criveli")
+                                    RecordingService.shared.startTimer(for: targetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, outputName: response)
                                 }
                                 
                             } else {
@@ -213,8 +222,9 @@ struct NewProgramScreen: View {
                         } catch {
                             print("Erreur : \(error)")
                         }
+                        
                     }
-                                        
+                                                            
                     if (ProgramManager.shared.estDansLeFutur(heure: hour1, minute: minute1, seconde: second1)) {
                         print("L'horaire est déjà passée dans la journée")
                     }

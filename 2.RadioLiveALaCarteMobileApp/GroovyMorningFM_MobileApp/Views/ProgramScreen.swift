@@ -26,7 +26,6 @@ struct ProgramScreen: View {
     
     @State private var isPlaying = false
     @State private var durationText = "Durée : --:--"
-    let fileName = "bb777e65-c46a-42fd-bf81-230aed356e60.m4a" // Ton fichier enregistré
     
     var body: some View {
         
@@ -113,7 +112,7 @@ struct ProgramScreen: View {
                 }
             }
             
-            VStack(spacing: 20) {
+            /*VStack(spacing: 20) {
                 Text("🎧 Écouter l'enregistrement")
                     .font(.title2)
 
@@ -132,7 +131,7 @@ struct ProgramScreen: View {
             }
             .onAppear {
                 prepareAudio()
-            }
+            }*/
             
             VStack {
                                 
@@ -174,6 +173,7 @@ struct ProgramScreen: View {
                     let fetchedPrograms = await apiService.fetchPrograms(for: userId)
                     self.programs = fetchedPrograms
                     bigModel.programs = fetchedPrograms
+                    bigModel.generateUrls()
                 }
             }
             
@@ -250,7 +250,7 @@ struct ProgramScreen: View {
     }
 
     
-    func prepareAudio() {
+    /*func prepareAudio() {
         
             let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             let fileURL = documentsURL.appendingPathComponent(fileName)
@@ -271,17 +271,17 @@ struct ProgramScreen: View {
             }
 
             audioPlayer = AVPlayer(url: fileURL)
-        }
+        }*/
 
     func togglePlayback() {
         guard let player = audioPlayer else { return }
-
+        
         if isPlaying {
             player.pause()
         } else {
             player.play()
         }
-
+        
         isPlaying.toggle()
     }
     
