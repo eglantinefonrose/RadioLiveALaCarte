@@ -176,6 +176,7 @@ struct NewProgramScreen: View {
                         Task {
                             let fetchedPrograms = await apiService.fetchPrograms(for: userId)
                             bigModel.programs = fetchedPrograms
+                            bigModel.generateUrls()
                         }
                         bigModel.currentView = .MultipleAudiosPlayer
                     }
@@ -193,7 +194,9 @@ struct NewProgramScreen: View {
                                 endTimeMinute: minute2,
                                 endTimeSeconds: second2
                             )
+                            
                             print("Réponse du serveur : \(response)")
+                            
                             if (ProgramManager.shared.estDansLeFutur(heure: hour1, minute: minute1, seconde: second1) && (radioName != "")) {
                                 
                                 let calendar = Calendar.current
@@ -219,8 +222,9 @@ struct NewProgramScreen: View {
                         } catch {
                             print("Erreur : \(error)")
                         }
+                        
                     }
-                                        
+                                                            
                     if (ProgramManager.shared.estDansLeFutur(heure: hour1, minute: minute1, seconde: second1)) {
                         print("L'horaire est déjà passée dans la journée")
                     }

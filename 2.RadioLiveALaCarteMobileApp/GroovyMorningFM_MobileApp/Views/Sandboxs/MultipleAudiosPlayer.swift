@@ -27,10 +27,14 @@ class MulitpleAudioPlayerManager: ObservableObject {
 
     init() {
         bigModel = BigModel.shared
-        fileNames = bigModel.delayedProgramsNames
-        print(fileNames)
-        loadTracksFromDocuments()
-        setupPlayer()
+        
+        if (!(bigModel.delayedProgramsNames.isEmpty)) {
+            fileNames = bigModel.delayedProgramsNames
+            print(fileNames)
+            loadTracksFromDocuments()
+            setupPlayer()
+        }
+        
     }
 
     private func loadTracksFromDocuments() {
@@ -116,6 +120,12 @@ class MulitpleAudioPlayerManager: ObservableObject {
     func nextTrack() {
         if currentTrackIndex < playerItems.count - 1 {
             playTrack(at: currentTrackIndex + 1)
+        } else {
+            if (currentTrackIndex < (playerItems.count + bigModel.liveProgramsNames.count - 1)) {
+                bigModel.currentView = .SandboxPlayerEnchainement
+            } else {
+                
+            }
         }
     }
 
@@ -129,49 +139,66 @@ class MulitpleAudioPlayerManager: ObservableObject {
 }
 
 struct MultipleAudiosPlayer: View {
+    
+    @ObservedObject var bigModel: BigModel = BigModel.shared
     @StateObject private var playerManager = MulitpleAudioPlayerManager()
     
     var body: some View {
         VStack(spacing: 30) {
-            Text("Piste actuelle : \(playerManager.currentTrackIndex + 1)")
-                .font(.title2)
-
-            // Barre de progression
-            Slider(value: $playerManager.currentTime, in: 0...playerManager.duration, onEditingChanged: { editing in
-                if !editing {
-                    playerManager.seek(to: playerManager.currentTime)
-                }
-            })
             
-            Text("\(formatTime(playerManager.currentTime)) / \(formatTime(playerManager.duration))")
-                .font(.subheadline)
-
-            // Contrôles
-            HStack(spacing: 40) {
-                Button(action: {
-                    playerManager.previousTrack()
-                }) {
-                    Image(systemName: "backward.fill")
-                        .resizable()
-                        .frame(width: 30, height: 30)
+            Image(systemName: "house.fill")
+                .onTapGesture {
+                    bigModel.currentView = .ProgramScreen
                 }
+            
+            if (!(bigModel.delayedProgramsNames.isEmpty)) {
+                Text("Piste actuelle : \(playerManager.currentTrackIndex + 1)")
+                    .font(.title2)
 
-                Button(action: {
-                    playerManager.togglePlayPause()
-                }) {
-                    Image(systemName: playerManager.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                        .resizable()
-                        .frame(width: 60, height: 60)
-                }
+                // Barre de progression
+                Slider(value: $playerManager.currentTime, in: 0...playerManager.duration, onEditingChanged: { editing in
+                    if !editing {
+                        playerManager.seek(to: playerManager.currentTime)
+                    }
+                })
+                
+                Text("\(formatTime(playerManager.currentTime)) / \(formatTime(playerManager.duration))")
+                    .font(.subheadline)
 
-                Button(action: {
-                    playerManager.nextTrack()
-                }) {
-                    Image(systemName: "forward.fill")
-                        .resizable()
-                        .frame(width: 30, height: 30)
+                // Contrôles
+                HStack(spacing: 40) {
+                    Button(action: {
+                        playerManager.previousTrack()
+                    }) {
+                        Image(systemName: "backward.fill")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                    }
+
+                    Button(action: {
+                        playerManager.togglePlayPause()
+                    }) {
+                        Image(systemName: playerManager.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                            .resizable()
+                            .frame(width: 60, height: 60)
+                    }
+
+                    Button(action: {
+                        playerManager.nextTrack()
+                    }) {
+                        Image(systemName: "forward.fill")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                    }
                 }
+            } else {
+                Text("See live")
+                    .onTapGesture {
+                        bigModel.currentView = .SandboxPlayerEnchainement
+                    }
             }
+            
+            
         }
         .padding()
         .onAppear {

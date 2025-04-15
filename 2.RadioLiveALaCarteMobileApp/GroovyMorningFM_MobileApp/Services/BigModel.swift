@@ -45,6 +45,32 @@ class BigModel: ObservableObject {
         }
     }
     
+    func generateUrls() {
+        let fileManager = FileManager.default
+        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+
+        var delayedUrls: [String] = []
+        for program in programs {
+            if program.isProgramAvailable() {
+                let fileName = program.id + ".mp4"
+                let fileURL = documentsURL.appendingPathComponent(fileName)
+                
+                if (isPlayableVideo(url: fileURL)) {
+                    delayedUrls.append(fileName)
+                }
+            }
+        }
+        delayedProgramsNames = delayedUrls
+
+        var liveUrls: [String] = []
+        for program in programs {
+            if program.isInLive() {
+                liveUrls.append(program.id)
+            }
+            liveProgramsNames = liveUrls
+        }
+    }
+    
 }
 
 extension Notification.Name {

@@ -37,6 +37,9 @@ struct GroovyRootView: View {
             if (BigModel.shared.currentView == .MultipleAudiosPlayer) {
                 MultipleAudiosPlayer()
             }
+            if (BigModel.shared.currentView == .SandboxPlayerEnchainement) {
+                SandboxPlayerEnchainement()
+            }
             
         }.onAppear {
             if (danielMorinVersion) {
@@ -55,4 +58,5 @@ enum GroovyView {
     case DanielMorin
     case TestLivePlayer
     case MultipleAudiosPlayer
+    case SandboxPlayerEnchainement
 }
