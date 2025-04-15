@@ -39,4 +39,8 @@ class Program: Codable, Identifiable, Equatable {
         return !(ProgramManager.shared.estDansLeFutur(heure: startTimeHour, minute: startTimeMinute, seconde: startTimeSeconds))
     }
     
+    func isInLive() -> Bool {
+        return (ProgramManager.shared.estEnLive(heureDebut: startTimeHour, minuteDebut: startTimeMinute, secondeDebut: startTimeSeconds, heureFin: endTimeHour, minuteFin: endTimeMinute, secondeFin: endTimeSeconds))
+    }
+    
 }

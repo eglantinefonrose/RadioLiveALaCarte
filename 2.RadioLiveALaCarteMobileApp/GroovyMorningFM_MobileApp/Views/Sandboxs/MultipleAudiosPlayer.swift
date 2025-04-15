@@ -10,6 +10,7 @@ import AVFoundation
 import Combine
 
 class MulitpleAudioPlayerManager: ObservableObject {
+    
     private var player: AVQueuePlayer?
     private var timeObserverToken: Any?
     private var cancellables = Set<AnyCancellable>()
@@ -18,12 +19,16 @@ class MulitpleAudioPlayerManager: ObservableObject {
     @Published var duration: Double = 1
     @Published var isPlaying: Bool = false
     @Published var currentTrackIndex: Int = 0
-    private let bigModel: BigModel = BigModel.shared
     
-    private let fileNames = ["test_dino.mp4", "miamiam.mp4"]
+    private var fileNames: [String] = []
     private var playerItems: [AVPlayerItem] = []
+    
+    @ObservedObject var bigModel: BigModel
 
     init() {
+        bigModel = BigModel.shared
+        fileNames = bigModel.delayedProgramsNames
+        print(fileNames)
         loadTracksFromDocuments()
         setupPlayer()
     }
@@ -111,8 +116,6 @@ class MulitpleAudioPlayerManager: ObservableObject {
     func nextTrack() {
         if currentTrackIndex < playerItems.count - 1 {
             playTrack(at: currentTrackIndex + 1)
-        } else {
-            bigModel.currentView = .TestLivePlayer
         }
     }
 
@@ -126,8 +129,6 @@ class MulitpleAudioPlayerManager: ObservableObject {
 }
 
 struct MultipleAudiosPlayer: View {
-    
-    @ObservedObject var bigModel: BigModel = BigModel.shared
     @StateObject private var playerManager = MulitpleAudioPlayerManager()
     
     var body: some View {

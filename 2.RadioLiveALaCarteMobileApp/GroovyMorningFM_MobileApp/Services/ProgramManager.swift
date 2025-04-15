@@ -27,4 +27,35 @@ class ProgramManager {
         return false
     }
     
+    public func estEnLive(heureDebut: Int, minuteDebut: Int, secondeDebut: Int,
+                          heureFin: Int, minuteFin: Int, secondeFin: Int) -> Bool {
+        
+        let calendrier = Calendar.current
+        let maintenant = Date()
+        
+        // Obtenir la date actuelle avec uniquement les composantes heure, minute, seconde
+        let composantsActuels = calendrier.dateComponents([.hour, .minute, .second], from: maintenant)
+        
+        // Créer les composants Date pour l'heure de début et de fin aujourd'hui
+        var composantsDebut = composantsActuels
+        composantsDebut.hour = heureDebut
+        composantsDebut.minute = minuteDebut
+        composantsDebut.second = secondeDebut
+        
+        var composantsFin = composantsActuels
+        composantsFin.hour = heureFin
+        composantsFin.minute = minuteFin
+        composantsFin.second = secondeFin
+        
+        // Convertir les composants en Date
+        guard let dateDebut = calendrier.date(from: composantsDebut),
+              let dateFin = calendrier.date(from: composantsFin),
+              let maintenantDate = calendrier.date(from: composantsActuels) else {
+            return false
+        }
+        
+        return maintenantDate >= dateDebut && maintenantDate < dateFin
+    }
+
+    
 }

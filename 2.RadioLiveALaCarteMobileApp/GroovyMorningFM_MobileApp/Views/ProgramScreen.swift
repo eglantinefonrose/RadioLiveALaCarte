@@ -174,6 +174,7 @@ struct ProgramScreen: View {
                     let fetchedPrograms = await apiService.fetchPrograms(for: userId)
                     self.programs = fetchedPrograms
                     bigModel.programs = fetchedPrograms
+                    generateUrls()
                 }
             }
             
@@ -284,6 +285,39 @@ struct ProgramScreen: View {
 
         isPlaying.toggle()
     }
+    
+    func generateUrls() {
+        let fileManager = FileManager.default
+        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+
+        var delayedUrls: [String] = []
+        for program in bigModel.programs {
+            if program.isProgramAvailable() {
+                let fileName = program.id + ".mp4"
+                let fileURL = documentsURL.appendingPathComponent(fileName)
+                
+                if (bigModel.isPlayableVideo(url: fileURL)) {
+                    delayedUrls.append(fileName)
+                }
+            }
+        }
+        bigModel.delayedProgramsNames = delayedUrls
+
+        var liveUrls: [String] = []
+        for program in bigModel.programs {
+            if program.isInLive() {
+                let fileName = program.id + ".mp4"
+                let fileURL = documentsURL.appendingPathComponent(fileName)
+                
+                if fileManager.fileExists(atPath: fileURL.path),
+                   FileHandle(forReadingAtPath: fileURL.path) != nil {
+                    liveUrls.append(fileName)
+                }
+            }
+        }
+        bigModel.liveProgramsNames = liveUrls
+    }
+
     
 }
 
