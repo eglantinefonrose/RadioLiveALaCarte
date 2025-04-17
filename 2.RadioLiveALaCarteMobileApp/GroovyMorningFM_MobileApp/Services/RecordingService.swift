@@ -24,7 +24,7 @@ class RecordingService {
         RunLoop.current.add(timer, forMode: .common)
     }
     
-    private func recordRadio(radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, outputName: String) {
+    func recordRadio(radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, outputName: String) {
         
         let urlString = "http://\(BigModel.shared.ipAdress):8287/api/radio/getURLByName/name/\(radioName)"
         
@@ -46,12 +46,14 @@ class RecordingService {
                 return
             }
             
+            let uuid = UUID().uuidString
+
             let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-            let outputURL = documentsDirectory.appendingPathComponent("\(outputName).mp4")
+            let outputURL = documentsDirectory.appendingPathComponent("output_info_\(uuid).mp4")
 
             print("streamURLString = \(streamURLString)")
             
-            let ffmpegCommand = [
+            /*let ffmpegCommand = [
                 "ffmpeg",
                 "-i", "\(streamURLString)",
                 "-t", "50",
@@ -60,15 +62,53 @@ class RecordingService {
                 "-b:a", "128k",
                 "-f", "tee",
                 "[f=mp4]\(outputURL.absoluteString)|[f=segment:segment_time=5:reset_timestamps=1]\(documentsDirectory.path)/\(outputName)_%03d.mp4"
+                
+            ]*/
+                        
+            let ffmpegCommand1 = [
+                "ffmpeg",
+                "-i", "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance",
+                "-t", "30",
+                "-c", "copy",
+                "\(outputURL.absoluteString)"
             ]
-
-            DispatchQueue.global(qos: .userInitiated).async {
+            /*DispatchQueue.global(qos: .userInitiated).async {
                 ffmpeg(ffmpegCommand)
-            }
+            }*/
+            
+            /*let group = DispatchGroup()
+            
+            group.enter()
+            DispatchQueue.global(qos: .background).async {
+                ffmpeg(ffmpegCommand1)
+                group.leave()
+            }*/
+            
+            ffmpeg(ffmpegCommand1)
+            //ffmpeg(ffmpegCommand2)
             
         }
         
         task.resume()
+    }
+    
+    func recordRadioMocked() {
+           
+        let uuid = UUID().uuidString
+
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let outputURL = documentsDirectory.appendingPathComponent("output_info_\(uuid).mp4")
+                    
+        let ffmpegCommand1 = [
+            "ffmpeg",
+            "-i", "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance",
+            "-t", "30",
+            "-c", "copy",
+            "\(outputURL.absoluteString)"
+        ]
+        
+        ffmpeg(ffmpegCommand1)
+        
     }
     
 }
