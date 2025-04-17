@@ -49,7 +49,7 @@ class RecordingService {
             let uuid = UUID().uuidString
 
             let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-            let outputURL = documentsDirectory.appendingPathComponent("output_info_\(uuid).mp4")
+            let outputURL = documentsDirectory.appendingPathComponent("\(outputName).mp4")
 
             print("streamURLString = \(streamURLString)")
             

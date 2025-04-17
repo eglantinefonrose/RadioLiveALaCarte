@@ -26,7 +26,9 @@ class MulitpleAudioPlayerManager: ObservableObject {
     @ObservedObject var bigModel: BigModel
 
     init() {
+        
         bigModel = BigModel.shared
+        currentTrackIndex = bigModel.currentProgramIndex
         
         if (!(bigModel.delayedProgramsNames.isEmpty)) {
             fileNames = bigModel.delayedProgramsNames
@@ -120,6 +122,7 @@ class MulitpleAudioPlayerManager: ObservableObject {
     func nextTrack() {
         if currentTrackIndex < playerItems.count - 1 {
             playTrack(at: currentTrackIndex + 1)
+            bigModel.currentProgramIndex += 1
         } else {
             if (currentTrackIndex < (playerItems.count + bigModel.liveProgramsNames.count - 1)) {
                 bigModel.currentView = .SandboxPlayerEnchainement
@@ -134,6 +137,7 @@ class MulitpleAudioPlayerManager: ObservableObject {
             seek(to: 0)
         } else if currentTrackIndex > 0 {
             playTrack(at: currentTrackIndex - 1)
+            bigModel.currentProgramIndex -= 1
         }
     }
 }
@@ -152,8 +156,13 @@ struct MultipleAudiosPlayer: View {
                 }
             
             if (!(bigModel.delayedProgramsNames.isEmpty)) {
-                Text("Piste actuelle : \(playerManager.currentTrackIndex + 1)")
-                    .font(.title2)
+                
+                AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)){ result in
+                    result.image?
+                        .resizable()
+                        .scaledToFill()
+                }
+                .frame(width: 100)
 
                 // Barre de progression
                 Slider(value: $playerManager.currentTime, in: 0...playerManager.duration, onEditingChanged: { editing in
@@ -162,8 +171,13 @@ struct MultipleAudiosPlayer: View {
                     }
                 })
                 
-                Text("\(formatTime(playerManager.currentTime)) / \(formatTime(playerManager.duration))")
-                    .font(.subheadline)
+                HStack {
+                    Text("\(formatTime(playerManager.currentTime))")
+                        .font(.subheadline)
+                    Spacer()
+                    Text("\(formatTime(playerManager.duration))")
+                        .font(.subheadline)
+                }
 
                 // Contrôles
                 HStack(spacing: 40) {
@@ -202,7 +216,7 @@ struct MultipleAudiosPlayer: View {
         }
         .padding()
         .onAppear {
-            playerManager.play()
+            playerManager.playTrack(at: playerManager.currentTrackIndex)
         }
     }
 

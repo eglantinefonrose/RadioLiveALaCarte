@@ -70,7 +70,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         super.init()
         
         setupTimers(repet: false)
-        fetchAllURLs()
+        //fetchAllURLs()
         
         if !self.audioURLs.isEmpty {
             loadAudio(at: bigModel.currentProgramIndex)
