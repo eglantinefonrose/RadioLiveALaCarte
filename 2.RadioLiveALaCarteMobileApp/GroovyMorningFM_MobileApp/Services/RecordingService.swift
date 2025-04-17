@@ -53,7 +53,7 @@ class RecordingService {
 
             print("streamURLString = \(streamURLString)")
             
-            /*let ffmpegCommand = [
+            let ffmpegCommand = [
                 "ffmpeg",
                 "-i", "\(streamURLString)",
                 "-t", "50",
@@ -63,29 +63,9 @@ class RecordingService {
                 "-f", "tee",
                 "[f=mp4]\(outputURL.absoluteString)|[f=segment:segment_time=5:reset_timestamps=1]\(documentsDirectory.path)/\(outputName)_%03d.mp4"
                 
-            ]*/
-                        
-            let ffmpegCommand1 = [
-                "ffmpeg",
-                "-i", "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance",
-                "-t", "30",
-                "-c", "copy",
-                "\(outputURL.absoluteString)"
             ]
-            /*DispatchQueue.global(qos: .userInitiated).async {
-                ffmpeg(ffmpegCommand)
-            }*/
             
-            /*let group = DispatchGroup()
-            
-            group.enter()
-            DispatchQueue.global(qos: .background).async {
-                ffmpeg(ffmpegCommand1)
-                group.leave()
-            }*/
-            
-            ffmpeg(ffmpegCommand1)
-            //ffmpeg(ffmpegCommand2)
+            ffmpeg(ffmpegCommand)
             
         }
         
@@ -97,14 +77,18 @@ class RecordingService {
         let uuid = UUID().uuidString
 
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let outputURL = documentsDirectory.appendingPathComponent("output_info_\(uuid).mp4")
-                    
+        let outputURL = "/Users/eglantine/Desktop/Test_ffmpeg/output_info_\(uuid).mp4"
+        
         let ffmpegCommand1 = [
             "ffmpeg",
             "-i", "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance",
-            "-t", "30",
-            "-c", "copy",
-            "\(outputURL.absoluteString)"
+            "-t", "50",
+            "-map", "0:a",
+            "-c:a", "aac",
+            "-b:a", "128k",
+            "-f", "tee",
+            "[f=mp4]\(outputURL)|[f=segment:segment_time=5:reset_timestamps=1]/Users/eglantine/Desktop/Test_ffmpeg/outputName\(uuid)_%03d.mp4"
+            
         ]
         
         ffmpeg(ffmpegCommand1)

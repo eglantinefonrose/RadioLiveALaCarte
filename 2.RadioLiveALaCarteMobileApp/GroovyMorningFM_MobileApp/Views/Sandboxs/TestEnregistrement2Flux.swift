@@ -38,13 +38,14 @@ struct TestEnregistrement2Flux: View {
                 
                 let calendar = Calendar.current
                 let currentDate = Date()
-                let targetTime = calendar.date(bySettingHour: 13, minute: 39, second: 0, of: currentDate)!
+                let targetTime1 = calendar.date(bySettingHour: 16, minute: 55, second: 30, of: currentDate)!
+                let targetTime2 = calendar.date(bySettingHour: 16, minute: 56, second: 40, of: currentDate)!
                 
-                let timer = Timer.scheduledTimer(withTimeInterval: targetTime.timeIntervalSinceNow, repeats: false) { _ in
+                let timer = Timer.scheduledTimer(withTimeInterval: targetTime1.timeIntervalSinceNow, repeats: false) { _ in
                     RecordingService.shared.recordRadioMocked()
                 }
                 
-                let timer2 = Timer.scheduledTimer(withTimeInterval: targetTime.timeIntervalSinceNow, repeats: false) { _ in
+                let timer2 = Timer.scheduledTimer(withTimeInterval: targetTime2.timeIntervalSinceNow, repeats: false) { _ in
                     RecordingService.shared.recordRadioMocked()
                 }
                 
