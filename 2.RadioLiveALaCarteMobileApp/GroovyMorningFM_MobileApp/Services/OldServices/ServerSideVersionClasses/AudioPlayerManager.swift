@@ -35,7 +35,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     private var updateTimer: Timer?
     private var fetchTimer: Timer?
     
-    var apiService: APIService = APIService.shared
+    var apiService: APIServiceProtocol = APIService.shared
     let bigModel: BigModel = BigModel.shared
     
     private var audioURLs: [URL] = []

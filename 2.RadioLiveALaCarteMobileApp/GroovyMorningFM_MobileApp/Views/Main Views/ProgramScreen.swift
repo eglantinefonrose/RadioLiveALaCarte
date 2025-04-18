@@ -15,7 +15,7 @@ struct ProgramScreen: View {
     
     @State private var programs: [Program] = []
     private let userId = "user001"
-    @ObservedObject var apiService: APIService = APIService.shared
+    var apiService: APIServiceProtocol = APIService.shared
     @ObservedObject var bigModel: BigModel = BigModel.shared
     @StateObject private var audioManager = AudioPlayerManager()
     @State private var showPopup: Bool = false
@@ -292,7 +292,7 @@ struct IpInputView: View {
     @Binding var ipAddress: String
     @Binding var isPresented: Bool
     var userId: String
-    @ObservedObject var apiService: APIService = APIService.shared
+    var apiService: APIServiceProtocol = APIService.shared
     @ObservedObject var bigModel: BigModel = BigModel.shared
     @State var programs: [Program]
     
@@ -316,9 +316,6 @@ struct IpInputView: View {
                 Button("Valider") {
                     isPresented = false
                     BigModel.shared.ipAdress = ipAddress
-                    /*let fetchedPrograms = apiService.fetchPrograms(for: userId)
-                    self.programs = fetchedPrograms
-                    bigModel.programs = fetchedPrograms*/
                 }
                 .foregroundColor(.blue)
             }

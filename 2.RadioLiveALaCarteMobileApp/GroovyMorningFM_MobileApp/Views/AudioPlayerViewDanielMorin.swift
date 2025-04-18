@@ -6,7 +6,7 @@ struct AudioPlayerViewDanielMorin: View {
     
     @State private var programs: [Program] = []
     private let userId = "user001"
-    @ObservedObject var apiService: APIService = APIService()
+    var apiService: APIServiceProtocol = APIService.shared
     @ObservedObject var bigModel: BigModel = BigModel.shared
     @State private var showPopup: Bool = false
     @State var ipAddress: String = ""

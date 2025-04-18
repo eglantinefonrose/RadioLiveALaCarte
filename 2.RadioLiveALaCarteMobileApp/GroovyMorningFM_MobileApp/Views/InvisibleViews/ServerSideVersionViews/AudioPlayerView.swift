@@ -1,13 +1,13 @@
 import SwiftUI
 
-struct AudioPlayerViewIsolated: View {
+struct AudioPlayerView: View {
     
     @StateObject private var audioManager = AudioPlayerManager()
     
     @State private var offsetY: CGFloat = UIScreen.main.bounds.height / 2
     let minHeight: CGFloat = UIScreen.main.bounds.height / 2
     let maxHeight: CGFloat = UIScreen.main.bounds.height - 100
-    @ObservedObject private var bigModel: BigModel = BigModel.shared
+    @ObservedObject var bigModel: BigModel = BigModel.shared
     @State var liked: Bool = false
     @State var disliked: Bool = false
 
@@ -130,7 +130,7 @@ struct AudioPlayerViewIsolated: View {
     }
 }
 
-struct BottomSheetViewIsolated: View {
+struct BottomSheetView: View {
     
     @StateObject var audioManager: AudioPlayerManager
     @ObservedObject var bigModel = BigModel.shared
