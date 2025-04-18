@@ -103,7 +103,7 @@ struct ProgramScreen: View {
                         
                     }.onTapGesture {
                         if (program.isProgramAvailable()) {
-                            bigModel.currentProgramIndex = index
+                            //bigModel.currentProgramIndex = index
                             bigModel.currentView = .AudioPlayerView
                         } else {
                             print("The program isn't available yet")

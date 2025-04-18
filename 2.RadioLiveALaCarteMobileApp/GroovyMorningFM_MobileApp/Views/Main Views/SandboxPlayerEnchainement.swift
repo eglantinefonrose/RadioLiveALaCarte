@@ -20,14 +20,13 @@ class MultipleAudiosPlayerManager: ObservableObject {
     @Published var isPlaying: Bool = false
     var firstPlay: Bool = true
     
-    var filePrefix: String = ""
-    var liveProgramIndex: Int
+    var filePrefix: String
     
     let bigModel: BigModel = BigModel.shared
 
-    init(index: Int) {
-        liveProgramIndex = index
-        filePrefix = bigModel.liveProgramsNames[liveProgramIndex]
+    init(filePrefix: String) {
+        self.filePrefix = filePrefix
+        togglePlayPause()
     }
     
     func loadAndPlay() {
@@ -310,34 +309,18 @@ class MultipleAudiosPlayerManager: ObservableObject {
 
 struct SandboxPlayerEnchainementComponent: View {
     
+    let filePrefix: String
     @StateObject var manager: MultipleAudiosPlayerManager
     @State private var isDragging = false
     @State private var dragProgress: Double = 0.0
     @ObservedObject var bigModel: BigModel = BigModel.shared
+    
+    init(filePrefix: String) {
+        self.filePrefix = filePrefix
+        _manager = StateObject(wrappedValue: MultipleAudiosPlayerManager(filePrefix: filePrefix))
+    }
 
         var body: some View {
-            
-            Text("Lancer l'enregistrement")
-                .onTapGesture {
-                    let outputName: String = "test_criveli"
-                    let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-                    let outputURL = documentsDirectory.appendingPathComponent("\(outputName).mp4")
-                    
-                    let ffmpegCommand = [
-                        "ffmpeg",
-                        "-i", "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance",
-                        "-t", "50",
-                        "-map", "0:a",
-                        "-c:a", "aac",
-                        "-b:a", "128k",
-                        "-f", "tee",
-                        "[f=mp4]\(outputURL.absoluteString)|[f=segment:segment_time=5:reset_timestamps=1]\(documentsDirectory.path)/\(outputName)_%03d.mp4"
-                    ]
-
-                    DispatchQueue.global(qos: .userInitiated).async {
-                        ffmpeg(ffmpegCommand)
-                    }
-                }
             
             Text("Retour au player classique")
                 .foregroundStyle(.blue)
@@ -388,24 +371,48 @@ struct SandboxPlayerEnchainementComponent: View {
     
 }
 
+
 struct SandboxPlayerEnchainement: View {
     
-    @State var index: Int = 0
-    
-    var body: some View {
-        
-        SandboxPlayerEnchainementComponent(manager: MultipleAudiosPlayerManager(index: index))
-        
-        Button(action: {
-            index += 1
-        }) {
-            Image(systemName: "forward.fill")
-                .resizable()
-                .frame(width: 30, height: 30)
+    let filesPrefixs: [String] = [
+            "d17b2a3a-4f25-4d5a-926f-ff0cf9a9115b",
+            "bc682985-037b-4eae-b967-3f88eeb30c35"
+        ]
+    @ObservedObject var bigModel: BigModel = BigModel.shared
+                
+        var body: some View {
+            VStack {
+                // Le composant qui doit se mettre à jour
+                SandboxPlayerEnchainementComponent(filePrefix: filesPrefixs[bigModel.currentLiveProgramIndex])
+                    .id(filesPrefixs[bigModel.currentLiveProgramIndex])
+                
+                HStack {
+                    Button(action: {
+                        
+                        // [bigModel.currentLiveProgramIndex]
+                        
+                        if bigModel.currentLiveProgramIndex > 0 {
+                            bigModel.currentLiveProgramIndex -= 1
+                        }
+                    }) {
+                        Image(systemName: "backward.fill")
+                            .font(.title)
+                    }
+                    .disabled(bigModel.currentLiveProgramIndex == 0) // désactiver si on est au début
+                    
+                    Button(action: {
+                        if bigModel.currentLiveProgramIndex < filesPrefixs.count - 1 {
+                            bigModel.currentLiveProgramIndex += 1
+                        }
+                    }) {
+                        Image(systemName: "forward.fill")
+                            .font(.title)
+                    }
+                    .disabled(bigModel.currentLiveProgramIndex == filesPrefixs.count - 1) // désactiver si on est à la fin
+                }
+                .padding()
+            }
         }
-        
-    }
     
 }
-
 

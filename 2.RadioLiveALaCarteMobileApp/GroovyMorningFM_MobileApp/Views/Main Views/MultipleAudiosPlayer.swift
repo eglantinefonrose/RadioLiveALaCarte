@@ -28,7 +28,7 @@ class MulitpleAudioPlayerManager: ObservableObject {
     init() {
         
         bigModel = BigModel.shared
-        currentTrackIndex = bigModel.currentProgramIndex
+        currentTrackIndex = bigModel.currentDelayedProgramIndex
         
         if (!(bigModel.delayedProgramsNames.isEmpty)) {
             fileNames = bigModel.delayedProgramsNames
@@ -122,7 +122,7 @@ class MulitpleAudioPlayerManager: ObservableObject {
     func nextTrack() {
         if currentTrackIndex < playerItems.count - 1 {
             playTrack(at: currentTrackIndex + 1)
-            bigModel.currentProgramIndex += 1
+            bigModel.currentDelayedProgramIndex += 1
         } else {
             if (currentTrackIndex < (playerItems.count + bigModel.liveProgramsNames.count - 1)) {
                 bigModel.currentView = .SandboxPlayerEnchainement
@@ -137,7 +137,7 @@ class MulitpleAudioPlayerManager: ObservableObject {
             seek(to: 0)
         } else if currentTrackIndex > 0 {
             playTrack(at: currentTrackIndex - 1)
-            bigModel.currentProgramIndex -= 1
+            bigModel.currentDelayedProgramIndex -= 1
         }
     }
 }
@@ -157,7 +157,7 @@ struct MultipleAudiosPlayer: View {
             
             if (!(bigModel.delayedProgramsNames.isEmpty)) {
                 
-                AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)){ result in
+                AsyncImage(url: URL(string: bigModel.programs[bigModel.currentDelayedProgramIndex].favIcoURL)){ result in
                     result.image?
                         .resizable()
                         .scaledToFill()
