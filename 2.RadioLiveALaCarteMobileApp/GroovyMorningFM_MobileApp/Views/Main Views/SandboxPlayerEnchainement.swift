@@ -20,14 +20,14 @@ class MultipleAudiosPlayerManager: ObservableObject {
     @Published var isPlaying: Bool = false
     var firstPlay: Bool = true
     
-    var filePrefix: String = ""
-    var liveProgramIndex: Int
+    var filePrefix: String
+    let filesPrefixs: [String] = BigModel.shared.liveProgramsNames
     
     let bigModel: BigModel = BigModel.shared
 
-    init(index: Int) {
-        liveProgramIndex = index
-        filePrefix = bigModel.liveProgramsNames[liveProgramIndex]
+    init(filePrefix: String) {
+        self.filePrefix = filePrefix
+        togglePlayPause()
     }
     
     func loadAndPlay() {
@@ -310,40 +310,33 @@ class MultipleAudiosPlayerManager: ObservableObject {
 
 struct SandboxPlayerEnchainementComponent: View {
     
+    let filePrefix: String
+    var playing: Bool = true
     @StateObject var manager: MultipleAudiosPlayerManager
     @State private var isDragging = false
     @State private var dragProgress: Double = 0.0
     @ObservedObject var bigModel: BigModel = BigModel.shared
+    
+    init(filePrefix: String, playing: Bool) {
+        self.filePrefix = filePrefix
+        self.playing = playing
+        _manager = StateObject(wrappedValue: MultipleAudiosPlayerManager(filePrefix: filePrefix))
+    }
 
         var body: some View {
-            
-            Text("Lancer l'enregistrement")
-                .onTapGesture {
-                    let outputName: String = "test_criveli"
-                    let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-                    let outputURL = documentsDirectory.appendingPathComponent("\(outputName).mp4")
-                    
-                    let ffmpegCommand = [
-                        "ffmpeg",
-                        "-i", "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance",
-                        "-t", "50",
-                        "-map", "0:a",
-                        "-c:a", "aac",
-                        "-b:a", "128k",
-                        "-f", "tee",
-                        "[f=mp4]\(outputURL.absoluteString)|[f=segment:segment_time=5:reset_timestamps=1]\(documentsDirectory.path)/\(outputName)_%03d.mp4"
-                    ]
-
-                    DispatchQueue.global(qos: .userInitiated).async {
-                        ffmpeg(ffmpegCommand)
-                    }
-                }
             
             Text("Retour au player classique")
                 .foregroundStyle(.blue)
                 .onTapGesture {
                     bigModel.currentView = .MultipleAudiosPlayer
                 }
+            
+            AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)){ result in
+                result.image?
+                    .resizable()
+                    .scaledToFill()
+            }
+            .frame(width: 100)
             
             VStack(spacing: 16) {
                 Slider(value: Binding(get: {
@@ -361,22 +354,11 @@ struct SandboxPlayerEnchainementComponent: View {
 
                 Text("\(formatTime(seconds: isDragging ? dragProgress * manager.totalDuration : manager.currentTime)) / \(formatTime(seconds: manager.totalDuration))")
 
-                /*Text("Play")
-                    .onTapGesture {
-                        manager.loadAndPlay()
-                    }*/
-                
-                Button(action: {
-                    manager.togglePlayPause()
-                }) {
-                    Image(systemName: manager.isPlaying ? "pause.fill" : "play.fill")
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .padding()
-                }
-                
             }
             .padding()
+            .onChange(of: playing) { oldValue, newValue in
+                manager.togglePlayPause()
+            }
             
         }
 
@@ -388,24 +370,61 @@ struct SandboxPlayerEnchainementComponent: View {
     
 }
 
+
 struct SandboxPlayerEnchainement: View {
     
-    @State var index: Int = 0
-    
+    let filesPrefixs: [String] = BigModel.shared.liveProgramsNames
+    @ObservedObject var bigModel: BigModel = BigModel.shared
+    @State var playing: Bool = true
+                
     var body: some View {
-        
-        SandboxPlayerEnchainementComponent(manager: MultipleAudiosPlayerManager(index: index))
-        
-        Button(action: {
-            index += 1
-        }) {
-            Image(systemName: "forward.fill")
-                .resizable()
-                .frame(width: 30, height: 30)
+        VStack {
+            
+            SandboxPlayerEnchainementComponent(filePrefix: filesPrefixs[bigModel.currentLiveProgramIndex], playing: playing)
+                .id(filesPrefixs[bigModel.currentLiveProgramIndex])
+            
+            HStack {
+                Button(action: {
+                    
+                    // [bigModel.currentLiveProgramIndex]
+                    
+                    if bigModel.currentLiveProgramIndex > 0 {
+                        bigModel.currentLiveProgramIndex -= 1
+                    }
+                }) {
+                    Image(systemName: "backward.fill")
+                        .font(.title)
+                }
+                .disabled(bigModel.currentLiveProgramIndex == 0) // désactiver si on est au début
+                
+                Button(action: {
+                    playing.toggle()
+                }) {
+                    Image(systemName: playing ? "pause.circle.fill" : "play.circle.fill")
+                        .resizable()
+                        .frame(width: 60, height: 60)
+                }
+                
+                Button(action: {
+                    if bigModel.currentLiveProgramIndex < filesPrefixs.count - 1 {
+                        bigModel.currentLiveProgramIndex += 1
+                    }
+                }) {
+                    Image(systemName: "forward.fill")
+                        .font(.title)
+                }
+                .disabled(bigModel.currentLiveProgramIndex == filesPrefixs.count - 1) // désactiver si on est à la fin
+            }
+            .padding()
         }
-        
     }
     
+}
+
+struct SandboxPlayerEnchainement_Previews: PreviewProvider {
+    static var previews: some View {
+        SandboxPlayerEnchainement()
+    }
 }
 
 

@@ -33,12 +33,12 @@ struct AudioPlayerView: View {
                     .bold()
                     .padding(20)
                 
-                AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)){ result in
+                /*AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)){ result in
                             result.image?
                                 .resizable()
                                 .scaledToFill()
                         }
-                        .frame(width: 100)
+                        .frame(width: 100)*/
                 
                 VStack {
                     
@@ -111,7 +111,7 @@ struct AudioPlayerView: View {
             }
             .padding()
             
-            BottomSheetView(audioManager: audioManager, offsetY: $offsetY, minHeight: minHeight, maxHeight: maxHeight, programs: bigModel.programs)
+            //BottomSheetView(audioManager: audioManager, offsetY: $offsetY, minHeight: minHeight, maxHeight: maxHeight, programs: bigModel.programs)
             
         }.onAppear {
             bigModel.viewHistoryList.append(.AudioPlayerView)
@@ -130,7 +130,7 @@ struct AudioPlayerView: View {
     }
 }
 
-struct BottomSheetView: View {
+/*struct BottomSheetView: View {
     
     @StateObject var audioManager: AudioPlayerManager
     @ObservedObject var bigModel = BigModel.shared
@@ -174,4 +174,4 @@ struct BottomSheetView: View {
         )
         .animation(.spring(), value: offsetY)
     }
-}
+}*/

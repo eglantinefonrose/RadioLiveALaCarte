@@ -17,17 +17,37 @@
 import Foundation
 import SwiftUI
 import AVFoundation
+import Combine
 
 class BigModel: ObservableObject {
+    
     static let shared = BigModel()
 
     @Published var danielMorinVersion: Bool = false
     @Published var currentView: GroovyView = .ProgramScreen
+    
     @Published var currentProgram: Program = Program(id: "", radioName: "", startTimeHour: 0, startTimeMinute: 0, startTimeSeconds: 0, endTimeHour: 0, endTimeMinute: 0, endTimeSeconds: 0, favIcoURL: "")
     @Published var programs: [Program] = []
+    
     @Published var delayedProgramsNames: [String] = []
     @Published var liveProgramsNames: [String] = []
-    @Published var currentProgramIndex: Int = 0
+    @Published private(set) var currentProgramIndex: Int = 0
+    
+    @Published var currentDelayedProgramIndex: Int = 0
+    @Published var currentLiveProgramIndex: Int = 0
+    
+    private var cancellables = Set<AnyCancellable>()
+        
+    init() {
+        Publishers
+            .CombineLatest($currentDelayedProgramIndex, $currentLiveProgramIndex)
+            .map { delayed, live in
+                delayed + live
+            }
+            .assign(to: \.currentProgramIndex, on: self)
+            .store(in: &cancellables)
+    }
+    
     @AppStorage("ipAddress") var ipAdress: String = "localhost" {
         didSet {
             if !ipAdress.isEmpty {
@@ -50,6 +70,7 @@ class BigModel: ObservableObject {
     }
 
     func generateUrls() {
+        
         let fileManager = FileManager.default
         let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
 
@@ -74,6 +95,7 @@ class BigModel: ObservableObject {
         }
         liveProgramsNames = liveUrls
     }
+    
 }
 
 extension Notification.Name {

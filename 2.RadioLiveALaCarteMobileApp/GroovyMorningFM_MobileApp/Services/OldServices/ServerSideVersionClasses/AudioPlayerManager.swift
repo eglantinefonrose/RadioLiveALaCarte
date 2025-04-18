@@ -73,7 +73,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         //fetchAllURLs()
         
         if !self.audioURLs.isEmpty {
-            loadAudio(at: bigModel.currentProgramIndex)
+            loadAudio(at: bigModel.currentDelayedProgramIndex)
             self.setupTimers(repet: false)
         } else if !self.liveBaseNames.isEmpty {
             setupTimers(repet: true)
@@ -104,12 +104,12 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     
     public func updateCurrentProgramIndex(index: Int) {
                 
-        if (bigModel.currentProgramIndex < audioURLs.count) {
+        /*if (bigModel.currentDelayedProgramIndex < audioURLs.count) {
             self.bigModel.currentProgramIndex = index
-            loadAudio(at: bigModel.currentProgramIndex)
+            loadAudio(at: bigModel.currentDelayedProgramIndex)
         } else {
             
-            if ( ((bigModel.currentProgramIndex - audioURLs.count)) < liveBaseNames.count) {
+            if ( ((bigModel.currentDelayedProgramIndex - audioURLs.count)) < liveBaseNames.count) {
                 if (!isLivePlaying) {
                     // Premier audio du live
                     isLivePlaying = true
@@ -121,7 +121,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
                 fetchAndReplaceAudio()
             }
             
-        }
+        }*/
     }
     
     func addTrimmedToFileName(urlString: String) -> String? {
@@ -145,7 +145,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     
     private func fetchAllURLs() {
             
-            if (versionDanielMorin) {
+            /*if (versionDanielMorin) {
                 DispatchQueue.main.async { [self] in
                     Task {
                         let fetchedPrograms = await self.apiService.fetchPrograms(for: "user001")
@@ -201,7 +201,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
                 }
                 
                 print("all URls = \(audioURLs)")
-            }
+            }*/
         }
 
     
@@ -261,7 +261,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
         
     func nextTrack() {
                 
-        if (bigModel.currentProgramIndex+1 < audioURLs.count) {
+        /*if (bigModel.currentProgramIndex+1 < audioURLs.count) {
             
             bigModel.currentProgramIndex += 1
             loadAudio(at: bigModel.currentProgramIndex)
@@ -282,13 +282,13 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
                 fetchAndReplaceAudio()
             }
             
-        }
+        }*/
         
     }
     
     func previousTrack() {
         
-        if (bigModel.currentProgramIndex <= audioURLs.count) {
+        /*if (bigModel.currentProgramIndex <= audioURLs.count) {
             
             invalidateTimers()
             isLivePlaying = false
@@ -311,7 +311,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
                 loadAudio(at: bigModel.currentProgramIndex)
             }
             
-        }
+        }*/
         
     }
 
@@ -389,7 +389,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
 
     @objc func fetchAndReplaceAudio() {
         
-        print("bigModel.currentProgramIndex+1 - audioURLs.count = \(bigModel.currentProgramIndex+1 - audioURLs.count)")
+        /*print("bigModel.currentProgramIndex+1 - audioURLs.count = \(bigModel.currentProgramIndex+1 - audioURLs.count)")
         print("liveBaseNames.count = \(liveBaseNames.count)")
         var urlString = ""
         if (audioURLs.count != 0) {
@@ -417,12 +417,12 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             }
             
         }
-        task.resume()
+        task.resume()*/
         
     }
 
     func loadNewAudio(baseName: String) {
-        let urlString = "http://\(bigModel.ipAdress):8287/media/mp3/concatenated_output\(liveBaseNames[(bigModel.currentProgramIndex - audioURLs.count)])output_\(index).mp3"
+        /*let urlString = "http://\(bigModel.ipAdress):8287/media/mp3/concatenated_output\(liveBaseNames[(bigModel.currentProgramIndex - audioURLs.count)])output_\(index).mp3"
         print("Chargement de l'audio livex \(urlString)")
 
         guard let url = URL(string: urlString) else { return }
@@ -441,7 +441,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
                 self?.replaceCurrentAudio(data: data)
             }
         }
-        task.resume()
+        task.resume()*/
     }
 
     private func replaceCurrentAudio(data: Data) {
@@ -491,10 +491,10 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     
     func loadAndPlay() {
         
-        if (!isLivePlaying) {
+        /*if (!isLivePlaying) {
             loadAudio(at: bigModel.currentProgramIndex)
             print(bigModel.currentProgramIndex)
-        }
+        }*/
         
     }
 
@@ -517,7 +517,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
     
     func giveFeedback(feedback: String, completion: @escaping (Result<String, Error>) -> Void) {
         // Construction correcte de l'URL
-        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createFeedback/programID/\(bigModel.programs[bigModel.currentProgramIndex].id)/feedback/\(feedback)"
+        /*let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createFeedback/programID/\(bigModel.programs[bigModel.currentProgramIndex].id)/feedback/\(feedback)"
         print(urlString)
         
         // Vérification de l'URL valide
@@ -551,12 +551,12 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
                     completion(.failure(NSError(domain: errorMessage, code: statusCode, userInfo: nil)))
                 }
             }
-        }.resume()
+        }.resume()*/
     }
     
     func deleteFeedback(completion: @escaping (Result<String, Error>) -> Void) {
         // Construction correcte de l'URL
-        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/deleteFeedback/programID/\(bigModel.programs[bigModel.currentProgramIndex].id)"
+       /* let urlString = "http://\(bigModel.ipAdress):8287/api/radio/deleteFeedback/programID/\(bigModel.programs[bigModel.currentProgramIndex].id)"
         print(urlString)
         
         // Vérification de l'URL valide
@@ -590,11 +590,11 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
                     completion(.failure(NSError(domain: errorMessage, code: statusCode, userInfo: nil)))
                 }
             }
-        }.resume()
+        }.resume()*/
     }
     
     func getFeedback(completion: @escaping (Result<String, Error>) -> Void) {
-        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/getFeedback/programID/\(bigModel.programs[bigModel.currentProgramIndex].id)"
+        /*let urlString = "http://\(bigModel.ipAdress):8287/api/radio/getFeedback/programID/\(bigModel.programs[bigModel.currentProgramIndex].id)"
         print(urlString)
         
         guard let url = URL(string: urlString) else {
@@ -622,7 +622,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate, ObservableObject {
             } else {
                 completion(.failure(NSError(domain: "Données invalides", code: 500, userInfo: nil)))
             }
-        }.resume()
+        }.resume()*/
     }
 
     
