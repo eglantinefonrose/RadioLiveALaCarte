@@ -85,11 +85,16 @@ struct AudioPlayerView_2237: View {
     }
 
     private func loadAudioFiles() {
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        
+        let fileManager = FileManager.default
+        guard let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else {
+            return
+        }
+        
         do {
             let files = try FileManager.default.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: nil)
             audioFiles = files
-                .filter { $0.pathExtension == "m4a" || $0.pathExtension == "mp3" }
+                .filter { $0.pathExtension == "m4a" || $0.pathExtension == "mp4" }
                 .map { $0.lastPathComponent }
                 .sorted() // tri par nom (tu peux changer si besoin)
         } catch {

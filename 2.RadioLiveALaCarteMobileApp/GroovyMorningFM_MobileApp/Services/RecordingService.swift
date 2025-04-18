@@ -24,7 +24,7 @@ class RecordingService {
         RunLoop.current.add(timer, forMode: .common)
     }
     
-    private func recordRadio(radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, outputName: String) {
+    func recordRadio(radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, outputName: String) {
         
         let urlString = "http://\(BigModel.shared.ipAdress):8287/api/radio/getURLByName/name/\(radioName)"
         
@@ -46,6 +46,8 @@ class RecordingService {
                 return
             }
             
+            let uuid = UUID().uuidString
+
             let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
             let outputURL = documentsDirectory.appendingPathComponent("\(outputName).mp4")
 
@@ -60,15 +62,37 @@ class RecordingService {
                 "-b:a", "128k",
                 "-f", "tee",
                 "[f=mp4]\(outputURL.absoluteString)|[f=segment:segment_time=5:reset_timestamps=1]\(documentsDirectory.path)/\(outputName)_%03d.mp4"
+                
             ]
-
-            DispatchQueue.global(qos: .userInitiated).async {
-                ffmpeg(ffmpegCommand)
-            }
+            
+            ffmpeg(ffmpegCommand)
             
         }
         
         task.resume()
+    }
+    
+    func recordRadioMocked() {
+           
+        let uuid = UUID().uuidString
+
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let outputURL = "/Users/eglantine/Desktop/Test_ffmpeg/output_info_\(uuid).mp4"
+        
+        let ffmpegCommand1 = [
+            "ffmpeg",
+            "-i", "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance",
+            "-t", "50",
+            "-map", "0:a",
+            "-c:a", "aac",
+            "-b:a", "128k",
+            "-f", "tee",
+            "[f=mp4]\(outputURL)|[f=segment:segment_time=5:reset_timestamps=1]/Users/eglantine/Desktop/Test_ffmpeg/outputName\(uuid)_%03d.mp4"
+            
+        ]
+        
+        ffmpeg(ffmpegCommand1)
+        
     }
     
 }

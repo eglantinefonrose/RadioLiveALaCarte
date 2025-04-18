@@ -21,11 +21,13 @@ class AudioPlayerManagerSandbox: ObservableObject {
     var firstPlay: Bool = true
     
     var filePrefix: String = ""
+    var liveProgramIndex: Int
     
     let bigModel: BigModel = BigModel.shared
 
-    init() {
-        filePrefix = bigModel.liveProgramsNames[0]
+    init(index: Int) {
+        liveProgramIndex = index
+        filePrefix = bigModel.liveProgramsNames[liveProgramIndex]
     }
     
     func loadAndPlay() {
@@ -306,9 +308,9 @@ class AudioPlayerManagerSandbox: ObservableObject {
 
 
 
-struct SandboxPlayerEnchainement: View {
+struct SandboxPlayerEnchainementComponent: View {
     
-    @StateObject private var manager = AudioPlayerManagerSandbox()
+    @StateObject var manager: AudioPlayerManagerSandbox
     @State private var isDragging = false
     @State private var dragProgress: Double = 0.0
     @ObservedObject var bigModel: BigModel = BigModel.shared
@@ -383,6 +385,26 @@ struct SandboxPlayerEnchainement: View {
             let seconds = Int(seconds) % 60
             return String(format: "%02d:%02d", minutes, seconds)
         }
+    
+}
+
+struct SandboxPlayerEnchainement: View {
+    
+    @State var index: Int = 0
+    
+    var body: some View {
+        
+        SandboxPlayerEnchainementComponent(manager: AudioPlayerManagerSandbox(index: index))
+        
+        Button(action: {
+            index += 1
+        }) {
+            Image(systemName: "forward.fill")
+                .resizable()
+                .frame(width: 30, height: 30)
+        }
+        
+    }
     
 }
 
