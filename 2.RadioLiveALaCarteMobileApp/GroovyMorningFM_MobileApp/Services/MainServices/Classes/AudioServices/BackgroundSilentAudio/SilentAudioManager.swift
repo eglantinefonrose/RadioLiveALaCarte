@@ -8,14 +8,14 @@
 import Foundation
 import AVFoundation
 
-class SilentAudioPlayer: ObservableObject {
+class SilentAudioPlayer: ObservableObject, SilentAudioPlayerProtocol {
     private var player: AVAudioPlayer?
 
     init() {
         startSilentAudio()
     }
 
-    private func startSilentAudio() {
+    func startSilentAudio() {
         guard let path = Bundle.main.path(forResource: "silent", ofType: "mp3") else {
             print("Silence audio file not found")
             return

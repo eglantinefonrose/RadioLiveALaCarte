@@ -10,7 +10,7 @@ import AVFoundation
 import FFmpegSupport
 import Foundation
 
-class RecordingService {
+class RecordingService: RecordingServiceProtocol {
     
     static let shared = RecordingService()
     

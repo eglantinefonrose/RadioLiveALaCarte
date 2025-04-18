@@ -4,7 +4,7 @@ import FFmpegSupport
 import AVFoundation
 import Combine
 
-class AudioPlayerManagerSandbox: ObservableObject {
+class MultipleAudiosPlayerManager: ObservableObject {
     
     var player: AVPlayer?
     private var audioURLs: [URL] = []
@@ -310,7 +310,7 @@ class AudioPlayerManagerSandbox: ObservableObject {
 
 struct SandboxPlayerEnchainementComponent: View {
     
-    @StateObject var manager: AudioPlayerManagerSandbox
+    @StateObject var manager: MultipleAudiosPlayerManager
     @State private var isDragging = false
     @State private var dragProgress: Double = 0.0
     @ObservedObject var bigModel: BigModel = BigModel.shared
@@ -394,7 +394,7 @@ struct SandboxPlayerEnchainement: View {
     
     var body: some View {
         
-        SandboxPlayerEnchainementComponent(manager: AudioPlayerManagerSandbox(index: index))
+        SandboxPlayerEnchainementComponent(manager: MultipleAudiosPlayerManager(index: index))
         
         Button(action: {
             index += 1

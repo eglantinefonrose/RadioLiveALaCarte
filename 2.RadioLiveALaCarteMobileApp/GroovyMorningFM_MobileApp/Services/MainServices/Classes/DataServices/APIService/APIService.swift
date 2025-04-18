@@ -7,7 +7,7 @@
 
 import Foundation
 
-class APIService: ObservableObject {
+class APIService: ObservableObject, APIServiceProtocol {
     
     static let shared = APIService()
     let bigModel: BigModel = BigModel.shared
@@ -60,6 +60,7 @@ class APIService: ObservableObject {
         }.resume()
     }
     
+    
     func createProgram(
         radioName: String,
         startTimeHour: Int,
@@ -86,7 +87,6 @@ class APIService: ObservableObject {
     }
 
 
-    
     func creerHoraireDanielMorin() {
         let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createAndRecordProgram/radioName/FranceInter/startTimeHour/6/startTimeMinute/57/startTimeSeconds/0/endTimeHour/7/endTimeMinute/0/endTimeSeconds/1/userID/user001/danielMorinVersion/0"
         guard let url = URL(string: urlString) else { return }

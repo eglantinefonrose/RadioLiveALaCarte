@@ -1,13 +1,13 @@
 //
-//  ProgramManager.swift
+//  File.swift
 //  GroovyMorningFM_MobileApp
 //
-//  Created by Eglantine Fonrose on 24/02/2025.
+//  Created by Eglantine Fonrose on 18/04/2025.
 //
 
 import Foundation
 
-class ProgramManager {
+class ProgramManager: ProgramManagerProtocol {
     
     static let shared = ProgramManager()
     
@@ -27,8 +27,7 @@ class ProgramManager {
         return false
     }
     
-    public func estEnLive(heureDebut: Int, minuteDebut: Int, secondeDebut: Int,
-                          heureFin: Int, minuteFin: Int, secondeFin: Int) -> Bool {
+    public func estEnLive(heureDebut: Int, minuteDebut: Int, secondeDebut: Int, heureFin: Int, minuteFin: Int, secondeFin: Int) -> Bool {
         
         let calendrier = Calendar.current
         let maintenant = Date()
@@ -56,6 +55,5 @@ class ProgramManager {
         
         return maintenantDate >= dateDebut && maintenantDate < dateFin
     }
-
-    
 }
+

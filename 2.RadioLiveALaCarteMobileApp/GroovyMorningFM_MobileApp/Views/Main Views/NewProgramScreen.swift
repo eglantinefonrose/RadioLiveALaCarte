@@ -10,7 +10,8 @@ import SwiftUI
 struct NewProgramScreen: View {
     
     @ObservedObject var bigModel: BigModel = BigModel.shared
-    @ObservedObject var apiService: APIService = APIService.shared
+    let apiService: APIServiceProtocol = APIService.shared
+    let programManager: ProgramManagerProtocol = ProgramManager.shared
     
     @State private var horaireDebut: Double = 8.0
     @State private var horaireFin: Double = 18.0
