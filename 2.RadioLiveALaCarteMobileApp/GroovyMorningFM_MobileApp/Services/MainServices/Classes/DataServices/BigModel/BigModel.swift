@@ -20,6 +20,7 @@ import AVFoundation
 import Combine
 
 class BigModel: ObservableObject {
+    
     static let shared = BigModel()
 
     @Published var danielMorinVersion: Bool = false

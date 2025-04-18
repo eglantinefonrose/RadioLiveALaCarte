@@ -21,6 +21,7 @@ class MultipleAudiosPlayerManager: ObservableObject {
     var firstPlay: Bool = true
     
     var filePrefix: String
+    let filesPrefixs: [String] = BigModel.shared.liveProgramsNames
     
     let bigModel: BigModel = BigModel.shared
 
@@ -310,13 +311,15 @@ class MultipleAudiosPlayerManager: ObservableObject {
 struct SandboxPlayerEnchainementComponent: View {
     
     let filePrefix: String
+    var playing: Bool = true
     @StateObject var manager: MultipleAudiosPlayerManager
     @State private var isDragging = false
     @State private var dragProgress: Double = 0.0
     @ObservedObject var bigModel: BigModel = BigModel.shared
     
-    init(filePrefix: String) {
+    init(filePrefix: String, playing: Bool) {
         self.filePrefix = filePrefix
+        self.playing = playing
         _manager = StateObject(wrappedValue: MultipleAudiosPlayerManager(filePrefix: filePrefix))
     }
 
@@ -327,6 +330,13 @@ struct SandboxPlayerEnchainementComponent: View {
                 .onTapGesture {
                     bigModel.currentView = .MultipleAudiosPlayer
                 }
+            
+            AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)){ result in
+                result.image?
+                    .resizable()
+                    .scaledToFill()
+            }
+            .frame(width: 100)
             
             VStack(spacing: 16) {
                 Slider(value: Binding(get: {
@@ -344,22 +354,11 @@ struct SandboxPlayerEnchainementComponent: View {
 
                 Text("\(formatTime(seconds: isDragging ? dragProgress * manager.totalDuration : manager.currentTime)) / \(formatTime(seconds: manager.totalDuration))")
 
-                /*Text("Play")
-                    .onTapGesture {
-                        manager.loadAndPlay()
-                    }*/
-                
-                Button(action: {
-                    manager.togglePlayPause()
-                }) {
-                    Image(systemName: manager.isPlaying ? "pause.fill" : "play.fill")
-                        .resizable()
-                        .frame(width: 30, height: 30)
-                        .padding()
-                }
-                
             }
             .padding()
+            .onChange(of: playing) { oldValue, newValue in
+                manager.togglePlayPause()
+            }
             
         }
 
@@ -374,45 +373,58 @@ struct SandboxPlayerEnchainementComponent: View {
 
 struct SandboxPlayerEnchainement: View {
     
-    let filesPrefixs: [String] = [
-            "d17b2a3a-4f25-4d5a-926f-ff0cf9a9115b",
-            "bc682985-037b-4eae-b967-3f88eeb30c35"
-        ]
+    let filesPrefixs: [String] = BigModel.shared.liveProgramsNames
     @ObservedObject var bigModel: BigModel = BigModel.shared
+    @State var playing: Bool = true
                 
-        var body: some View {
-            VStack {
-                // Le composant qui doit se mettre à jour
-                SandboxPlayerEnchainementComponent(filePrefix: filesPrefixs[bigModel.currentLiveProgramIndex])
-                    .id(filesPrefixs[bigModel.currentLiveProgramIndex])
-                
-                HStack {
-                    Button(action: {
-                        
-                        // [bigModel.currentLiveProgramIndex]
-                        
-                        if bigModel.currentLiveProgramIndex > 0 {
-                            bigModel.currentLiveProgramIndex -= 1
-                        }
-                    }) {
-                        Image(systemName: "backward.fill")
-                            .font(.title)
-                    }
-                    .disabled(bigModel.currentLiveProgramIndex == 0) // désactiver si on est au début
+    var body: some View {
+        VStack {
+            
+            SandboxPlayerEnchainementComponent(filePrefix: filesPrefixs[bigModel.currentLiveProgramIndex], playing: playing)
+                .id(filesPrefixs[bigModel.currentLiveProgramIndex])
+            
+            HStack {
+                Button(action: {
                     
-                    Button(action: {
-                        if bigModel.currentLiveProgramIndex < filesPrefixs.count - 1 {
-                            bigModel.currentLiveProgramIndex += 1
-                        }
-                    }) {
-                        Image(systemName: "forward.fill")
-                            .font(.title)
+                    // [bigModel.currentLiveProgramIndex]
+                    
+                    if bigModel.currentLiveProgramIndex > 0 {
+                        bigModel.currentLiveProgramIndex -= 1
                     }
-                    .disabled(bigModel.currentLiveProgramIndex == filesPrefixs.count - 1) // désactiver si on est à la fin
+                }) {
+                    Image(systemName: "backward.fill")
+                        .font(.title)
                 }
-                .padding()
+                .disabled(bigModel.currentLiveProgramIndex == 0) // désactiver si on est au début
+                
+                Button(action: {
+                    playing.toggle()
+                }) {
+                    Image(systemName: playing ? "pause.circle.fill" : "play.circle.fill")
+                        .resizable()
+                        .frame(width: 60, height: 60)
+                }
+                
+                Button(action: {
+                    if bigModel.currentLiveProgramIndex < filesPrefixs.count - 1 {
+                        bigModel.currentLiveProgramIndex += 1
+                    }
+                }) {
+                    Image(systemName: "forward.fill")
+                        .font(.title)
+                }
+                .disabled(bigModel.currentLiveProgramIndex == filesPrefixs.count - 1) // désactiver si on est à la fin
             }
+            .padding()
         }
+    }
     
 }
+
+struct SandboxPlayerEnchainement_Previews: PreviewProvider {
+    static var previews: some View {
+        SandboxPlayerEnchainement()
+    }
+}
+
 
