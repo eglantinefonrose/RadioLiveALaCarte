@@ -120,12 +120,15 @@ class MulitpleAudioPlayerManager: ObservableObject {
     }
 
     func nextTrack() {
+        
         if currentTrackIndex < playerItems.count - 1 {
             playTrack(at: currentTrackIndex + 1)
             bigModel.currentDelayedProgramIndex += 1
+            bigModel.currentProgramIndex += 1
         } else {
             if (currentTrackIndex < (playerItems.count + bigModel.liveProgramsNames.count - 1)) {
-                bigModel.currentView = .SandboxPlayerEnchainement
+                bigModel.currentView = .LiveAudioPlayer
+                bigModel.currentProgramIndex += 1
             } else {
                 
             }
@@ -138,6 +141,7 @@ class MulitpleAudioPlayerManager: ObservableObject {
         } else if currentTrackIndex > 0 {
             playTrack(at: currentTrackIndex - 1)
             bigModel.currentDelayedProgramIndex -= 1
+            bigModel.currentProgramIndex -= 1
         }
     }
 }
@@ -147,77 +151,89 @@ struct MultipleAudiosPlayer: View {
     @ObservedObject var bigModel: BigModel = BigModel.shared
     @StateObject private var playerManager = MulitpleAudioPlayerManager()
     
+    @State private var offsetY: CGFloat = UIScreen.main.bounds.height / 2
+    let minHeight: CGFloat = UIScreen.main.bounds.height / 2
+    let maxHeight: CGFloat = UIScreen.main.bounds.height - 100
+    
     var body: some View {
-        VStack(spacing: 30) {
+        
+        ZStack {
             
-            Image(systemName: "house.fill")
-                .onTapGesture {
-                    bigModel.currentView = .ProgramScreen
-                }
-            
-            if (!(bigModel.delayedProgramsNames.isEmpty)) {
+            VStack(spacing: 30) {
                 
-                AsyncImage(url: URL(string: bigModel.programs[bigModel.currentDelayedProgramIndex].favIcoURL)){ result in
-                    result.image?
-                        .resizable()
-                        .scaledToFill()
-                }
-                .frame(width: 100)
-
-                // Barre de progression
-                Slider(value: $playerManager.currentTime, in: 0...playerManager.duration, onEditingChanged: { editing in
-                    if !editing {
-                        playerManager.seek(to: playerManager.currentTime)
-                    }
-                })
-                
-                HStack {
-                    Text("\(formatTime(playerManager.currentTime))")
-                        .font(.subheadline)
-                    Spacer()
-                    Text("\(formatTime(playerManager.duration))")
-                        .font(.subheadline)
-                }
-
-                // Contrôles
-                HStack(spacing: 40) {
-                    Button(action: {
-                        playerManager.previousTrack()
-                    }) {
-                        Image(systemName: "backward.fill")
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                    }
-
-                    Button(action: {
-                        playerManager.togglePlayPause()
-                    }) {
-                        Image(systemName: playerManager.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                            .resizable()
-                            .frame(width: 60, height: 60)
-                    }
-
-                    Button(action: {
-                        playerManager.nextTrack()
-                    }) {
-                        Image(systemName: "forward.fill")
-                            .resizable()
-                            .frame(width: 30, height: 30)
-                    }
-                }
-            } else {
-                Text("See live")
+                Image(systemName: "house.fill")
                     .onTapGesture {
-                        bigModel.currentView = .SandboxPlayerEnchainement
+                        bigModel.currentView = .ProgramScreen
                     }
+                
+                if (!(bigModel.delayedProgramsNames.isEmpty)) {
+                    
+                    AsyncImage(url: URL(string: bigModel.programs[bigModel.currentDelayedProgramIndex].favIcoURL)){ result in
+                        result.image?
+                            .resizable()
+                            .scaledToFill()
+                    }
+                    .frame(width: 100)
+
+                    // Barre de progression
+                    Slider(value: $playerManager.currentTime, in: 0...playerManager.duration, onEditingChanged: { editing in
+                        if !editing {
+                            playerManager.seek(to: playerManager.currentTime)
+                        }
+                    })
+                    
+                    HStack {
+                        Text("\(formatTime(playerManager.currentTime))")
+                            .font(.subheadline)
+                        Spacer()
+                        Text("\(formatTime(playerManager.duration))")
+                            .font(.subheadline)
+                    }
+
+                    // Contrôles
+                    HStack(spacing: 40) {
+                        Button(action: {
+                            playerManager.previousTrack()
+                        }) {
+                            Image(systemName: "backward.fill")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                        }
+
+                        Button(action: {
+                            playerManager.togglePlayPause()
+                        }) {
+                            Image(systemName: playerManager.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                                .resizable()
+                                .frame(width: 60, height: 60)
+                        }
+
+                        Button(action: {
+                            playerManager.nextTrack()
+                        }) {
+                            Image(systemName: "forward.fill")
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                        }
+                    }
+                } else {
+                    Text("See live")
+                        .onTapGesture {
+                            bigModel.currentView = .LiveAudioPlayer
+                        }
+                }
+                
+                
+            }
+            .padding()
+            .onAppear {
+                playerManager.playTrack(at: playerManager.currentTrackIndex)
             }
             
+            BottomSheetView(offsetY: $offsetY, minHeight: minHeight, maxHeight: maxHeight, programs: bigModel.programs)
             
         }
-        .padding()
-        .onAppear {
-            playerManager.playTrack(at: playerManager.currentTrackIndex)
-        }
+        
     }
 
     func formatTime(_ seconds: Double) -> String {

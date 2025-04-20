@@ -18,7 +18,7 @@ protocol APIServiceProtocol {
         endTimeSeconds: Int,
         completion: @escaping (Result<String, Error>) -> Void
     )
-
+    
     func createProgram(
         radioName: String,
         startTimeHour: Int,
@@ -26,7 +26,8 @@ protocol APIServiceProtocol {
         startTimeSeconds: Int,
         endTimeHour: Int,
         endTimeMinute: Int,
-        endTimeSeconds: Int
+        endTimeSeconds: Int,
+        radioUUID: String
     ) async throws -> String
 
     func creerHoraireDanielMorin()
@@ -38,6 +39,8 @@ protocol APIServiceProtocol {
     static func fetchFilesWithoutSegmentNames(for userId: String, completion: @escaping ([String]) -> Void)
 
     func searchByName(for name: String, completion: @escaping (LightenedRadioStationAndAmountOfResponses) -> Void)
+    
+    func searchByUUID(uuid: String) async throws -> String
 
     func deleteProgram(programID: String, completion: @escaping (Result<Void, Error>) -> Void)
 }

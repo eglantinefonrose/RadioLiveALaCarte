@@ -60,7 +60,6 @@ class APIService: ObservableObject, APIServiceProtocol {
         }.resume()
     }
     
-    
     func createProgram(
         radioName: String,
         startTimeHour: Int,
@@ -68,22 +67,33 @@ class APIService: ObservableObject, APIServiceProtocol {
         startTimeSeconds: Int,
         endTimeHour: Int,
         endTimeMinute: Int,
-        endTimeSeconds: Int
+        endTimeSeconds: Int,
+        radioUUID: String
     ) async throws -> String {
-        
-        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeMinute)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001/danielMorinVersion/0"
-        
-        guard let url = URL(string: urlString) else {
-            throw URLError(.badURL)
+            
+        do {
+                        
+            let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeMinute)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001/danielMorinVersion/0"
+            
+            guard let url = URL(string: urlString) else {
+                throw URLError(.badURL)
+            }
+            
+            let (data, _) = try await URLSession.shared.data(from: url)
+            
+            if let responseString = String(data: data, encoding: .utf8) {
+                print(urlString)
+                return responseString
+            } else {
+                throw URLError(.cannotDecodeContentData)
+            }
+            
+        } catch {
+            print("error")
         }
         
-        let (data, _) = try await URLSession.shared.data(from: url)
-        
-        if let responseString = String(data: data, encoding: .utf8) {
-            return responseString
-        } else {
-            throw URLError(.cannotDecodeContentData)
-        }
+        return ""
+            
     }
 
 
@@ -210,6 +220,26 @@ class APIService: ObservableObject, APIServiceProtocol {
             }
         }.resume()
         
+    }
+    
+    func searchByUUID(uuid: String) async throws -> String {
+        
+        guard let url = URL(string: "http://\(bigModel.ipAdress):8287/api/radio/getURLByUUID/\(uuid)") else {
+            throw URLError(.badURL)
+        }
+
+        let (data, response) = try await URLSession.shared.data(from: url)
+
+        guard let httpResponse = response as? HTTPURLResponse,
+              200..<300 ~= httpResponse.statusCode else {
+            throw URLError(.badServerResponse)
+        }
+
+        guard let resultString = String(data: data, encoding: .utf8) else {
+            throw URLError(.cannotDecodeRawData)
+        }
+
+        return resultString
     }
     
     public func deleteProgram(programID: String, completion: @escaping (Result<Void, Error>) -> Void) {

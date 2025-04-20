@@ -16,6 +16,7 @@ struct NewProgramScreen: View {
     @State private var horaireDebut: Double = 8.0
     @State private var horaireFin: Double = 18.0
     @State private var radioName: String = ""
+    @State private var radioUUID: String = ""
     @State private var selectedRadioName: String = ""
     @State private var listAndAmountOfResponses: LightenedRadioStationAndAmountOfResponses = LightenedRadioStationAndAmountOfResponses(lightenedRadioStations: [], amountOfResponses: 0)
     
@@ -105,6 +106,7 @@ struct NewProgramScreen: View {
                     }.onTapGesture {
                         isTextFieldFocused = false
                         radioName = radioStation.name
+                        radioUUID = radioStation.radioUUID
                     }
                 }
                 
@@ -186,6 +188,9 @@ struct NewProgramScreen: View {
                     
                     Task {
                         do {
+                            
+                            let url = try await APIService.shared.searchByUUID(uuid: radioUUID)
+                            
                             let response = try await APIService.shared.createProgram(
                                 radioName: radioName,
                                 startTimeHour: hour1,
@@ -193,7 +198,8 @@ struct NewProgramScreen: View {
                                 startTimeSeconds: second1,
                                 endTimeHour: hour2,
                                 endTimeMinute: minute2,
-                                endTimeSeconds: second2
+                                endTimeSeconds: second2,
+                                radioUUID: radioUUID
                             )
                             
                             print("Réponse du serveur : \(response)")
@@ -211,9 +217,9 @@ struct NewProgramScreen: View {
                                     let nextDay = calendar.date(byAdding: .day, value: 1, to: currentDate)!
                                     let newTargetTime = calendar.date(bySettingHour: hour1, minute: minute1, second: second1, of: nextDay)!
                                     
-                                    RecordingService.shared.startTimer(for: newTargetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, outputName: response)
+                                    RecordingService.shared.startTimer(for: newTargetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, outputName: response, url: url)
                                 } else {
-                                    RecordingService.shared.startTimer(for: targetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, outputName: response)
+                                    RecordingService.shared.startTimer(for: targetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, outputName: response, url: url)
                                 }
                                 
                             } else {

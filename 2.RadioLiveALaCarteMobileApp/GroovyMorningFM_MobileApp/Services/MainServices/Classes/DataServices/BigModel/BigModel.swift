@@ -31,22 +31,10 @@ class BigModel: ObservableObject {
     
     @Published var delayedProgramsNames: [String] = []
     @Published var liveProgramsNames: [String] = []
-    @Published private(set) var currentProgramIndex: Int = 0
+    @Published var currentProgramIndex: Int = 0
     
     @Published var currentDelayedProgramIndex: Int = 0
     @Published var currentLiveProgramIndex: Int = 0
-    
-    private var cancellables = Set<AnyCancellable>()
-        
-    init() {
-        Publishers
-            .CombineLatest($currentDelayedProgramIndex, $currentLiveProgramIndex)
-            .map { delayed, live in
-                delayed + live
-            }
-            .assign(to: \.currentProgramIndex, on: self)
-            .store(in: &cancellables)
-    }
     
     @AppStorage("ipAddress") var ipAdress: String = "localhost" {
         didSet {
@@ -94,6 +82,20 @@ class BigModel: ObservableObject {
             }
         }
         liveProgramsNames = liveUrls
+    }
+    
+    func verifierValeur(index: Int) -> Int {
+        if index < (self.delayedProgramsNames.count) {
+            self.currentDelayedProgramIndex = index
+            self.currentLiveProgramIndex = 0
+            return 1
+        } else if index <= (self.liveProgramsNames.count) {
+            self.currentDelayedProgramIndex = self.delayedProgramsNames.count - 1
+            self.currentLiveProgramIndex = index - self.delayedProgramsNames.count
+            return 2
+        } else {
+            return 0
+        }
     }
     
 }

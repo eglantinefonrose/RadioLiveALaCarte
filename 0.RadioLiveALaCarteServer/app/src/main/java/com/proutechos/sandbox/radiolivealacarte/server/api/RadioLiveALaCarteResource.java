@@ -1,9 +1,6 @@
 package com.proutechos.sandbox.radiolivealacarte.server.api;
 
-import com.proutechos.sandbox.radiolivealacarte.server.model.LightenedRadioStationAndAmountOfResponses;
-import com.proutechos.sandbox.radiolivealacarte.server.model.Program;
-import com.proutechos.sandbox.radiolivealacarte.server.model.RadioStation;
-import com.proutechos.sandbox.radiolivealacarte.server.model.UserModel;
+import com.proutechos.sandbox.radiolivealacarte.server.model.*;
 import com.proutechos.sandbox.radiolivealacarte.server.service.FeedbackService;
 import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteDataStorage;
 import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteUserService;
@@ -60,6 +57,13 @@ public class RadioLiveALaCarteResource {
         return RadioInformationAndPlanningService.getInstance().searchByName(name);
     }
 
+    @GET
+    @Path("searchByUUID/{uuid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public RadioStation[] searchByStationUUID(@PathParam("uuid") String uuid) throws Exception {
+        return RadioInformationAndPlanningService.getInstance().searchByStationUUID(uuid);
+    }
+
     /**
      * curl -s -X GET "http://localhost:8287/api/radio/lightenSearchByName/FranceInter"
      * param name
@@ -70,6 +74,25 @@ public class RadioLiveALaCarteResource {
     @Produces(MediaType.APPLICATION_JSON)
     public LightenedRadioStationAndAmountOfResponses lightenSearchByName(@PathParam("name") String name) throws Exception {
         return RadioInformationAndPlanningService.getInstance().lightenSearchByName(name);
+    }
+
+    /**
+     * curl -s -X GET "http://localhost:8287/api/radio/lightenSearchByUUID/9609743b-0601-11e8-ae97-52543be04c81"
+     * param name
+     * @return
+     */
+    @GET
+    @Path("getURLByUUID/{uuid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getURLByUUID(@PathParam("uuid") String uuid) throws Exception {
+        return RadioInformationAndPlanningService.getInstance().getURLByUUID(uuid);
+    }
+
+    @GET
+    @Path("lightenSearchByUUID/{uuid}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public LightenedRadioStation lightenSearchByUUID(@PathParam("uuid") String uuid) throws Exception {
+        return RadioInformationAndPlanningService.getInstance().lightenSearchByUUID(uuid);
     }
 
     private static final String STREAM_URL = "https://stream.radiofrance.fr/franceinter/franceinter_hifi.m3u8?id=radiofrance"; // URL du flux HLS
@@ -233,8 +256,8 @@ public class RadioLiveALaCarteResource {
     }
 
     @POST
-    @Path("/recordProgram/programId/{programId}/radioName/{radioName}/startTimeHour/{startTimeHour}/startTimeMinute/{startTimeMinute}/startTimeSeconds/{startTimeSeconds}/endTimeHour/{endTimeHour}/endTimeMinute/{endTimeMinute}/endTimeSeconds/{endTimeSeconds}/danielMorinVersion/{danielMorinVersion}")
-    public void recordProgram(@PathParam("programId") String programId, @PathParam("radioName") String radioName, @PathParam("startTimeHour") int startTimeHour, @PathParam("startTimeMinute") int startTimeMinute, @PathParam("startTimeSeconds") int startTimeSeconds, @PathParam("endTimeHour") int endTimeHour, @PathParam("endTimeMinute") int endTimeMinute, @PathParam("endTimeSeconds") int endTimeSeconds, @PathParam("danielMorinVersion") int danielMorinVersion) throws ProutechosBaseException {
+    @Path("/recordProgram/programId/{programId}/radioName/{radioName}/startTimeHour/{startTimeHour}/startTimeMinute/{startTimeMinute}/startTimeSeconds/{startTimeSeconds}/endTimeHour/{endTimeHour}/endTimeMinute/{endTimeMinute}/endTimeSeconds/{endTimeSeconds}/url/{url}/danielMorinVersion/{danielMorinVersion}")
+    public void recordProgram(@PathParam("programId") String programId, @PathParam("radioName") String radioName, @PathParam("startTimeHour") int startTimeHour, @PathParam("startTimeMinute") int startTimeMinute, @PathParam("startTimeSeconds") int startTimeSeconds, @PathParam("endTimeHour") int endTimeHour, @PathParam("endTimeMinute") int endTimeMinute, @PathParam("endTimeSeconds") int endTimeSeconds, @PathParam("url") String url, @PathParam("danielMorinVersion") int danielMorinVersion) throws ProutechosBaseException {
 
         try {
             Program program = new Program(programId, radioName, startTimeHour, startTimeMinute, startTimeSeconds, endTimeHour, endTimeMinute, endTimeSeconds);
@@ -292,7 +315,7 @@ public class RadioLiveALaCarteResource {
      */
     @POST
     @Path("/createAndRecordProgram/radioName/{radioName}/startTimeHour/{startTimeHour}/startTimeMinute/{startTimeMinute}/startTimeSeconds/{startTimeSeconds}/endTimeHour/{endTimeHour}/endTimeMinute/{endTimeMinute}/endTimeSeconds/{endTimeSeconds}/userID/{userID}/danielMorinVersion/{danielMorinVersion}")
-    public void recordProgram(@PathParam("radioName") String radioName, @PathParam("startTimeHour") int startTimeHour, @PathParam("startTimeMinute") int startTimeMinute, @PathParam("startTimeSeconds") int startTimeSeconds, @PathParam("endTimeHour") int endTimeHour, @PathParam("endTimeMinute") int endTimeMinute, @PathParam("endTimeSeconds") int endTimeSeconds, @PathParam("userID") String userID, @PathParam("danielMorinVersion") Integer danielMorinVersion) throws ProutechosBaseException {
+    public void recordProgram(@PathParam("radioName") String radioName, @PathParam("startTimeHour") int startTimeHour, @PathParam("startTimeMinute") int startTimeMinute, @PathParam("startTimeSeconds") int startTimeSeconds, @PathParam("endTimeHour") int endTimeHour, @PathParam("endTimeMinute") int endTimeMinute, @PathParam("endTimeSeconds") int endTimeSeconds, @PathParam("url") String url, @PathParam("userID") String userID, @PathParam("danielMorinVersion") Integer danielMorinVersion) throws ProutechosBaseException {
 
         try {
 
@@ -314,8 +337,10 @@ public class RadioLiveALaCarteResource {
 
     }
 
+    //     @Path("/createProgram/radioName/FranceInter/startTimeHour/23/startTimeMinute/0/startTimeSeconds/0/endTimeHour/23/endTimeMinute/1/endTimeSeconds/0/url/url/userID/user001/danielMorinVersion/0")
+
     /**
-     * curl -s -X GET "http://localhost:8287/api/radio/createProgram/radioName/FranceInter/startTimeHour/15/startTimeMinute/31/startTimeSeconds/0/endTimeHour/15/endTimeMinute/33/endTimeSeconds/0/userID/aa768288-7621-49c8-99bd-c33c6fc02cc5"
+     * curl -s -X GET "http://localhost:8287/api/radio/createProgram/radioName/FranceInter/startTimeHour/23/startTimeMinute/0/startTimeSeconds/0/endTimeHour/23/endTimeMinute/1/endTimeSeconds/0/url/url/userID/user001/danielMorinVersion/0"
      * @return
      */
     @GET

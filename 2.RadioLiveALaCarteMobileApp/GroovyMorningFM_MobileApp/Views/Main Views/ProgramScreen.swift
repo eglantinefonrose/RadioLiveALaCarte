@@ -102,12 +102,21 @@ struct ProgramScreen: View {
                             }
                         
                     }.onTapGesture {
-                        if (program.isProgramAvailable()) {
-                            //bigModel.currentProgramIndex = index
-                            bigModel.currentView = .AudioPlayerView
-                        } else {
-                            print("The program isn't available yet")
+                        
+                        if (program.isProgramAvailable() || program.isInLive()) {
+                            
+                            let result = bigModel.verifierValeur(index: index)
+                            
+                            if (result == 1) {
+                                bigModel.currentView = .MultipleAudiosPlayer
+                            }
+                            
+                            if (result == 2) {
+                                bigModel.currentView = .LiveAudioPlayer
+                            }
+                            
                         }
+                        
                     }
                 }
             }
