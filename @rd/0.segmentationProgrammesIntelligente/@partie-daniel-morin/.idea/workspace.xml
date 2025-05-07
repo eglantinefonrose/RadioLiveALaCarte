@@ -5,7 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dd679760-44f7-4275-8689-d8107fe74684" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../3.FFMPEGOnIOS/Test-FFMPEG/Test-FFMPEG.xcodeproj/project.xcworkspace/xcuserdata/eglantine.xcuserdatad/UserInterfaceState.xcuserstate" beforeDir="false" afterPath="$PROJECT_DIR$/../../3.FFMPEGOnIOS/Test-FFMPEG/Test-FFMPEG.xcodeproj/project.xcworkspace/xcuserdata/eglantine.xcuserdatad/UserInterfaceState.xcuserstate" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Views/Main Views/Special-views/BottomSheetView.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../0.RadioLiveALaCarteServer/@db/RadioLiveALaCarteDB.db" beforeDir="false" afterPath="$PROJECT_DIR$/../../../0.RadioLiveALaCarteServer/@db/RadioLiveALaCarteDB.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp.xcodeproj/project.xcworkspace/xcuserdata/eglantine.xcuserdatad/UserInterfaceState.xcuserstate" beforeDir="false" afterPath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp.xcodeproj/project.xcworkspace/xcuserdata/eglantine.xcuserdatad/UserInterfaceState.xcuserstate" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Models/LightenedRadioStation.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Models/LightenedRadioStation.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Models/Program.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Models/Program.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Services/MainServices/Classes/DataServices/APIService/APIService.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Services/MainServices/Classes/DataServices/APIService/APIService.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Services/MainServices/Classes/DataServices/BigModel/BigModel.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Services/MainServices/Classes/DataServices/BigModel/BigModel.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Services/MainServices/Protocols/DataServices/APIService/APIServiceProtocol.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Services/MainServices/Protocols/DataServices/APIService/APIServiceProtocol.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Views/Main Views/MultipleAudiosPlayer.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Views/Main Views/MultipleAudiosPlayer.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Views/Main Views/NewProgramScreen.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Views/Main Views/NewProgramScreen.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Views/Main Views/ProgramScreen.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Views/Main Views/ProgramScreen.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Views/Main Views/SandboxPlayerEnchainement.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Views/Main Views/SandboxPlayerEnchainement.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Views/Main Views/Special-views/GroovyRootView.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../../../2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Views/Main Views/Special-views/GroovyRootView.swift" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +43,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "RD__BRANCH__2025__04__10__RunFFMPEGOnIOS",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/@rd/0.segmentationProgrammesIntelligente/@partie-daniel-morin",
     "node.js.detected.package.eslint": "true",
@@ -59,6 +72,7 @@
       <workItem from="1741533034603" duration="1529000" />
       <workItem from="1741534583583" duration="97000" />
       <workItem from="1744270301023" duration="49000" />
+      <workItem from="1745082350897" duration="91000" />
     </task>
     <servers />
   </component>

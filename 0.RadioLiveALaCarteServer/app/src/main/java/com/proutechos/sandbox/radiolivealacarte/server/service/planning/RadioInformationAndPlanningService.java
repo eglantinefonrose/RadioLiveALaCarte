@@ -118,6 +118,52 @@ public class RadioInformationAndPlanningService {
 
     }
 
+    public RadioStation[] searchByStationUUID(String uuid) throws Exception {
+
+        try {
+
+            // Construction de l'URL en utilisant la variable camelCaseSearch
+            String url = "http://37.27.202.89/json/stations/byuuid/" + uuid;
+
+            // Créer un objet URL
+            URL obj = new URL(url);
+
+            // Ouvrir la connexion HTTP
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            // Définir la méthode de requête comme GET
+            con.setRequestMethod("GET");
+
+            // Définir les propriétés de la requête
+            con.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+            // Vérifier le code de réponse HTTP
+            int responseCode = con.getResponseCode();
+
+            // Lire la réponse
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            // Afficher la réponse JSON
+            String jsonString = response.toString();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<RadioStation> stations = objectMapper.readValue(jsonString, new TypeReference<List<RadioStation>>() {
+            });
+
+            return stations.toArray(new RadioStation[0]);
+
+        } catch (Exception e) {
+            throw (e);
+        }
+
+    }
+
     public String getURLByName(String name) throws Exception {
 
         try {
@@ -208,12 +254,112 @@ public class RadioInformationAndPlanningService {
             List<LightenedRadioStation> lightenedRadioStations = new ArrayList<>();
             for (RadioStation station : stations) {
                 String id = station.getStationuuid();
-                LightenedRadioStation lightenedRadioStation = new LightenedRadioStation(id, station.getName(), station.getFavicon());
+                LightenedRadioStation lightenedRadioStation = new LightenedRadioStation(id, station.getName(), station.getFavicon(), station.getStationuuid());
                 lightenedRadioStations.add(lightenedRadioStation);
             }
 
             LightenedRadioStation[] lightenedRadioStationsArray = lightenedRadioStations.toArray(new LightenedRadioStation[0]);
             return new LightenedRadioStationAndAmountOfResponses(Arrays.copyOfRange(lightenedRadioStationsArray, 0, Math.min(5, lightenedRadioStationsArray.length)), lightenedRadioStations.size());
+
+        } catch (Exception e) {
+            throw (e);
+        }
+
+    }
+
+    public LightenedRadioStation lightenSearchByUUID(String uuid) throws Exception {
+
+        try {
+
+            // Construction de l'URL en utilisant la variable camelCaseSearch
+            String url = "http://37.27.202.89/json/stations/byuuid/" + uuid;
+
+            // Créer un objet URL
+            URL obj = new URL(url);
+
+            // Ouvrir la connexion HTTP
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            // Définir la méthode de requête comme GET
+            con.setRequestMethod("GET");
+
+            // Définir les propriétés de la requête
+            con.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+            // Vérifier le code de réponse HTTP
+            int responseCode = con.getResponseCode();
+
+            // Lire la réponse
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            // Afficher la réponse JSON
+            String jsonString = response.toString();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<RadioStation> stations = objectMapper.readValue(jsonString, new TypeReference<List<RadioStation>>() {
+            });
+
+            List<LightenedRadioStation> lightenedRadioStations = new ArrayList<>();
+            for (RadioStation station : stations) {
+                String id = station.getStationuuid();
+                LightenedRadioStation lightenedRadioStation = new LightenedRadioStation(id, station.getName(), station.getFavicon(), station.getStationuuid());
+                lightenedRadioStations.add(lightenedRadioStation);
+            }
+
+            LightenedRadioStation[] lightenedRadioStationsArray = lightenedRadioStations.toArray(new LightenedRadioStation[0]);
+            return lightenedRadioStationsArray[0];
+
+        } catch (Exception e) {
+            throw (e);
+        }
+
+    }
+
+    public String getURLByUUID(String uuid) throws Exception {
+
+        try {
+
+            // Construction de l'URL en utilisant la variable camelCaseSearch
+            String url = "http://37.27.202.89/json/stations/byuuid/" + uuid;
+
+            // Créer un objet URL
+            URL obj = new URL(url);
+
+            // Ouvrir la connexion HTTP
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+
+            // Définir la méthode de requête comme GET
+            con.setRequestMethod("GET");
+
+            // Définir les propriétés de la requête
+            con.setRequestProperty("User-Agent", "Mozilla/5.0");
+
+            // Vérifier le code de réponse HTTP
+            int responseCode = con.getResponseCode();
+
+            // Lire la réponse
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            // Afficher la réponse JSON
+            String jsonString = response.toString();
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<RadioStation> stations = objectMapper.readValue(jsonString, new TypeReference<List<RadioStation>>() {
+            });
+
+            return stations.getFirst().getUrl();
 
         } catch (Exception e) {
             throw (e);

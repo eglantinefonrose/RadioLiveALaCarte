@@ -252,4 +252,20 @@ public class RadioLiveALaCarteServiceTest {
         }
     }
 
+    @Test public void newCreateProgram() throws  Exception {
+        try {
+
+            Program program = new Program("programId", "radioName", 23, 0, 0, 23, 0, 1);
+
+            String programID = RadioLiveALaCarteUserService.getInstance().createProgram(program);
+            RadioLiveALaCarteUserService.getInstance().addUserProgram("user001", programID);
+            System.out.println(programID);
+
+        } catch (ProutechosBaseException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

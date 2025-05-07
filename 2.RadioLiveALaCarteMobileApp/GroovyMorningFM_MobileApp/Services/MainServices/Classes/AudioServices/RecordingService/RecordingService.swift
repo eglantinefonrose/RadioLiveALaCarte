@@ -14,72 +14,57 @@ class RecordingService: RecordingServiceProtocol {
     
     static let shared = RecordingService()
     
-    func startTimer(for targetTime: Date, radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, outputName: String) {
+    func startTimer(for targetTime: Date, radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, outputName: String, url: String) {
         
         print("horaire : \(startTimeHour), \(startTimeMinute), \(startTimeSeconds)")
         
         let timer = Timer.scheduledTimer(withTimeInterval: targetTime.timeIntervalSinceNow, repeats: false) { _ in
-            self.recordRadio(radioName: radioName, startTimeHour: startTimeHour, startTimeMinute: startTimeMinute, startTimeSeconds: startTimeSeconds, outputName: outputName)
+            self.recordRadio(radioName: radioName, startTimeHour: startTimeHour, startTimeMinute: startTimeMinute, startTimeSeconds: startTimeSeconds, outputName: outputName, url: url)
         }
         RunLoop.current.add(timer, forMode: .common)
     }
     
-    func recordRadio(radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, outputName: String) {
+    func recordRadio(radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, outputName: String, url: String) {
         
-        let urlString = "http://\(BigModel.shared.ipAdress):8287/api/radio/getURLByName/name/\(radioName)"
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let outputURL = documentsDirectory.appendingPathComponent("\(outputName).mp4")
+            
+        let ffmpegCommand1 = [
+            "ffmpeg",
+            "-i", "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance",
+            "-t", "300",
+            "-map", "0:a",
+            "-c:a", "aac",
+            "-b:a", "128k",
+            "-f", "tee",
+            "[f=mp4]\(outputURL.absoluteString)|[f=segment:segment_time=5:reset_timestamps=1]\(documentsDirectory.path)/\(outputName)_%03d.mp4"
+        ]
         
-        guard let url = URL(string: urlString) else {
-            print("URL invalide.")
-            return
+        let ffmpegCommand2 = [
+            "ffmpeg",
+            "-i", "https://stream.radiofrance.fr/franceinter/franceinter_hifi.m3u8?id=radiofrance",
+            "-t", "300",
+            "-map", "0:a",
+            "-c:a", "aac",
+            "-b:a", "128k",
+            "-f", "tee",
+            "[f=mp4]\(outputURL.absoluteString)|[f=segment:segment_time=5:reset_timestamps=1]\(documentsDirectory.path)/\(outputName)_%03d.mp4"
+        ]
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            ffmpeg(ffmpegCommand1)
+            ffmpeg(ffmpegCommand2)
         }
         
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                print("Erreur lors de la requête: \(error)")
-                return
-            }
-            
-            guard let data = data,
-                  let streamURLString = String(data: data, encoding: .utf8),
-                  let streamURL = URL(string: streamURLString.trimmingCharacters(in: .whitespacesAndNewlines)) else {
-                print("Réponse invalide.")
-                return
-            }
-            
-            let uuid = UUID().uuidString
-
-            let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-            let outputURL = documentsDirectory.appendingPathComponent("\(outputName).mp4")
-
-            print("streamURLString = \(streamURLString)")
-            
-            let ffmpegCommand = [
-                "ffmpeg",
-                "-i", "\(streamURLString)",
-                "-t", "50",
-                "-map", "0:a",
-                "-c:a", "aac",
-                "-b:a", "128k",
-                "-f", "tee",
-                "[f=mp4]\(outputURL.absoluteString)|[f=segment:segment_time=5:reset_timestamps=1]\(documentsDirectory.path)/\(outputName)_%03d.mp4"
-                
-            ]
-            
-            ffmpeg(ffmpegCommand)
-            
-        }
-        
-        task.resume()
     }
     
     func recordRadioMocked() {
-           
-        let uuid = UUID().uuidString
-
-        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let outputURL = "/Users/eglantine/Desktop/Test_ffmpeg/output_info_\(uuid).mp4"
         
-        let ffmpegCommand1 = [
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let uuid = UUID().uuidString
+        let outputURL = documentsDirectory.appendingPathComponent("output_\(uuid).mp4")
+            
+        let ffmpegCommand = [
             "ffmpeg",
             "-i", "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance",
             "-t", "50",
@@ -87,12 +72,11 @@ class RecordingService: RecordingServiceProtocol {
             "-c:a", "aac",
             "-b:a", "128k",
             "-f", "tee",
-            "[f=mp4]\(outputURL)|[f=segment:segment_time=5:reset_timestamps=1]/Users/eglantine/Desktop/Test_ffmpeg/outputName\(uuid)_%03d.mp4"
+            "[f=mp4]\(outputURL.absoluteString)|[f=segment:segment_time=5:reset_timestamps=1]\(documentsDirectory.path)/output_\(uuid)_%03d.mp4"
             
         ]
         
-        ffmpeg(ffmpegCommand1)
-        
+        ffmpeg(ffmpegCommand)
     }
     
 }

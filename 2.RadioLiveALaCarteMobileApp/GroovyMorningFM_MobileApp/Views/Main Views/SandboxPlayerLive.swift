@@ -308,7 +308,7 @@ class MultipleAudiosPlayerManager: ObservableObject {
 
 
 
-struct SandboxPlayerEnchainementComponent: View {
+struct SandboxPlayerLiveComponent: View {
     
     let filePrefix: String
     var playing: Bool = true
@@ -371,59 +371,73 @@ struct SandboxPlayerEnchainementComponent: View {
 }
 
 
-struct SandboxPlayerEnchainement: View {
+struct SandboxPlayerLive: View {
     
     let filesPrefixs: [String] = BigModel.shared.liveProgramsNames
     @ObservedObject var bigModel: BigModel = BigModel.shared
     @State var playing: Bool = true
+    
+    @State private var offsetY: CGFloat = UIScreen.main.bounds.height / 2
+    let minHeight: CGFloat = UIScreen.main.bounds.height / 2
+    let maxHeight: CGFloat = UIScreen.main.bounds.height - 100
                 
     var body: some View {
-        VStack {
+        
+        ZStack {
             
-            SandboxPlayerEnchainementComponent(filePrefix: filesPrefixs[bigModel.currentLiveProgramIndex], playing: playing)
-                .id(filesPrefixs[bigModel.currentLiveProgramIndex])
-            
-            HStack {
-                Button(action: {
-                    
-                    // [bigModel.currentLiveProgramIndex]
-                    
-                    if bigModel.currentLiveProgramIndex > 0 {
-                        bigModel.currentLiveProgramIndex -= 1
-                    }
-                }) {
+            VStack {
+                
+                SandboxPlayerLiveComponent(filePrefix: filesPrefixs[bigModel.currentLiveProgramIndex], playing: playing)
+                    .id(filesPrefixs[bigModel.currentLiveProgramIndex])
+                
+                HStack {
                     Image(systemName: "backward.fill")
                         .font(.title)
-                }
-                .disabled(bigModel.currentLiveProgramIndex == 0) // désactiver si on est au début
-                
-                Button(action: {
-                    playing.toggle()
-                }) {
-                    Image(systemName: playing ? "pause.circle.fill" : "play.circle.fill")
-                        .resizable()
-                        .frame(width: 60, height: 60)
-                }
-                
-                Button(action: {
-                    if bigModel.currentLiveProgramIndex < filesPrefixs.count - 1 {
-                        bigModel.currentLiveProgramIndex += 1
+                        .disabled(bigModel.currentLiveProgramIndex == 0) // désactiver si on est au début
+                        .onTapGesture {
+                            if bigModel.currentLiveProgramIndex > 0 {
+                                bigModel.currentLiveProgramIndex -= 1
+                                bigModel.currentProgramIndex -= 1
+                            } else {
+                                if (bigModel.delayedProgramsNames.count != 0) {
+                                    bigModel.currentView = .MultipleAudiosPlayer
+                                }
+                            }
+                        }
+                    
+                    Button(action: {
+                        playing.toggle()
+                    }) {
+                        Image(systemName: playing ? "pause.circle.fill" : "play.circle.fill")
+                            .resizable()
+                            .frame(width: 60, height: 60)
                     }
-                }) {
-                    Image(systemName: "forward.fill")
-                        .font(.title)
+                    
+                    Button(action: {
+                        if bigModel.currentLiveProgramIndex < filesPrefixs.count - 1 {
+                            bigModel.currentLiveProgramIndex += 1
+                            bigModel.currentProgramIndex += 1
+                        }
+                    }) {
+                        Image(systemName: "forward.fill")
+                            .font(.title)
+                    }
+                    .disabled(bigModel.currentLiveProgramIndex == filesPrefixs.count - 1) // désactiver si on est à la fin
                 }
-                .disabled(bigModel.currentLiveProgramIndex == filesPrefixs.count - 1) // désactiver si on est à la fin
+                .padding()
             }
-            .padding()
+            
+            BottomSheetView(offsetY: $offsetY, minHeight: minHeight, maxHeight: maxHeight, programs: bigModel.programs)
+            
         }
+        
     }
     
 }
 
 struct SandboxPlayerEnchainement_Previews: PreviewProvider {
     static var previews: some View {
-        SandboxPlayerEnchainement()
+        SandboxPlayerLive()
     }
 }
 
