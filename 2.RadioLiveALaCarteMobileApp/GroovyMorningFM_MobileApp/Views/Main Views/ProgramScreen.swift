@@ -38,7 +38,9 @@ struct ProgramScreen: View {
                     .padding(10)
                     .onTapGesture {
                         if (bigModel.viewHistoryList.count >= 2) {
-                            bigModel.currentView = bigModel.viewHistoryList[bigModel.viewHistoryList.count-2]
+                            DispatchQueue.main.async {
+                                bigModel.currentView = bigModel.viewHistoryList[bigModel.viewHistoryList.count-2]
+                            }
                         }
                     }
                 
@@ -48,7 +50,9 @@ struct ProgramScreen: View {
                 Image(systemName: "gear")
                     .padding(10)
                     .onTapGesture {
-                        bigModel.currentView = .IpAdressView
+                        DispatchQueue.main.async {
+                            bigModel.currentView = .IpAdressView
+                        }
                     }
             }.background(Color.gray)
             

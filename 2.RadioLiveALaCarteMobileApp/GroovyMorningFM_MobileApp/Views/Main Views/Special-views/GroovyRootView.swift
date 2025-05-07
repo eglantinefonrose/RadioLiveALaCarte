@@ -32,7 +32,7 @@ struct GroovyRootView: View {
                 AudioPlayerViewDanielMorin()
             }
             if (BigModel.shared.currentView == .LiveAudioPlayer) {
-                SandboxPlayerEnchainement()
+                SandboxPlayerLive()
             }
             if (BigModel.shared.currentView == .MultipleAudiosPlayer) {
                 MultipleAudiosPlayer()

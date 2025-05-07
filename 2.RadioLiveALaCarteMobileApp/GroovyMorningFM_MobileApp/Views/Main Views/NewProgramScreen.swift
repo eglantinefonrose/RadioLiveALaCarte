@@ -46,7 +46,9 @@ struct NewProgramScreen: View {
                     .foregroundStyle(Color.blue)
                     .onTapGesture {
                         if (bigModel.viewHistoryList.count >= 2) {
-                            bigModel.currentView = bigModel.viewHistoryList[bigModel.viewHistoryList.count-2]
+                            DispatchQueue.main.async {
+                                bigModel.currentView = bigModel.viewHistoryList[bigModel.viewHistoryList.count-2]
+                            }
                         }
                     }
                 Spacer()
@@ -106,7 +108,7 @@ struct NewProgramScreen: View {
                     }.onTapGesture {
                         isTextFieldFocused = false
                         radioName = radioStation.name
-                        radioUUID = radioStation.radioUUID
+                        radioUUID = radioStation.id
                     }
                 }
                 
@@ -176,12 +178,14 @@ struct NewProgramScreen: View {
                 
                 Text("Go to the player")
                     .onTapGesture {
-                        Task {
-                            let fetchedPrograms = await apiService.fetchPrograms(for: userId)
-                            bigModel.programs = fetchedPrograms
-                            bigModel.generateUrls()
+                        DispatchQueue.main.async {
+                            Task {
+                                let fetchedPrograms = await apiService.fetchPrograms(for: userId)
+                                bigModel.programs = fetchedPrograms
+                                bigModel.generateUrls()
+                            }
+                            bigModel.currentView = .MultipleAudiosPlayer
                         }
-                        bigModel.currentView = .MultipleAudiosPlayer
                     }
                 
                 Button(action: {

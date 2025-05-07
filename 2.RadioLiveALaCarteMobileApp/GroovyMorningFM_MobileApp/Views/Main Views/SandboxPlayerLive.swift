@@ -308,7 +308,7 @@ class MultipleAudiosPlayerManager: ObservableObject {
 
 
 
-struct SandboxPlayerEnchainementComponent: View {
+struct SandboxPlayerLiveComponent: View {
     
     let filePrefix: String
     var playing: Bool = true
@@ -371,7 +371,7 @@ struct SandboxPlayerEnchainementComponent: View {
 }
 
 
-struct SandboxPlayerEnchainement: View {
+struct SandboxPlayerLive: View {
     
     let filesPrefixs: [String] = BigModel.shared.liveProgramsNames
     @ObservedObject var bigModel: BigModel = BigModel.shared
@@ -387,7 +387,7 @@ struct SandboxPlayerEnchainement: View {
             
             VStack {
                 
-                SandboxPlayerEnchainementComponent(filePrefix: filesPrefixs[bigModel.currentLiveProgramIndex], playing: playing)
+                SandboxPlayerLiveComponent(filePrefix: filesPrefixs[bigModel.currentLiveProgramIndex], playing: playing)
                     .id(filesPrefixs[bigModel.currentLiveProgramIndex])
                 
                 HStack {
@@ -437,7 +437,7 @@ struct SandboxPlayerEnchainement: View {
 
 struct SandboxPlayerEnchainement_Previews: PreviewProvider {
     static var previews: some View {
-        SandboxPlayerEnchainement()
+        SandboxPlayerLive()
     }
 }
 

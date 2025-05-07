@@ -110,8 +110,8 @@
             filePath = "GroovyMorningFM_MobileApp/Views/Main Views/NewProgramScreen.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "207"
-            endingLineNumber = "207"
+            startingLineNumber = "211"
+            endingLineNumber = "211"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -126,13 +126,13 @@
             filePath = "GroovyMorningFM_MobileApp/Views/Main Views/NewProgramScreen.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "230"
-            endingLineNumber = "230"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
             landmarkName = "body"
             landmarkType = "24">
             <Locations>
                <Location
-                  uuid = "F6CA14A8-BC04-4420-832B-0C74CFD28EEA - 89742eb54f899e57"
+                  uuid = "F6CA14A8-BC04-4420-832B-0C74CFD28EEA - 89742eb54f899ed3"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -142,11 +142,11 @@
                   urlString = "file:///Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Views/Main%20Views/NewProgramScreen.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "230"
-                  endingLineNumber = "230">
+                  startingLineNumber = "234"
+                  endingLineNumber = "234">
                </Location>
                <Location
-                  uuid = "F6CA14A8-BC04-4420-832B-0C74CFD28EEA - 533d40e31a953c56"
+                  uuid = "F6CA14A8-BC04-4420-832B-0C74CFD28EEA - 533d40e31a953cd2"
                   shouldBeEnabled = "Yes"
                   ignoreCount = "0"
                   continueAfterRunningActions = "No"
@@ -156,8 +156,8 @@
                   urlString = "file:///Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/2.RadioLiveALaCarteMobileApp/GroovyMorningFM_MobileApp/Views/Main%20Views/NewProgramScreen.swift"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "230"
-                  endingLineNumber = "230">
+                  startingLineNumber = "234"
+                  endingLineNumber = "234">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -172,8 +172,24 @@
             filePath = "GroovyMorningFM_MobileApp/Views/Main Views/NewProgramScreen.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "226"
-            endingLineNumber = "226"
+            startingLineNumber = "230"
+            endingLineNumber = "230"
+            landmarkName = "body"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "D6274304-E2BF-432A-9F77-591E6356023C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "GroovyMorningFM_MobileApp/Views/Main Views/MultipleAudiosPlayer.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "230"
+            endingLineNumber = "230"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>

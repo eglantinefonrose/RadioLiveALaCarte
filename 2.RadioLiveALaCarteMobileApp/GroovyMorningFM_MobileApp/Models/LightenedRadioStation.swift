@@ -12,13 +12,13 @@ public struct LightenedRadioStation: Decodable, Identifiable {
     public var id: String = UUID().uuidString
     var name: String
     var favicon: String
-    var radioUUID: String
+    //var radioUUID: String
     
     init(id: String, name: String, favicon: String, url: String, radioUUID: String) {
         self.id = id
         self.name = name
         self.favicon = favicon
-        self.radioUUID = radioUUID
+        //self.radioUUID = radioUUID
     }
     
 }

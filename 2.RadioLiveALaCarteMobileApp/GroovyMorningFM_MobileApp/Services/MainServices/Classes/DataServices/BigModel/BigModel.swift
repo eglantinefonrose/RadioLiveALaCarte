@@ -85,11 +85,11 @@ class BigModel: ObservableObject {
     }
     
     func verifierValeur(index: Int) -> Int {
-        if index < (self.delayedProgramsNames.count) {
+        if index <= (self.delayedProgramsNames.count) {
             self.currentDelayedProgramIndex = index
             self.currentLiveProgramIndex = 0
             return 1
-        } else if index <= (self.liveProgramsNames.count) {
+        } else if ( ( (index+1) > (self.delayedProgramsNames.count)) && ( (index+1) <= (delayedProgramsNames.count + liveProgramsNames.count)) ) {
             self.currentDelayedProgramIndex = self.delayedProgramsNames.count - 1
             self.currentLiveProgramIndex = index - self.delayedProgramsNames.count
             return 2
