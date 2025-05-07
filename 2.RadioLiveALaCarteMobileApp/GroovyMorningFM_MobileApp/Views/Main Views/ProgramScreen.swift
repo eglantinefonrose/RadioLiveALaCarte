@@ -113,6 +113,7 @@ struct ProgramScreen: View {
                             
                             if (result == 1) {*/
                                 bigModel.currentView = .MultipleAudiosPlayer
+                            bigModel.currentProgramIndex = index
                             /*}
                             
                             if (result == 2) {
