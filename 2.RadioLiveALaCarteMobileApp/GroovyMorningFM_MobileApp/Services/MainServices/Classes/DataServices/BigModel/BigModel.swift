@@ -77,9 +77,9 @@ class BigModel: ObservableObject {
 
         var liveUrls: [String] = []
         for program in programs {
-            if program.isInLive() {
+            //if program.isInLive() {
                 liveUrls.append(program.id)
-            }
+            //}
         }
         liveProgramsNames = liveUrls
     }
