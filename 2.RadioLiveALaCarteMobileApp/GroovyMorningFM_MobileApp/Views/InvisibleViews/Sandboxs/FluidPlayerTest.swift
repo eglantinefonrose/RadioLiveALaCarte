@@ -28,45 +28,49 @@ class AudioPlayerManager952025: ObservableObject {
     private var itemSegmentMap: [AVPlayerItem: AudioSegment] = [:]
     private let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     private var filePrefix: String = ""
+    
+    @Published var isPlaying: Bool = false
+    var firstPlay: Bool = true
 
-        init(filePrefix: String) {
-            self.filePrefix = filePrefix
-            startMonitoring()
-            observeTime()
+    init(filePrefix: String) {
+        self.filePrefix = filePrefix
+        startMonitoring()
+        observeTime()
+        isPlaying = true
+    }
+
+    deinit {
+        timer?.invalidate()
+        if let observer = timeObserver {
+            player.removeTimeObserver(observer)
         }
+    }
 
-        deinit {
-            timer?.invalidate()
-            if let observer = timeObserver {
-                player.removeTimeObserver(observer)
-            }
+    private func observeTime() {
+        timeObserver = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.2, preferredTimescale: 600), queue: .main) { [weak self] time in
+            self?.updateGlobalCurrentTime()
         }
+    }
 
-        private func observeTime() {
-            timeObserver = player.addPeriodicTimeObserver(forInterval: CMTime(seconds: 0.2, preferredTimescale: 600), queue: .main) { [weak self] time in
-                self?.updateGlobalCurrentTime()
-            }
+    private func updateGlobalCurrentTime() {
+        guard let currentItem = player.currentItem else { return }
+
+        let currentSegment = itemSegmentMap[currentItem]
+        let index = segments.firstIndex { $0.url == currentSegment?.url } ?? 0
+
+        let previousDurations = segments.prefix(index).map { $0.duration }.reduce(0, +)
+        let currentItemTime = player.currentTime().seconds
+
+        currentTime = previousDurations + currentItemTime
+    }
+
+    func startMonitoring() {
+        loadSegments()
+        timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
+            self?.loadSegments()
         }
-
-        private func updateGlobalCurrentTime() {
-            guard let currentItem = player.currentItem else { return }
-
-            let currentSegment = itemSegmentMap[currentItem]
-            let index = segments.firstIndex { $0.url == currentSegment?.url } ?? 0
-
-            let previousDurations = segments.prefix(index).map { $0.duration }.reduce(0, +)
-            let currentItemTime = player.currentTime().seconds
-
-            currentTime = previousDurations + currentItemTime
-        }
-
-        func startMonitoring() {
-            loadSegments()
-            timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
-                self?.loadSegments()
-            }
-            player.play()
-        }
+        player.play()
+    }
 
     private func loadSegments() {
         let files = try? FileManager.default.contentsOfDirectory(at: documentsDirectory, includingPropertiesForKeys: nil)
@@ -159,7 +163,29 @@ class AudioPlayerManager952025: ObservableObject {
             self?.player = newPlayer
         })
     }
-
+    
+    func togglePlayPause() {
+        
+        if self.isPlaying {
+            player.pause()
+            isPlaying = false
+            return
+        }
+        
+        if (!self.isPlaying) {
+            if (firstPlay) {
+                loadSegments()
+                firstPlay = false
+                isPlaying = true
+                return
+            } else {
+                player.play()
+                isPlaying = true
+                return
+            }
+        }
+        
+    }
     
 }
 
@@ -170,9 +196,11 @@ struct FluidPlayerTest: View {
     let filePrefix: String
     @StateObject private var manager: AudioPlayerManager952025
     @ObservedObject private var bigModel: BigModel = BigModel.shared
+    var playing: Bool = true
     
-    init(filePrefix: String) {
+    init(filePrefix: String, playing: Bool) {
         self.filePrefix = filePrefix
+        self.playing = playing
         _manager = StateObject(wrappedValue: AudioPlayerManager952025(filePrefix: filePrefix))
     }
 
@@ -214,6 +242,8 @@ struct FluidPlayerTest: View {
                 }
             )
             
+        }.onChange(of: playing) { oldValue, newValue in
+            manager.togglePlayPause()
         }
         .padding()
     }

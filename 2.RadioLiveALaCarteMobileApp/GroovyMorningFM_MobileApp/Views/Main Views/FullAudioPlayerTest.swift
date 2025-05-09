@@ -387,7 +387,7 @@ struct FullAudioPlayerTest: View {
                 
                 //FullAudioPlayerTestComponent(filePrefix: filesPrefixs[bigModel.currentProgramIndex], playing: playing)
                     //.id(filesPrefixs[bigModel.currentProgramIndex])
-                FluidPlayerTest(filePrefix: "\(filesPrefixs[bigModel.currentProgramIndex])_")
+                FluidPlayerTest(filePrefix: "\(filesPrefixs[bigModel.currentProgramIndex])_", playing: playing)
                     .id(filesPrefixs[bigModel.currentProgramIndex])
                 
                 HStack {
