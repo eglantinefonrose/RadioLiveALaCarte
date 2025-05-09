@@ -56,11 +56,11 @@ struct ProgramScreen: View {
                     }
             }.background(Color.gray)
             
-            Toggle("Show trimmed audios", isOn: $bigModel.raw)
+            /*Toggle("Show trimmed audios", isOn: $bigModel.raw)
                 .bold()
-                .padding(20)
+                .padding(20)*/
             
-            Text("Bonjour \(userId), voici votre programme du jour")
+            Text("Bonjour, voici vos programmes du jour")
                 .font(.largeTitle)
                 .fontWeight(.semibold)
                 .padding(20)

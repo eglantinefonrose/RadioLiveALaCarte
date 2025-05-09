@@ -67,13 +67,13 @@ class RecordingService: RecordingServiceProtocol {
 
         let ffmpegCommand1 = [
             "ffmpeg",
-            "-i", "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance",
+            "-i", "\(url)",
             "-t", "\(delay)",
             "-c", "copy",
             "-f", "segment",
             "-segment_time", "5",
             "-reset_timestamps", "1",
-            "\(documentsDirectory.path)/\(outputName)_program1_%03d.mp4"
+            "\(documentsDirectory.path)/\(outputName)_%03d.mp4"
         ]
         
         group.enter()

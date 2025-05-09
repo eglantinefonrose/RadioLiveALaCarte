@@ -38,8 +38,6 @@ class FullAudioPlayerTestManager: ObservableObject {
 
         do {
             let allFiles = try FileManager.default.contentsOfDirectory(atPath: documentsURL.path)
-
-            //if (!bigModel.liveProgramsNames.isEmpty) {
                 
                 let sortedAudioFiles = allFiles
                     .filter { $0.hasPrefix("\(filePrefix)_") && $0.hasSuffix(".mp4") }
@@ -387,7 +385,9 @@ struct FullAudioPlayerTest: View {
             
             VStack {
                 
-                FullAudioPlayerTestComponent(filePrefix: filesPrefixs[bigModel.currentProgramIndex], playing: playing)
+                //FullAudioPlayerTestComponent(filePrefix: filesPrefixs[bigModel.currentProgramIndex], playing: playing)
+                    //.id(filesPrefixs[bigModel.currentProgramIndex])
+                FluidPlayerTest(filePrefix: "\(filesPrefixs[bigModel.currentProgramIndex])_", playing: playing)
                     .id(filesPrefixs[bigModel.currentProgramIndex])
                 
                 HStack {
