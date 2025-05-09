@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import FFmpegSupport
 
 struct NewProgramScreen: View {
     
     @ObservedObject var bigModel: BigModel = BigModel.shared
     let apiService: APIServiceProtocol = APIService.shared
     let programManager: ProgramManagerProtocol = ProgramManager.shared
+    let group = DispatchGroup()
     
     @State private var horaireDebut: Double = 8.0
     @State private var horaireFin: Double = 18.0
@@ -193,7 +195,7 @@ struct NewProgramScreen: View {
                     Task {
                         do {
                             
-                            let url = try await APIService.shared.searchByUUID(uuid: radioUUID)
+                            let url = try await APIService.shared.searchURLByUUID(uuid: radioUUID)
                             
                             let response = try await APIService.shared.createProgram(
                                 radioName: radioName,
@@ -210,20 +212,25 @@ struct NewProgramScreen: View {
                             
                             if (ProgramManager.shared.estDansLeFutur(heure: hour1, minute: minute1, seconde: second1) && (radioName != "")) {
                                 
+                                let delay: Int = timeStringToEpoch(hour: hour2, minute: minute2, second: second2) - timeStringToEpoch(hour: hour1, minute: minute1, second: second1)
                                 let calendar = Calendar.current
                                 let currentDate = Date()
-                                let targetTime = calendar.date(bySettingHour: hour1, minute: minute1, second: second1, of: currentDate)!
+                                let targetTime1 = calendar.date(bySettingHour: hour1, minute: minute1, second: second1, of: currentDate)!
+                                //let targetTime2 = calendar.date(bySettingHour: hour1, minute: minute1, second: second1+10, of: currentDate)!
 
-                                let timeInterval = targetTime.timeIntervalSince(currentDate)
+                                let timeInterval = targetTime1.timeIntervalSince(currentDate)
 
                                 // Si l'heure cible est déjà passée aujourd'hui, ajuste pour demain
                                 if timeInterval < 0 {
                                     let nextDay = calendar.date(byAdding: .day, value: 1, to: currentDate)!
                                     let newTargetTime = calendar.date(bySettingHour: hour1, minute: minute1, second: second1, of: nextDay)!
                                     
-                                    RecordingService.shared.startTimer(for: newTargetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, outputName: response, url: url)
-                                } else {
-                                    RecordingService.shared.startTimer(for: targetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, outputName: response, url: url)
+                                    RecordingService.shared.startTimer(for: newTargetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, delay: delay, outputName: response, url: url)
+                                }
+                                else {
+                                        
+                                    RecordingService.shared.startTimer(for: targetTime1, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, delay: delay, outputName: response, url: url)
+                                    
                                 }
                                 
                             } else {
@@ -262,6 +269,32 @@ struct NewProgramScreen: View {
     }
     
 }
+
+func timeStringToEpoch(hour: Int, minute: Int, second: Int) -> Int {
+    var calendar = Calendar.current
+    calendar.timeZone = TimeZone.current // Utilise le fuseau horaire local
+
+    // Obtenir la date d'aujourd'hui
+    let now = Date()
+    let components = calendar.dateComponents([.year, .month, .day], from: now)
+
+    // Créer une date complète avec les heures/minutes/secondes
+    var fullComponents = DateComponents()
+    fullComponents.year = components.year
+    fullComponents.month = components.month
+    fullComponents.day = components.day
+    fullComponents.hour = hour
+    fullComponents.minute = minute
+    fullComponents.second = second
+
+    // Convertir en Date, puis en timestamp
+    if let date = calendar.date(from: fullComponents) {
+        return Int(date.timeIntervalSince1970)
+    } else {
+        return -1 // Erreur si la date ne peut pas être créée
+    }
+}
+
 
 
 #Preview {

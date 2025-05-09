@@ -40,7 +40,7 @@ protocol APIServiceProtocol {
 
     func searchByName(for name: String, completion: @escaping (LightenedRadioStationAndAmountOfResponses) -> Void)
     
-    func searchByUUID(uuid: String) async throws -> String
+    func searchURLByUUID(uuid: String) async throws -> String
 
     func deleteProgram(programID: String, completion: @escaping (Result<Void, Error>) -> Void)
 }

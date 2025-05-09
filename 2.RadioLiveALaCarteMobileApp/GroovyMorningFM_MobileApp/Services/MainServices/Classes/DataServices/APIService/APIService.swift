@@ -222,7 +222,7 @@ class APIService: ObservableObject, APIServiceProtocol {
         
     }
     
-    func searchByUUID(uuid: String) async throws -> String {
+    func searchURLByUUID(uuid: String) async throws -> String {
         
         guard let url = URL(string: "http://\(bigModel.ipAdress):8287/api/radio/getURLByUUID/\(uuid)") else {
             throw URLError(.badURL)
