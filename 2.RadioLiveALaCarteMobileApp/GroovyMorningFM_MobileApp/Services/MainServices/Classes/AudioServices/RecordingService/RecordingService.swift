@@ -73,7 +73,7 @@ class RecordingService: RecordingServiceProtocol {
             "-f", "segment",
             "-segment_time", "5",
             "-reset_timestamps", "1",
-            "\(documentsDirectory.path)/\(outputName)_program1_%03d.mp4"
+            "\(documentsDirectory.path)/\(outputName)_%03d.mp4"
         ]
         
         group.enter()
