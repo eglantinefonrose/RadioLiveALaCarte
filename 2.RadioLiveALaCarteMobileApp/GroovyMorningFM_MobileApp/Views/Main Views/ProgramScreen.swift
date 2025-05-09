@@ -109,15 +109,16 @@ struct ProgramScreen: View {
                         
                         if (program.isProgramAvailable() || program.isInLive()) {
                             
-                            let result = bigModel.verifierValeur(index: index)
+                            /*let result = bigModel.verifierValeur(index: index)
                             
-                            if (result == 1) {
+                            if (result == 1) {*/
                                 bigModel.currentView = .MultipleAudiosPlayer
-                            }
+                            bigModel.currentProgramIndex = index
+                            /*}
                             
                             if (result == 2) {
                                 bigModel.currentView = .LiveAudioPlayer
-                            }
+                            }*/
                             
                         }
                         

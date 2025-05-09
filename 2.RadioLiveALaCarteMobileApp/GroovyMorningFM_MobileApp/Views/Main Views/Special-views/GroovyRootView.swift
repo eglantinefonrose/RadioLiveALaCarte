@@ -35,7 +35,8 @@ struct GroovyRootView: View {
                 SandboxPlayerLive()
             }
             if (BigModel.shared.currentView == .MultipleAudiosPlayer) {
-                MultipleAudiosPlayer()
+                //MultipleAudiosPlayer()
+                FullAudioPlayerTest()
             }
             
         }.onAppear {

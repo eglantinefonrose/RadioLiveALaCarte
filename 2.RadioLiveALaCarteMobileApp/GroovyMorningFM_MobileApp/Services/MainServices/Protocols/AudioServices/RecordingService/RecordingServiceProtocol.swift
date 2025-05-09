@@ -8,7 +8,7 @@
 import Foundation
 
 protocol RecordingServiceProtocol {
-    func startTimer(for targetTime: Date, radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, outputName: String, url: String)
-    func recordRadio(radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, outputName: String, url: String)
+    func startTimer(for targetTime: Date, radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, delay: Int, outputName: String, url: String)
+    func recordRadio(radioName: String, delay: Int, outputName: String, url: String)
     func recordRadioMocked()
 }
