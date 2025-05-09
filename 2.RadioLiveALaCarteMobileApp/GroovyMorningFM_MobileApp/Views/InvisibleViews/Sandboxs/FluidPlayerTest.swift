@@ -205,29 +205,24 @@ struct FluidPlayerTest: View {
     }
 
     var body: some View {
+        
         VStack {
             
-            Image(systemName: "house.fill")
+            Image(systemName: "house")
+                .foregroundStyle(.blue)
                 .onTapGesture {
                     bigModel.currentView = .ProgramScreen
                 }
             
-            Text("Lecture en cours…")
-                .font(.title2)
-
-            /*Slider(value: Binding(
-                get: { manager.currentTime },
-                set: { _ in }
-            ), in: 0...manager.duration)
-                .padding()*/
+            AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)){ result in
+                result.image?
+                    .resizable()
+                    .scaledToFill()
+            }
+            .frame(width: 100)
 
             Text("\(formatTime(manager.currentTime)) / \(formatTime(manager.duration))")
                 .font(.caption)
-            
-            Text("rp")
-                .onTapGesture {
-                    print(self.filePrefix)
-                }
             
             Slider(
                 value: Binding(

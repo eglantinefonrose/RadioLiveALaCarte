@@ -67,7 +67,7 @@ class RecordingService: RecordingServiceProtocol {
 
         let ffmpegCommand1 = [
             "ffmpeg",
-            "-i", "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance",
+            "-i", "\(url)",
             "-t", "\(delay)",
             "-c", "copy",
             "-f", "segment",
