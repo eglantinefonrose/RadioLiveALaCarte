@@ -5,38 +5,52 @@
 //  Created by Eglantine Fonrose on 09/05/2025.
 //
 
+import Foundation
+import AVFoundation
+import Combine
+import Speech
 import SwiftUI
 
 struct AudioSegment {
     let url: URL
     let duration: Double
+    var transcription: String?
 }
-
-import AVFoundation
-import Combine
 
 class AudioPlayerManager952025: ObservableObject {
     
     @Published var duration: Double = 0
     @Published var currentTime: Double = 0
+    @Published var isPlaying: Bool = false
 
     private var player = AVQueuePlayer()
     private var timeObserver: Any?
     private var timer: Timer?
-
+    
     private var segments: [AudioSegment] = []
     private var itemSegmentMap: [AVPlayerItem: AudioSegment] = [:]
     private let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     private var filePrefix: String = ""
     
-    @Published var isPlaying: Bool = false
     var firstPlay: Bool = true
 
     init(filePrefix: String) {
         self.filePrefix = filePrefix
         startMonitoring()
         observeTime()
-        isPlaying = true
+        //isPlaying = true
+        
+        // Demande de permission au lancement
+        SFSpeechRecognizer.requestAuthorization { status in
+            switch status {
+            case .authorized:
+                print("Autorisé")
+            case .denied, .restricted, .notDetermined:
+                print("Transcription non autorisée")
+            @unknown default:
+                break
+            }
+        }
     }
 
     deinit {
@@ -76,7 +90,7 @@ class AudioPlayerManager952025: ObservableObject {
         let files = try? FileManager.default.contentsOfDirectory(at: documentsDirectory, includingPropertiesForKeys: nil)
         let newFiles = (files ?? [])
             .filter { $0.lastPathComponent.hasPrefix(filePrefix) && $0.pathExtension == "mp4" }
-            .sorted { $0.lastPathComponent < $1.lastPathComponent }  // trie par nom
+            .sorted { $0.lastPathComponent < $1.lastPathComponent }
 
         let alreadyLoadedURLs = Set(segments.map { $0.url })
         let filesToAdd = newFiles.filter { !alreadyLoadedURLs.contains($0) }
@@ -100,7 +114,7 @@ class AudioPlayerManager952025: ObservableObject {
                 let status = asset.statusOfValue(forKey: "duration", error: &error)
                 if status == .loaded {
                     let duration = asset.duration.seconds
-                    let segment = AudioSegment(url: url, duration: duration)
+                    let segment = AudioSegment(url: url, duration: duration, transcription: nil)
                     loadedSegments.append(segment)
                 }
                 group.leave()
@@ -116,17 +130,17 @@ class AudioPlayerManager952025: ObservableObject {
                 self.itemSegmentMap[item] = segment
             }
             self.updateTotalDuration()
+            self.seekToSegment(containing: "Fossiles")
         }
     }
 
     private func updateTotalDuration() {
         duration = segments.map { $0.duration }.reduce(0, +)
     }
-    
+
     func seek(to globalTime: Double) {
         guard !segments.isEmpty else { return }
 
-        // Trouver le segment correspondant
         var accumulated = 0.0
         var targetIndex: Int?
         var timeInSegment: Double = 0
@@ -143,7 +157,6 @@ class AudioPlayerManager952025: ObservableObject {
 
         guard let index = targetIndex else { return }
 
-        // Recréer la file de lecture
         let newPlayer = AVQueuePlayer()
         let remainingSegments = segments[index...]
 
@@ -155,25 +168,23 @@ class AudioPlayerManager952025: ObservableObject {
 
         player.pause()
         player = newPlayer
-        observeTime() // Reconnecte le timeObserver
+        observeTime()
 
-        // Attendre que le player soit prêt avant le seek
         newPlayer.currentItem?.seek(to: CMTime(seconds: timeInSegment, preferredTimescale: 600), completionHandler: { [weak self] _ in
             newPlayer.play()
             self?.player = newPlayer
         })
     }
-    
+
     func togglePlayPause() {
-        
         if self.isPlaying {
             player.pause()
             isPlaying = false
             return
         }
-        
-        if (!self.isPlaying) {
-            if (firstPlay) {
+
+        if !self.isPlaying {
+            if firstPlay {
                 loadSegments()
                 firstPlay = false
                 isPlaying = true
@@ -184,12 +195,82 @@ class AudioPlayerManager952025: ObservableObject {
                 return
             }
         }
-        
     }
-    
-}
 
-import SwiftUI
+    // MARK: - Transcription et lecture ciblée
+
+    private func transcribe(segment: AudioSegment, completion: @escaping (String?) -> Void) {
+        let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "fr-FR"))
+        guard let recognizer = recognizer, recognizer.isAvailable else {
+            completion(nil)
+            return
+        }
+
+        let request = SFSpeechURLRecognitionRequest(url: segment.url)
+        recognizer.recognitionTask(with: request) { result, error in
+            if let result = result, result.isFinal {
+                completion(result.bestTranscription.formattedString)
+            } else if let error = error {
+                print("Erreur transcription : \(error.localizedDescription)")
+                completion(nil)
+            }
+        }
+    }
+
+    func seekToSegment(containing keyword: String) {
+        let lowercaseKeyword = keyword.lowercased()
+        
+        let group = DispatchGroup()
+        var targetIndex: Int?
+
+        for (index, segment) in segments.enumerated() {
+            print(segment.transcription!.lowercased())
+            if let transcription = segment.transcription?.lowercased(), transcription.contains(lowercaseKeyword) {
+                targetIndex = index
+                break
+            } else if segment.transcription == nil {
+                group.enter()
+                transcribe(segment: segment) { [weak self] transcription in
+                    self?.segments[index].transcription = transcription
+                    if transcription?.lowercased().contains(lowercaseKeyword) == true && targetIndex == nil {
+                        targetIndex = index
+                        print("Mot trouvé à l'index \(index)")
+                    }
+                    group.leave()
+                }
+            }
+        }
+
+        group.notify(queue: .main) { [weak self] in
+            guard let self = self, let index = targetIndex else {
+                print("Mot-clé non trouvé dans les segments.")
+                return
+            }
+
+            self.seekToSegment(at: index)
+        }
+    }
+
+    private func seekToSegment(at index: Int) {
+        guard index < segments.count else { return }
+
+        let newPlayer = AVQueuePlayer()
+        let remainingSegments = segments[index...]
+
+        for segment in remainingSegments {
+            let item = AVPlayerItem(url: segment.url)
+            newPlayer.insert(item, after: nil)
+            itemSegmentMap[item] = segment
+        }
+
+        player.pause()
+        player = newPlayer
+        observeTime()
+
+        newPlayer.play()
+        isPlaying = true
+    }
+}
 
 struct FluidPlayerTest: View {
     

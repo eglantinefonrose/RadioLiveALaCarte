@@ -20,6 +20,7 @@ class RecordingService: RecordingServiceProtocol {
             self.recordRadio(radioName: radioName, delay: delay, outputName: outputName, url: url)
         }
         RunLoop.current.add(timer, forMode: .common)
+        
     }
     
     /*func recordRadio(radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, outputName: String, url: String) {
