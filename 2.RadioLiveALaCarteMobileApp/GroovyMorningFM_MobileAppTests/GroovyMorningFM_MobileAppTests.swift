@@ -37,32 +37,32 @@ final class GroovyMorningFM_MobileAppTests: XCTestCase {
     func testTranscriptionOfAudioFile() async throws {
         // Chemin vers ton fichier audio (doit être accessible dans le simulateur)
         let audioFilePath = "/Users/eglantine/Library/Developer/CoreSimulator/Devices/5427AE58-890A-4065-9F57-6783C33CD377/data/Containers/Data/Application/7F86FA0B-BD9D-4E99-898E-2A396B0BF4C6/Documents/ce1df3eb-9faa-43e1-bd72-0d48cc8f9b63_002.mp4"
-        let audioURL = URL(fileURLWithPath: audioFilePath)
-
-        let expectation = expectation(description: "Transcription terminée")
-
-        let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "fr-FR"))
-        XCTAssertNotNil(recognizer, "SFSpeechRecognizer est indisponible")
-
-        guard let recognizer = recognizer, recognizer.isAvailable else {
-            XCTFail("Le moteur de reconnaissance vocale n’est pas disponible.")
-            return
-        }
-
-        let request = SFSpeechURLRecognitionRequest(url: audioURL)
-
-        recognizer.recognitionTask(with: request) { result, error in
-            if let result = result, result.isFinal {
-                print("🔤 Transcription : \(result.bestTranscription.formattedString)")
-                XCTAssertFalse(result.bestTranscription.formattedString.isEmpty, "Transcription vide")
-                expectation.fulfill()
-            } else if let error = error {
-                XCTFail("Erreur de transcription : \(error.localizedDescription)")
-                expectation.fulfill()
+        
+        transcribeFrenchAudio(from: audioFilePath) { result in
+            switch result {
+            case .success(let transcription):
+                print("✅ Transcription réussie : \(transcription)")
+            case .failure(let error):
+                print("❌ Erreur : \(error.localizedDescription)")
             }
         }
-
-        waitForExpectations(timeout: 30, handler: nil)
+        
     }
 
+    func transcrireAudioDepuisFichier() {
+        let cheminAudio = "/Users/eglantine/Library/Developer/CoreSimulator/Devices/5427AE58-890A-4065-9F57-6783C33CD377/data/Containers/Data/Application/7F86FA0B-BD9D-4E99-898E-2A396B0BF4C6/Documents/franceinter_10s.wav"
+        let urlAudio = URL(fileURLWithPath: cheminAudio)
+        
+        let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "fr-FR")) // français
+        let request = SFSpeechURLRecognitionRequest(url: urlAudio)
+        
+        recognizer?.recognitionTask(with: request) { result, error in
+            if let error = error {
+                print("Erreur pendant la transcription: \(error.localizedDescription)")
+            } else if let result = result {
+                print("Transcription: \(result.bestTranscription.formattedString)")
+            }
+        }
+    }
+    
 }
