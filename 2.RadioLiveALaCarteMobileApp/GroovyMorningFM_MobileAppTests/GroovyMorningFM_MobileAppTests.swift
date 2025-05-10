@@ -34,35 +34,26 @@ final class GroovyMorningFM_MobileAppTests: XCTestCase {
         }
     }
     
-    func testTranscriptionOfAudioFile() async throws {
-        // Chemin vers ton fichier audio (doit être accessible dans le simulateur)
-        let audioFilePath = "/Users/eglantine/Library/Developer/CoreSimulator/Devices/5427AE58-890A-4065-9F57-6783C33CD377/data/Containers/Data/Application/7F86FA0B-BD9D-4E99-898E-2A396B0BF4C6/Documents/ce1df3eb-9faa-43e1-bd72-0d48cc8f9b63_002.mp4"
+    func testTranscriptionAudioFichier() throws {
+
+        let expectation = self.expectation(description: "Transcription terminée")
         
-        transcribeFrenchAudio(from: audioFilePath) { result in
+        let fileManager = FileManager.default
+        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileURL = documentsURL.appendingPathComponent("franceinter_10s.wav")
+
+        TranscriptionService.shared.transcrireAudioDepuisFichier(fileURL: fileURL) { result in
             switch result {
             case .success(let transcription):
-                print("✅ Transcription réussie : \(transcription)")
+                XCTAssertFalse(transcription.isEmpty, "La transcription ne doit pas être vide.")
+                print("Transcription : \(transcription)")
             case .failure(let error):
-                print("❌ Erreur : \(error.localizedDescription)")
+                XCTFail("La transcription a échoué avec une erreur : \(error)")
             }
+            expectation.fulfill()
         }
-        
-    }
 
-    func transcrireAudioDepuisFichier() {
-        let cheminAudio = "/Users/eglantine/Library/Developer/CoreSimulator/Devices/5427AE58-890A-4065-9F57-6783C33CD377/data/Containers/Data/Application/7F86FA0B-BD9D-4E99-898E-2A396B0BF4C6/Documents/franceinter_10s.wav"
-        let urlAudio = URL(fileURLWithPath: cheminAudio)
-        
-        let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "fr-FR")) // français
-        let request = SFSpeechURLRecognitionRequest(url: urlAudio)
-        
-        recognizer?.recognitionTask(with: request) { result, error in
-            if let error = error {
-                print("Erreur pendant la transcription: \(error.localizedDescription)")
-            } else if let result = result {
-                print("Transcription: \(result.bestTranscription.formattedString)")
-            }
-        }
+        waitForExpectations(timeout: 10.0, handler: nil)
     }
     
 }

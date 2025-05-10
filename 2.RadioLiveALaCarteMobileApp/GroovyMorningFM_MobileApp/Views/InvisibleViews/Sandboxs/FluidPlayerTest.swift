@@ -36,9 +36,9 @@ class AudioPlayerManager952025: ObservableObject {
 
     init(filePrefix: String) {
         self.filePrefix = filePrefix
-        startMonitoring()
+        //startMonitoring()
+        loadSegments()
         observeTime()
-        //isPlaying = true
         
         // Demande de permission au lancement
         SFSpeechRecognizer.requestAuthorization { status in
@@ -130,7 +130,7 @@ class AudioPlayerManager952025: ObservableObject {
                 self.itemSegmentMap[item] = segment
             }
             self.updateTotalDuration()
-            self.seekToSegment(containing: "Fossiles")
+            self.seekToSegment(containing: "mobilisation")
         }
     }
 
@@ -218,40 +218,27 @@ class AudioPlayerManager952025: ObservableObject {
     }
 
     func seekToSegment(containing keyword: String) {
-        let lowercaseKeyword = keyword.lowercased()
+            
+        let urls: [URL] = segments.map { $0.url }
         
-        let group = DispatchGroup()
-        var targetIndex: Int?
-
-        for (index, segment) in segments.enumerated() {
-            print(segment.transcription!.lowercased())
-            if let transcription = segment.transcription?.lowercased(), transcription.contains(lowercaseKeyword) {
-                targetIndex = index
-                break
-            } else if segment.transcription == nil {
-                group.enter()
-                transcribe(segment: segment) { [weak self] transcription in
-                    self?.segments[index].transcription = transcription
-                    if transcription?.lowercased().contains(lowercaseKeyword) == true && targetIndex == nil {
-                        targetIndex = index
-                        print("Mot trouvé à l'index \(index)")
+        TranscriptionService.shared.transcrireAudiosDepuisFichiers(urls: urls) { result in
+            switch result {
+            case .success(let transcriptions):
+                print("Toutes les transcriptions ont réussi :")
+                for (index, text) in transcriptions.enumerated() {
+                    print("Fichier \(index + 1): \(text)")
+                    if text.localizedCaseInsensitiveContains("mobilisation") {
+                        self.seekToSegment(index: index)
                     }
-                    group.leave()
                 }
+            case .failure(let error):
+                print("Erreur lors de la transcription : \(error.localizedDescription)")
             }
         }
-
-        group.notify(queue: .main) { [weak self] in
-            guard let self = self, let index = targetIndex else {
-                print("Mot-clé non trouvé dans les segments.")
-                return
-            }
-
-            self.seekToSegment(at: index)
-        }
+        
     }
 
-    private func seekToSegment(at index: Int) {
+    private func seekToSegment(index: Int) {
         guard index < segments.count else { return }
 
         let newPlayer = AVQueuePlayer()
