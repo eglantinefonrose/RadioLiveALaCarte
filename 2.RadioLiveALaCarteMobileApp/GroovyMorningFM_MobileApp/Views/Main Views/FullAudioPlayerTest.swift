@@ -25,7 +25,7 @@ class AudioPlayerManager952025: ObservableObject {
     private var itemSegmentMap: [AVPlayerItem: AudioSegment] = [:]
     private let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     private var filePrefix: String = ""
-    private var keywordFound: Bool = false
+    var keywordFound: Bool = false
     
     var firstPlay: Bool = true
 
@@ -262,41 +262,68 @@ struct FluidPlayerTest: View {
 
     var body: some View {
         
-        VStack {
+        if (!manager.keywordFound) {
             
-            Image(systemName: "house")
-                .foregroundStyle(.blue)
-                .onTapGesture {
-                    bigModel.currentView = .ProgramScreen
-                }
-            
-            AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)){ result in
-                result.image?
-                    .resizable()
-                    .scaledToFill()
-            }
-            .frame(width: 100)
-
-            Text("\(formatTime(manager.currentTime)) / \(formatTime(manager.duration))")
-                .font(.caption)
-            
-            Slider(
-                value: Binding(
-                    get: { manager.currentTime },
-                    set: { newVal in
-                        manager.seek(to: newVal)
+            VStack {
+                
+                Image(systemName: "house")
+                    .foregroundStyle(.blue)
+                    .onTapGesture {
+                        bigModel.currentView = .ProgramScreen
                     }
-                ),
-                in: 0...manager.duration,
-                onEditingChanged: { isEditing in
-                    // Optionnel : pause le temps du glissement
-                }
-            )
+                
+                Spacer()
+                
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .scaleEffect(1) // Agrandir si besoin
+                    .padding()
+                    .foregroundStyle(Color.purple)
+                
+                Spacer()
+                
+            }.padding()
             
-        }.onChange(of: playing) { oldValue, newValue in
-            manager.togglePlayPause()
+        } else {
+            
+            VStack {
+                
+                Image(systemName: "house")
+                    .foregroundStyle(.blue)
+                    .onTapGesture {
+                        bigModel.currentView = .ProgramScreen
+                    }
+                
+                AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)){ result in
+                    result.image?
+                        .resizable()
+                        .scaledToFill()
+                }
+                .frame(width: 100)
+
+                Text("\(formatTime(manager.currentTime)) / \(formatTime(manager.duration))")
+                    .font(.caption)
+                
+                Slider(
+                    value: Binding(
+                        get: { manager.currentTime },
+                        set: { newVal in
+                            manager.seek(to: newVal)
+                        }
+                    ),
+                    in: 0...manager.duration,
+                    onEditingChanged: { isEditing in
+                        // Optionnel : pause le temps du glissement
+                    }
+                )
+                
+            }.onChange(of: playing) { oldValue, newValue in
+                manager.togglePlayPause()
+            }
+            .padding()
+            
         }
-        .padding()
+        
     }
 
     private func formatTime(_ seconds: Double) -> String {
