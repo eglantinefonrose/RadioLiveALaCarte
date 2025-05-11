@@ -13,6 +13,8 @@
 		7019FEE22D4F907C005081AC /* output_373f8ae9-b0d3-4ff2-bf22-f053497e5d75_17500.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7019FEE12D4F907C005081AC /* output_373f8ae9-b0d3-4ff2-bf22-f053497e5d75_17500.mp3 */; };
 		7019FEE42D4F90B2005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7019FEE32D4F90B2005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3 */; };
 		7019FEE62D4F90D9005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7019FEE52D4F90D9005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3 */; };
+		7034A86F2DCF57E200CD5B36 /* TranscriptionTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7034A86E2DCF57E200CD5B36 /* TranscriptionTest.swift */; };
+		704058FA2DCFA02E00359F7A /* TranscriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704058F92DCFA02E00359F7A /* TranscriptionService.swift */; };
 		704F64282D6E016D000C5556 /* AudioPlayerViewDanielMorin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 704F64272D6E016D000C5556 /* AudioPlayerViewDanielMorin.swift */; };
 		70639F7B2DA805F800E20060 /* RecordingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70639F7A2DA805F800E20060 /* RecordingService.swift */; };
 		70639F7E2DA8087E00E20060 /* FFmpeg-iOS in Frameworks */ = {isa = PBXBuildFile; productRef = 70639F7D2DA8087E00E20060 /* FFmpeg-iOS */; };
@@ -51,7 +53,6 @@
 		70B636052DA9B56700C94540 /* AudioPlayerManager_2237.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B636042DA9B56700C94540 /* AudioPlayerManager_2237.swift */; };
 		70D3B9472D5BB71B00BFF6F7 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D3B9462D5BB71B00BFF6F7 /* AudioPlayerManager.swift */; };
 		70D3B9492D5FE73600BFF6F7 /* RecordName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D3B9482D5FE73600BFF6F7 /* RecordName.swift */; };
-		70D8F1C52DCE28500043820F /* FluidPlayerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8F1C42DCE28500043820F /* FluidPlayerTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,6 +79,8 @@
 		7019FEE12D4F907C005081AC /* output_373f8ae9-b0d3-4ff2-bf22-f053497e5d75_17500.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "output_373f8ae9-b0d3-4ff2-bf22-f053497e5d75_17500.mp3"; sourceTree = "<group>"; };
 		7019FEE32D4F90B2005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0003.mp3"; sourceTree = "<group>"; };
 		7019FEE52D4F90D9005081AC /* output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "output_70c55fc8-8cc4-40a9-af11-499e94d8f9f3_17550output_0001.mp3"; sourceTree = "<group>"; };
+		7034A86E2DCF57E200CD5B36 /* TranscriptionTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionTest.swift; sourceTree = "<group>"; };
+		704058F92DCFA02E00359F7A /* TranscriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranscriptionService.swift; sourceTree = "<group>"; };
 		704F64272D6E016D000C5556 /* AudioPlayerViewDanielMorin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AudioPlayerViewDanielMorin.swift; path = GroovyMorningFM_MobileApp/Views/AudioPlayerViewDanielMorin.swift; sourceTree = SOURCE_ROOT; };
 		70639F7A2DA805F800E20060 /* RecordingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingService.swift; sourceTree = "<group>"; };
 		70639F812DA80BCC00E20060 /* silent.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silent.mp3; sourceTree = "<group>"; };
@@ -122,7 +125,6 @@
 		70B636042DA9B56700C94540 /* AudioPlayerManager_2237.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager_2237.swift; sourceTree = "<group>"; };
 		70D3B9462D5BB71B00BFF6F7 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
 		70D3B9482D5FE73600BFF6F7 /* RecordName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordName.swift; sourceTree = "<group>"; };
-		70D8F1C42DCE28500043820F /* FluidPlayerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FluidPlayerTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -266,7 +268,7 @@
 				707A5ABF2DAA672000D8198C /* SandboxTest.swift */,
 				707A5ABD2DAA5FEC00D8198C /* AudioPlayerManager 2.swift */,
 				707A5ABB2DAA5F5F00D8198C /* TestFFMPEGConcatene.swift */,
-				70D8F1C42DCE28500043820F /* FluidPlayerTest.swift */,
+				7034A86E2DCF57E200CD5B36 /* TranscriptionTest.swift */,
 			);
 			path = Sandboxs;
 			sourceTree = "<group>";
@@ -383,6 +385,7 @@
 			children = (
 				70A101AE2DB24D51007348E7 /* RecordingService */,
 				70A101A02DB24A91007348E7 /* BackgroundSilentAudio */,
+				704058F92DCFA02E00359F7A /* TranscriptionService.swift */,
 			);
 			path = AudioServices;
 			sourceTree = "<group>";
@@ -634,8 +637,9 @@
 				700764022D4ACFD900411F53 /* APIService.swift in Sources */,
 				7074574F2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift in Sources */,
 				70A101942DB2460A007348E7 /* APIServiceProtocol.swift in Sources */,
-				70D8F1C52DCE28500043820F /* FluidPlayerTest.swift in Sources */,
+				7034A86F2DCF57E200CD5B36 /* TranscriptionTest.swift in Sources */,
 				70A101A62DB24C79007348E7 /* ProgramManagerProtocol.swift in Sources */,
+				704058FA2DCFA02E00359F7A /* TranscriptionService.swift in Sources */,
 				70A1018A2DB024B5007348E7 /* TestFFMPEGSemaphore.swift in Sources */,
 				70639F842DA80C4A00E20060 /* SilentAudioManager.swift in Sources */,
 				70B636052DA9B56700C94540 /* AudioPlayerManager_2237.swift in Sources */,
@@ -817,6 +821,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "GroovyMorningFM-MobileApp-Info.plist";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -849,6 +854,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "GroovyMorningFM-MobileApp-Info.plist";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

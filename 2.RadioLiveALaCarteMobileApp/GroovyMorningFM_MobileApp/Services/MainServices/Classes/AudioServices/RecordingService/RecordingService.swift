@@ -20,44 +20,8 @@ class RecordingService: RecordingServiceProtocol {
             self.recordRadio(radioName: radioName, delay: delay, outputName: outputName, url: url)
         }
         RunLoop.current.add(timer, forMode: .common)
+        
     }
-    
-    /*func recordRadio(radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, outputName: String, url: String) {
-        
-        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let outputURL = documentsDirectory.appendingPathComponent("\(outputName).mp4")
-        let group = DispatchGroup()
-            
-        let ffmpegCommand1 = [
-            "ffmpeg",
-            "-i", "https://stream.radiofrance.fr/franceinfo/franceinfo_hifi.m3u8?id=radiofrance",
-            "-t", "300",
-            "-map", "0:a",
-            "-c:a", "aac",
-            "-b:a", "128k",
-            "-f", "tee",
-            "[f=mp4]\(outputURL.absoluteString)|[f=segment:segment_time=5:reset_timestamps=1]\(documentsDirectory.path)/\(outputName)1_%03d.mp4"
-        ]
-        
-        let ffmpegCommand2 = [
-            "ffmpeg",
-            "-i", "https://stream.radiofrance.fr/franceinter/franceinter_hifi.m3u8?id=radiofrance",
-            "-t", "300",
-            "-map", "0:a",
-            "-c:a", "aac",
-            "-b:a", "128k",
-            "-f", "tee",
-            "[f=mp4]\(outputURL.absoluteString)|[f=segment:segment_time=5:reset_timestamps=1]\(documentsDirectory.path)/\(outputName)2_%03d.mp4"
-        ]
-        
-        group.enter()
-        DispatchQueue.global(qos: .userInitiated).async {
-            ffmpeg(ffmpegCommand1)
-            ffmpeg(ffmpegCommand2)
-            group.leave()
-        }
-        
-    }*/
     
     func recordRadio(radioName: String, delay: Int, outputName: String, url: String) {
             
@@ -67,6 +31,8 @@ class RecordingService: RecordingServiceProtocol {
 
         let ffmpegCommand1 = [
             "ffmpeg",
+            "-hide_banner",
+            "-loglevel", "error",
             "-i", "\(url)",
             "-t", "\(delay)",
             "-c", "copy",

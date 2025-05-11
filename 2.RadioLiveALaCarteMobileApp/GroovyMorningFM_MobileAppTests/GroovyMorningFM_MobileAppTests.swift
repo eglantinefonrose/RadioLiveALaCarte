@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import Speech
 @testable import GroovyMorningFM_MobileApp
 
 final class GroovyMorningFM_MobileAppTests: XCTestCase {
@@ -32,5 +33,27 @@ final class GroovyMorningFM_MobileAppTests: XCTestCase {
             // Put the code you want to measure the time of here.
         }
     }
+    
+    func testTranscriptionAudioFichier() throws {
 
+        let expectation = self.expectation(description: "Transcription terminée")
+        
+        let fileManager = FileManager.default
+        let documentsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let fileURL = documentsURL.appendingPathComponent("franceinter_10s.wav")
+
+        TranscriptionService.shared.transcrireAudioDepuisFichier(fileURL: fileURL) { result in
+            switch result {
+            case .success(let transcription):
+                XCTAssertFalse(transcription.isEmpty, "La transcription ne doit pas être vide.")
+                print("Transcription : \(transcription)")
+            case .failure(let error):
+                XCTFail("La transcription a échoué avec une erreur : \(error)")
+            }
+            expectation.fulfill()
+        }
+
+        waitForExpectations(timeout: 10.0, handler: nil)
+    }
+    
 }

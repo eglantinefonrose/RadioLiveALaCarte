@@ -247,12 +247,12 @@ struct ProgramScreen: View {
             if fileURLs.isEmpty {
                 print("📁 Aucun fichier trouvé dans Documents.")
             } else {
-                print("📁 Fichiers dans Documents:")
+                //print("📁 Fichiers dans Documents:")
                 for fileURL in fileURLs {
                     do {
                         let resourceValues = try fileURL.resourceValues(forKeys: [.fileSizeKey])
                         let fileSize = resourceValues.fileSize ?? 0
-                        print("📄 \(fileURL.lastPathComponent) -> \(fileURL.path) (\(fileSize) octets)")
+                        //print("📄 \(fileURL.lastPathComponent) -> \(fileURL.path) (\(fileSize) octets)")
                     } catch {
                         print("⚠️ Impossible de lire la taille de \(fileURL.lastPathComponent): \(error)")
                     }

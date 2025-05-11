@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Privacy - Microphone Usage Description key</key>
+	<string>Audio is recorded to transcribe the meeting. Audio recordings are discarded after transcription.</string>
+	<key>Privacy - Speech Recognition Usage Description key</key>
+	<string>ou can view a text transcription of your meeting in the app.</string>
+</dict>
+</plist>
