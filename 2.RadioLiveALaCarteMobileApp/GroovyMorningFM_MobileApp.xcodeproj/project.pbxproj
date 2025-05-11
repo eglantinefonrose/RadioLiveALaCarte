@@ -53,7 +53,6 @@
 		70B636052DA9B56700C94540 /* AudioPlayerManager_2237.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B636042DA9B56700C94540 /* AudioPlayerManager_2237.swift */; };
 		70D3B9472D5BB71B00BFF6F7 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D3B9462D5BB71B00BFF6F7 /* AudioPlayerManager.swift */; };
 		70D3B9492D5FE73600BFF6F7 /* RecordName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D3B9482D5FE73600BFF6F7 /* RecordName.swift */; };
-		70D8F1C52DCE28500043820F /* FluidPlayerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8F1C42DCE28500043820F /* FluidPlayerTest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,7 +125,6 @@
 		70B636042DA9B56700C94540 /* AudioPlayerManager_2237.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager_2237.swift; sourceTree = "<group>"; };
 		70D3B9462D5BB71B00BFF6F7 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
 		70D3B9482D5FE73600BFF6F7 /* RecordName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordName.swift; sourceTree = "<group>"; };
-		70D8F1C42DCE28500043820F /* FluidPlayerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FluidPlayerTest.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -270,7 +268,6 @@
 				707A5ABF2DAA672000D8198C /* SandboxTest.swift */,
 				707A5ABD2DAA5FEC00D8198C /* AudioPlayerManager 2.swift */,
 				707A5ABB2DAA5F5F00D8198C /* TestFFMPEGConcatene.swift */,
-				70D8F1C42DCE28500043820F /* FluidPlayerTest.swift */,
 				7034A86E2DCF57E200CD5B36 /* TranscriptionTest.swift */,
 			);
 			path = Sandboxs;
@@ -641,7 +638,6 @@
 				7074574F2D4AB236000DC5EC /* GroovyMorningFM_MobileAppApp.swift in Sources */,
 				70A101942DB2460A007348E7 /* APIServiceProtocol.swift in Sources */,
 				7034A86F2DCF57E200CD5B36 /* TranscriptionTest.swift in Sources */,
-				70D8F1C52DCE28500043820F /* FluidPlayerTest.swift in Sources */,
 				70A101A62DB24C79007348E7 /* ProgramManagerProtocol.swift in Sources */,
 				704058FA2DCFA02E00359F7A /* TranscriptionService.swift in Sources */,
 				70A1018A2DB024B5007348E7 /* TestFFMPEGSemaphore.swift in Sources */,
