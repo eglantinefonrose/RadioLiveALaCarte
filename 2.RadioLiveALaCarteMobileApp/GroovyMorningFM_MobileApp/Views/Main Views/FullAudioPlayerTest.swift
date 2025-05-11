@@ -80,66 +80,6 @@ class AudioPlayerManager952025: ObservableObject {
         }
         //player.play()
     }
-
-    /*private func loadSegments() {
-        
-        let files = try? FileManager.default.contentsOfDirectory(at: documentsDirectory, includingPropertiesForKeys: nil)
-        let newFiles = (files ?? [])
-            .filter { $0.lastPathComponent.hasPrefix(filePrefix) && $0.pathExtension == "mp4" }
-            .sorted { $0.lastPathComponent < $1.lastPathComponent }
-
-        let alreadyLoadedURLs = Set(segments.map { $0.url })
-        let filesToAdd = newFiles.filter { !alreadyLoadedURLs.contains($0) }
-
-        var pendingSegments: [(url: URL, asset: AVURLAsset)] = []
-
-        for fileURL in filesToAdd {
-            let asset = AVURLAsset(url: fileURL)
-            pendingSegments.append((url: fileURL, asset: asset))
-        }
-
-        guard !pendingSegments.isEmpty else { return }
-
-        let group = DispatchGroup()
-        var loadedSegments: [AudioSegment] = []
-
-        for (url, asset) in pendingSegments {
-            group.enter()
-            asset.loadValuesAsynchronously(forKeys: ["duration"]) {
-                var error: NSError?
-                let status = asset.statusOfValue(forKey: "duration", error: &error)
-                if status == .loaded {
-                    let duration = asset.duration.seconds
-                    let segment = AudioSegment(url: url, duration: duration, transcription: nil)
-                    loadedSegments.append(segment)
-                }
-                group.leave()
-            }
-        }
-
-        group.notify(queue: .main) {
-            
-        let sortedSegments = loadedSegments.sorted { $0.url.lastPathComponent < $1.url.lastPathComponent }
-        for segment in sortedSegments {
-
-        let item = AVPlayerItem(url: segment.url)
-        self.player.insert(item, after: nil)
-        self.segments.append(segment)
-        self.itemSegmentMap[item] = segment
-
-        TranscriptionService.shared.transcrireAudioDepuisFichier(fileURL: segment.url) { result in
-            switch result {
-                case .success(let transcription):
-                print("✅ Transcription réussie : \(transcription)")
-                case .failure(let error):
-                print("❌ Erreur lors de la transcription : \(error.localizedDescription)")
-                }
-            }
-        }
-        self.updateTotalDuration()
-            
-        }
-    }*/
     
     private func loadSegments() {
         let files = try? FileManager.default.contentsOfDirectory(at: documentsDirectory, includingPropertiesForKeys: nil)
@@ -179,6 +119,7 @@ class AudioPlayerManager952025: ObservableObject {
         group.notify(queue: .main) {
             let sortedSegments = loadedSegments.sorted { $0.url.lastPathComponent < $1.url.lastPathComponent }
             self.processSegmentsSequentially(sortedSegments)
+            
         }
     }
 
@@ -192,6 +133,7 @@ class AudioPlayerManager952025: ObservableObject {
 
         // Si la condition a été déclenchée précédemment, on ajoute immédiatement sans transcription
         if foundTrigger {
+            keywordFound = true
             let item = AVPlayerItem(url: segment.url)
             self.player.insert(item, after: nil)
             self.segments.append(segment)
@@ -201,30 +143,43 @@ class AudioPlayerManager952025: ObservableObject {
         }
 
         // Sinon on transcrit normalement
-        TranscriptionService.shared.transcrireAudioDepuisFichier(fileURL: segment.url) { result in
-            var triggerFound = foundTrigger
-            switch result {
-            case .success(let transcription):
-                print("✅ Transcription réussie : \(transcription)")
+        
+        if (keywordFound) {
+            
+            let item = AVPlayerItem(url: segment.url)
+            self.player.insert(item, after: nil)
+            self.segments.append(segment)
+            self.itemSegmentMap[item] = segment
+            self.processSegmentsSequentially(segments, index: index + 1, foundTrigger: true)
+            
+        } else {
+            
+            TranscriptionService.shared.transcrireAudioDepuisFichier(fileURL: segment.url) { result in
+                var triggerFound = foundTrigger
+                switch result {
+                case .success(let transcription):
+                    print("✅ Transcription réussie : \(transcription)")
 
-                if transcription.localizedStandardContains("et") {
-                    let item = AVPlayerItem(url: segment.url)
-                    self.player.insert(item, after: nil)
-                    self.segments.append(segment)
-                    self.itemSegmentMap[item] = segment
-                    triggerFound = true
+                    if transcription.localizedStandardContains("et") {
+                        let item = AVPlayerItem(url: segment.url)
+                        self.player.insert(item, after: nil)
+                        self.segments.append(segment)
+                        self.itemSegmentMap[item] = segment
+                        triggerFound = true
+                    }
+
+                case .failure(let error):
+                    print("❌ Erreur lors de la transcription : \(error.localizedDescription)")
                 }
 
-            case .failure(let error):
-                print("❌ Erreur lors de la transcription : \(error.localizedDescription)")
+
+                // Traitement du suivant
+                self.processSegmentsSequentially(segments, index: index + 1, foundTrigger: triggerFound)
             }
-
-
-            // Traitement du suivant
-            self.processSegmentsSequentially(segments, index: index + 1, foundTrigger: triggerFound)
+            
         }
+        
     }
-
 
 
     private func updateTotalDuration() {
@@ -290,60 +245,6 @@ class AudioPlayerManager952025: ObservableObject {
         }
     }
     
-    /*func seekToSegment(keyword: String) {
-        
-        let urls: [URL] = segments.map { $0.url }
-        
-        func transcrireSuivant(index: Int) {
-            if index >= urls.count {
-                return
-            }
-
-            let fileURL = urls[index]
-            guard let recognizer = SFSpeechRecognizer(locale: Locale(identifier: "fr-FR")) else {
-                return
-            }
-
-            if !recognizer.isAvailable {
-                return
-            }
-
-            let request = SFSpeechURLRecognitionRequest(url: fileURL)
-            recognizer.recognitionTask(with: request) { result, error in
-                if let error = error {
-                    return
-                } else if let result = result, result.isFinal {
-                    if (result.bestTranscription.formattedString).localizedCaseInsensitiveContains(keyword) {
-                        self.seekToSegment(index: index)
-                    } else {
-                        transcrireSuivant(index: index + 1)
-                    }
-                }
-            }
-        }
-
-        transcrireSuivant(index: 0)
-    }
-
-    private func seekToSegment(index: Int) {
-        guard index < segments.count else { return }
-
-        let newPlayer = AVQueuePlayer()
-        let remainingSegments = segments[index...]
-
-        for segment in remainingSegments {
-            let item = AVPlayerItem(url: segment.url)
-            newPlayer.insert(item, after: nil)
-            itemSegmentMap[item] = segment
-        }
-
-        player.pause()
-        player = newPlayer
-        observeTime()
-
-        newPlayer.play()
-        isPlaying = true
-    }*/
 }
 
 struct FluidPlayerTest: View {
