@@ -31,8 +31,8 @@ class AudioPlayerManager952025: ObservableObject {
 
     init(filePrefix: String) {
         self.filePrefix = filePrefix
-        //startMonitoring()
-        loadSegments()
+        startMonitoring()
+        //loadSegments()
         observeTime()
         
         // Demande de permission au lancement
@@ -78,7 +78,7 @@ class AudioPlayerManager952025: ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
             self?.loadSegments()
         }
-        player.play()
+        //player.play()
     }
 
     /*private func loadSegments() {
@@ -207,7 +207,7 @@ class AudioPlayerManager952025: ObservableObject {
             case .success(let transcription):
                 print("✅ Transcription réussie : \(transcription)")
 
-                if transcription.localizedStandardContains("exterminés") {
+                if transcription.localizedStandardContains("et") {
                     let item = AVPlayerItem(url: segment.url)
                     self.player.insert(item, after: nil)
                     self.segments.append(segment)
