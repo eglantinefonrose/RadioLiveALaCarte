@@ -28,9 +28,18 @@ class AudioPlayerManager952025: ObservableObject {
     var keywordFound: Bool = false
     
     var firstPlay: Bool = true
+    
+    //
+    //
+    // SINGLETON
+    //
+    //
+    
+    var shared: AudioPlayerManager952025
 
     init(filePrefix: String) {
         self.filePrefix = filePrefix
+        shared = AudioPlayerManager952025(filePrefix: filePrefix)
         startMonitoring()
         //loadSegments()
         observeTime()

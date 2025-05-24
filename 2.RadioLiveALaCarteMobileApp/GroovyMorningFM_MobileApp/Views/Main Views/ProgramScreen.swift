@@ -20,7 +20,6 @@ struct ProgramScreen: View {
     @StateObject private var audioManager = AudioPlayerManager()
     @State private var showPopup: Bool = false
     @State var ipAddress: String = ""
-    @StateObject private var manager: AudioPlayerManager952025
     
     @State private var audioPlayer: AVPlayer?
     @State private var isProcessing = false
