@@ -127,7 +127,18 @@ struct ProgramScreen: View {
             }
             
             VStack {
-                                
+                  
+                if bigModel.isAnAudioSelected {
+                    HStack {
+                        Spacer()
+                        Image(systemName: bigModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                            .onTapGesture {
+                                AudioPlayerManager952025.shared.togglePlayPause()
+                            }
+                        Spacer()
+                    }.background(bigModel.playerBackgroudColor)
+                }
+                
                 HStack {
                     Spacer()
                     VStack {

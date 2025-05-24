@@ -98,6 +98,15 @@ class BigModel: ObservableObject {
         }
     }
     
+    //
+    //
+    // PLAYER UI
+    //
+    //
+    var isPlaying: Bool = false
+    var playerBackgroudColor: Color = Color.gray
+    @Published var isAnAudioSelected: Bool = false
+    
 }
 
 extension Notification.Name {

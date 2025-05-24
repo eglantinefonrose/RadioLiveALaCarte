@@ -38,6 +38,7 @@ class AudioPlayerManager952025: ObservableObject {
     static private(set) var shared: AudioPlayerManager952025!
     
     init(filePrefix: String) {
+        BigModel.shared.isAnAudioSelected = true
         self.filePrefix = filePrefix
         startMonitoring()
         //loadSegments()
@@ -244,10 +245,12 @@ class AudioPlayerManager952025: ObservableObject {
         
         if self.isPlaying {
             player.pause()
+            BigModel.shared.isPlaying = false
             isPlaying = false
             return
         } else {
             player.play()
+            BigModel.shared.isPlaying = true
             isPlaying = true
             return
         }
@@ -272,15 +275,13 @@ class AudioPlayerManager952025: ObservableObject {
 struct FluidPlayerTest: View {
     
     let filePrefix: String
-    @Binding var dominantColor: Color
     @StateObject private var manager: AudioPlayerManager952025
     @ObservedObject private var bigModel: BigModel = BigModel.shared
     var playing: Bool = true
     
-    init(filePrefix: String, playing: Bool, dominantColor: Binding<Color>) {
+    init(filePrefix: String, playing: Bool) {
         self.filePrefix = filePrefix
         self.playing = playing
-        self._dominantColor = dominantColor
         AudioPlayerManager952025.configure(filePrefix: filePrefix)
         _manager = StateObject(wrappedValue: AudioPlayerManager952025.shared)
     }
@@ -314,7 +315,7 @@ struct FluidPlayerTest: View {
 
                 Text("\(formatTime(manager.currentTime)) / \(formatTime(manager.duration))")
                     .font(.headline)
-                    .foregroundStyle(dominantColor.isCloserToWhite() ? Color.black : Color.white)
+                    .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white)
 
                 Slider(
                     value: Binding(
@@ -344,9 +345,9 @@ struct FluidPlayerTest: View {
 
         if let uiImage = renderer.uiImage {
             if let uiColor = uiImage.dominantColor() {
-                self.dominantColor = Color(uiColor)
+                bigModel.playerBackgroudColor = Color(uiColor)
             } else {
-                self.dominantColor = .gray
+                bigModel.playerBackgroudColor = .gray
             }
         }
     }
@@ -459,18 +460,17 @@ struct FullAudioPlayerTest: View {
     @State private var offsetY: CGFloat = UIScreen.main.bounds.height / 2
     let minHeight: CGFloat = UIScreen.main.bounds.height / 2
     let maxHeight: CGFloat = UIScreen.main.bounds.height - 100
-    
-    @State private var dominantColor: Color = .white
-    
+        
     var body: some View {
         ZStack {
-            dominantColor.darker(by: 10)
+            
+            bigModel.playerBackgroudColor.darker(by: 10)
                 .ignoresSafeArea()
 
             VStack {
                 
                 Image(systemName: "house")
-                    .foregroundStyle(dominantColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
+                    .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
                     .onTapGesture {
                         bigModel.currentView = .ProgramScreen
                     }
@@ -479,8 +479,7 @@ struct FullAudioPlayerTest: View {
                 
                 FluidPlayerTest(
                     filePrefix: "\(filesPrefixs[bigModel.currentProgramIndex])_",
-                    playing: playing,
-                    dominantColor: $dominantColor
+                    playing: playing
                 )
                 .id(filesPrefixs[bigModel.currentProgramIndex])
 
@@ -488,7 +487,7 @@ struct FullAudioPlayerTest: View {
                     Image(systemName: "backward.fill")
                         .font(.title)
                         .disabled(bigModel.currentProgramIndex == 0)
-                        .foregroundStyle(dominantColor.isCloserToWhite() ? Color.black : Color.white)
+                        .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white)
                         .onTapGesture {
                             if bigModel.currentProgramIndex > 0 {
                                 bigModel.currentProgramIndex -= 1
@@ -503,7 +502,7 @@ struct FullAudioPlayerTest: View {
                         Image(systemName: playing ? "pause.circle.fill" : "play.circle.fill")
                             .resizable()
                             .frame(width: 60, height: 60)
-                            .foregroundStyle(dominantColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
+                            .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
                     }
 
                     Button(action: {
@@ -513,7 +512,7 @@ struct FullAudioPlayerTest: View {
                     }) {
                         Image(systemName: "forward.fill")
                             .font(.title)
-                            .foregroundStyle(dominantColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
+                            .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
                     }
                     .disabled(bigModel.currentProgramIndex == filesPrefixs.count - 1)
                 }
