@@ -511,11 +511,3 @@ struct FullAudioPlayerTest: View {
 }
 
 
-
-struct FullAudioPlayerTest_Previews: PreviewProvider {
-    static var previews: some View {
-        FullAudioPlayerTest()
-    }
-}
-
-

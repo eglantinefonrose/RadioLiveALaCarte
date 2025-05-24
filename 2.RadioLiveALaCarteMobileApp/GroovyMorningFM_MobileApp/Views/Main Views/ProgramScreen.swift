@@ -20,6 +20,7 @@ struct ProgramScreen: View {
     @StateObject private var audioManager = AudioPlayerManager()
     @State private var showPopup: Bool = false
     @State var ipAddress: String = ""
+    @StateObject private var manager: AudioPlayerManager952025
     
     @State private var audioPlayer: AVPlayer?
     @State private var isProcessing = false
@@ -125,27 +126,6 @@ struct ProgramScreen: View {
                     }
                 }
             }
-            
-            /*VStack(spacing: 20) {
-                Text("🎧 Écouter l'enregistrement")
-                    .font(.title2)
-
-                Text(durationText)
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
-
-                Button(action: togglePlayback) {
-                    Text(isPlaying ? "⏸ Pause" : "▶️ Play")
-                        .font(.title)
-                        .padding()
-                        .background(Color.blue.opacity(0.8))
-                        .foregroundColor(.white)
-                        .cornerRadius(12)
-                }
-            }
-            .onAppear {
-                prepareAudio()
-            }*/
             
             VStack {
                                 
@@ -261,42 +241,6 @@ struct ProgramScreen: View {
         } catch {
             print("❌ Erreur lors de la lecture du dossier Documents: \(error)")
         }
-    }
-
-    
-    /*func prepareAudio() {
-        
-            let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            let fileURL = documentsURL.appendingPathComponent(fileName)
-
-            guard FileManager.default.fileExists(atPath: fileURL.path) else {
-                print("❌ Fichier non trouvé : \(fileName)")
-                return
-            }
-
-            let asset = AVAsset(url: fileURL)
-            let duration = asset.duration
-            let durationInSeconds = CMTimeGetSeconds(duration)
-
-            if durationInSeconds.isFinite {
-                let minutes = Int(durationInSeconds) / 60
-                let seconds = Int(durationInSeconds) % 60
-                durationText = String(format: "Durée : %02d:%02d", minutes, seconds)
-            }
-
-            audioPlayer = AVPlayer(url: fileURL)
-        }*/
-
-    func togglePlayback() {
-        guard let player = audioPlayer else { return }
-        
-        if isPlaying {
-            player.pause()
-        } else {
-            player.play()
-        }
-        
-        isPlaying.toggle()
     }
     
 }
