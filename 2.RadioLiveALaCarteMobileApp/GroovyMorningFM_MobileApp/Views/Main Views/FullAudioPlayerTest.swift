@@ -15,7 +15,7 @@ class AudioPlayerManager952025: ObservableObject {
     
     @Published var duration: Double = 0
     @Published var currentTime: Double = 0
-    @Published var isPlaying: Bool = false
+    @Published var isPlaying: Bool = true
 
     private var player = AVQueuePlayer()
     private var timeObserver: Any?
@@ -78,7 +78,7 @@ class AudioPlayerManager952025: ObservableObject {
         timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
             self?.loadSegments()
         }
-        //player.play()
+        player.play()
     }
     
     private func loadSegments() {
@@ -225,13 +225,18 @@ class AudioPlayerManager952025: ObservableObject {
     }
 
     func togglePlayPause() {
+        
         if self.isPlaying {
             player.pause()
             isPlaying = false
             return
+        } else {
+            player.play()
+            isPlaying = true
+            return
         }
 
-        if !self.isPlaying {
+        /*if !self.isPlaying {
             if firstPlay {
                 loadSegments()
                 firstPlay = false
@@ -242,7 +247,7 @@ class AudioPlayerManager952025: ObservableObject {
                 isPlaying = true
                 return
             }
-        }
+        }*/
     }
     
 }
