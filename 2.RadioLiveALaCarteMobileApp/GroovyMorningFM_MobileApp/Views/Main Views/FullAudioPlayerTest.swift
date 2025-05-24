@@ -24,7 +24,7 @@ class AudioPlayerManager952025: ObservableObject {
     private var segments: [AudioSegment] = []
     private var itemSegmentMap: [AVPlayerItem: AudioSegment] = [:]
     private let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-    private var filePrefix: String = ""
+    let filePrefix: String
     var keywordFound: Bool = false
     
     var firstPlay: Bool = true
@@ -35,11 +35,10 @@ class AudioPlayerManager952025: ObservableObject {
     //
     //
     
-    var shared: AudioPlayerManager952025
-
+    static private(set) var shared: AudioPlayerManager952025!
+    
     init(filePrefix: String) {
         self.filePrefix = filePrefix
-        shared = AudioPlayerManager952025(filePrefix: filePrefix)
         startMonitoring()
         //loadSegments()
         observeTime()
@@ -55,6 +54,14 @@ class AudioPlayerManager952025: ObservableObject {
                 break
             }
         }
+    }
+    
+    static func configure(filePrefix: String) {
+        guard shared == nil else {
+            print("MonManager est déjà configuré.")
+            return
+        }
+        shared = AudioPlayerManager952025(filePrefix: filePrefix)
     }
 
     deinit {
@@ -274,7 +281,8 @@ struct FluidPlayerTest: View {
         self.filePrefix = filePrefix
         self.playing = playing
         self._dominantColor = dominantColor
-        _manager = StateObject(wrappedValue: AudioPlayerManager952025(filePrefix: filePrefix))
+        AudioPlayerManager952025.configure(filePrefix: filePrefix)
+        _manager = StateObject(wrappedValue: AudioPlayerManager952025.shared)
     }
 
     var body: some View {
