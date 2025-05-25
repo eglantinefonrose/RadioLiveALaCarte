@@ -107,20 +107,11 @@ struct ProgramScreen: View {
                         
                     }.onTapGesture {
                         
-                        if (program.isProgramAvailable() || program.isInLive()) {
-                            
-                            /*let result = bigModel.verifierValeur(index: index)
-                            
-                            if (result == 1) {*/
-                                bigModel.currentView = .MultipleAudiosPlayer
-                            bigModel.currentProgramIndex = index
-                            /*}
-                            
-                            if (result == 2) {
-                                bigModel.currentView = .LiveAudioPlayer
-                            }*/
-                            
-                        }
+                        /*if (program.isProgramAvailable() || program.isInLive()) {
+                            bigModel.currentView = .MultipleAudiosPlayer
+                        }*/
+                        
+                        AudioPlayerManager952025.configure(filePrefix: "\(BigModel.shared.liveProgramsNames[bigModel.currentProgramIndex])_")
                         
                     }
                 }
@@ -140,6 +131,9 @@ struct ProgramScreen: View {
                                 image
                                     .resizable()
                                     .scaledToFit()
+                                    .onAppear {
+                                        bigModel.extractDominantColor(from: image)
+                                    }
                             } else {
                                 ProgressView()
                             }

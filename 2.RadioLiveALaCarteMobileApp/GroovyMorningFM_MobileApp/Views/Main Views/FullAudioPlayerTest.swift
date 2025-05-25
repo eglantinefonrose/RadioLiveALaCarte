@@ -306,7 +306,7 @@ struct FluidPlayerTest: View {
                             .resizable()
                             .scaledToFit()
                             .onAppear {
-                                extractDominantColor(from: image)
+                                bigModel.extractDominantColor(from: image)
                             }
                     } else {
                         ProgressView()
@@ -338,18 +338,6 @@ struct FluidPlayerTest: View {
         let minutes = intSec / 60
         let secs = intSec % 60
         return String(format: "%02d:%02d", minutes, secs)
-    }
-
-    private func extractDominantColor(from image: Image) {
-        let renderer = ImageRenderer(content: image)
-
-        if let uiImage = renderer.uiImage {
-            if let uiColor = uiImage.dominantColor() {
-                bigModel.playerBackgroudColor = Color(uiColor)
-            } else {
-                bigModel.playerBackgroudColor = .gray
-            }
-        }
     }
 
 }

@@ -18,6 +18,7 @@ import Foundation
 import SwiftUI
 import AVFoundation
 import Combine
+import UIKit
 
 class BigModel: ObservableObject {
     
@@ -106,6 +107,23 @@ class BigModel: ObservableObject {
     @Published var isPlaying: Bool = true
     @Published var playerBackgroudColor: Color = Color.gray
     @Published var isAnAudioSelected: Bool = false
+    
+    @MainActor
+    func extractDominantColor(from image: Image) {
+        let renderer = ImageRenderer(content: image)
+
+        if let uiImage = renderer.uiImage {
+            if let uiColor = uiImage.dominantColor() {
+                DispatchQueue.main.async {
+                    self.playerBackgroudColor = Color(uiColor)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.playerBackgroudColor = .gray
+                }
+            }
+        }
+    }
     
 }
 
