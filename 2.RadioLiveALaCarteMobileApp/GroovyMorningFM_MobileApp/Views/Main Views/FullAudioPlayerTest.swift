@@ -487,7 +487,7 @@ struct FullAudioPlayerTest: View {
                     Button(action: {
                         playing.toggle()
                     }) {
-                        Image(systemName: playing ? "pause.circle.fill" : "play.circle.fill")
+                        Image(systemName: bigModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                             .resizable()
                             .frame(width: 60, height: 60)
                             .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))

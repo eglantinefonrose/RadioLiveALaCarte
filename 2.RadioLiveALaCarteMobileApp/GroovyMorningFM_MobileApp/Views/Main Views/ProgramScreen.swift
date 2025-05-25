@@ -107,10 +107,6 @@ struct ProgramScreen: View {
                         
                     }.onTapGesture {
                         
-                        /*if (program.isProgramAvailable() || program.isInLive()) {
-                            bigModel.currentView = .MultipleAudiosPlayer
-                        }*/
-                        
                         AudioPlayerManager952025.configure(filePrefix: "\(BigModel.shared.liveProgramsNames[bigModel.currentProgramIndex])_")
                         
                     }
@@ -157,6 +153,9 @@ struct ProgramScreen: View {
                             .frame(width: 10)
                         
                     }.background(bigModel.playerBackgroudColor)
+                    .onTapGesture {
+                        bigModel.currentView = .MultipleAudiosPlayer
+                    }
                 }
                 
                 HStack {
@@ -200,9 +199,7 @@ struct ProgramScreen: View {
                     bigModel.generateUrls()
                 }
             }
-            
-            listAppFiles()
-            
+                        
         }
         .sheet(isPresented: $showPopup) {
             IpInputView(ipAddress: $ipAddress, isPresented: $showPopup, userId: userId, programs: programs)
@@ -242,35 +239,6 @@ struct ProgramScreen: View {
         
         semaphore.wait()
         return resultString
-    }
-    
-    func getDocumentsDirectory() -> URL {
-        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-    }
-    
-    func listAppFiles() {
-        let documentsURL = getDocumentsDirectory()
-
-        do {
-            let fileURLs = try FileManager.default.contentsOfDirectory(at: documentsURL, includingPropertiesForKeys: [.fileSizeKey])
-
-            if fileURLs.isEmpty {
-                print("📁 Aucun fichier trouvé dans Documents.")
-            } else {
-                //print("📁 Fichiers dans Documents:")
-                for fileURL in fileURLs {
-                    do {
-                        let resourceValues = try fileURL.resourceValues(forKeys: [.fileSizeKey])
-                        let fileSize = resourceValues.fileSize ?? 0
-                        //print("📄 \(fileURL.lastPathComponent) -> \(fileURL.path) (\(fileSize) octets)")
-                    } catch {
-                        print("⚠️ Impossible de lire la taille de \(fileURL.lastPathComponent): \(error)")
-                    }
-                }
-            }
-        } catch {
-            print("❌ Erreur lors de la lecture du dossier Documents: \(error)")
-        }
     }
     
 }
