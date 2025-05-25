@@ -413,7 +413,7 @@ public class RadioLiveALaCarteResource {
     public void deleteFeedback(@PathParam("programID") String programID)  throws Exception {
 
         try {
-            FeedbackService.getInstance().deleteFeedback(programID);
+            RadioLiveALaCarteDataStorage.getInstance().deleteFeedback(programID);
         } catch (ProutechosBaseException e) {
             throw e;
         }
@@ -426,7 +426,7 @@ public class RadioLiveALaCarteResource {
     public String getFeedback(@PathParam("programID") String programID)  throws Exception {
 
         try {
-            return FeedbackService.getInstance().getFeedback(programID);
+            return FeedbackService.getInstance().getFeedback("3bbe60fc-c0cd-47c6-890d-cd93d425dde3");
         } catch (ProutechosBaseException e) {
             throw e;
         }

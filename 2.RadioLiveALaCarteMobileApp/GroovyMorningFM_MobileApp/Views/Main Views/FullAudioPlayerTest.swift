@@ -279,6 +279,9 @@ struct FluidPlayerTest: View {
     @ObservedObject private var bigModel: BigModel = BigModel.shared
     var playing: Bool = true
     
+    @State var disliked: Bool = false
+    @State var liked: Bool = false
+    
     init(filePrefix: String, playing: Bool) {
         self.filePrefix = filePrefix
         self.playing = playing
@@ -448,6 +451,9 @@ struct FullAudioPlayerTest: View {
     @State private var offsetY: CGFloat = UIScreen.main.bounds.height / 2
     let minHeight: CGFloat = UIScreen.main.bounds.height / 2
     let maxHeight: CGFloat = UIScreen.main.bounds.height - 100
+    
+    @State var disliked: Bool = false
+    @State var liked: Bool = false
         
     var body: some View {
         ZStack {
@@ -472,7 +478,57 @@ struct FullAudioPlayerTest: View {
                 .id(filesPrefixs[bigModel.currentProgramIndex])
 
                 HStack {
-                    Image(systemName: "backward.fill")
+                    
+                    Image(systemName: disliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
+                        .foregroundColor(.white)
+                        .onTapGesture {
+                            
+                            if (!disliked) {
+                                if (liked) {
+                                    bigModel.deleteFeedback { result in
+                                        switch result {
+                                            case .success(let message):
+                                                print("Succès :", message)
+                                                liked.toggle()
+                                            bigModel.giveFeedback(feedback: "Bad") { result in
+                                                switch result {
+                                                    case .success(let message):
+                                                        print("Succès :", message)
+                                                        disliked.toggle()
+                                                    case .failure(let error):
+                                                        print("Erreur :", error.localizedDescription)
+                                                }
+                                            }
+                                            case .failure(let error):
+                                                print("Erreur :", error.localizedDescription)
+                                        }
+                                    }
+                                } else {
+                                    bigModel.giveFeedback(feedback: "Bad") { result in
+                                        switch result {
+                                            case .success(let message):
+                                                print("Succès :", message)
+                                                disliked.toggle()
+                                            case .failure(let error):
+                                                print("Erreur :", error.localizedDescription)
+                                        }
+                                    }
+                                }
+                            } else {
+                                bigModel.deleteFeedback { result in
+                                    switch result {
+                                        case .success(let message):
+                                            print("Succès :", message)
+                                            liked.toggle()
+                                        case .failure(let error):
+                                            print("Erreur :", error.localizedDescription)
+                                    }
+                                }
+                            }
+                            
+                        }
+                    
+                    Image(systemName: "backward.end.fill")
                         .font(.title)
                         .disabled(bigModel.currentProgramIndex == 0)
                         .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white)
@@ -498,11 +554,61 @@ struct FullAudioPlayerTest: View {
                             bigModel.currentProgramIndex += 1
                         }
                     }) {
-                        Image(systemName: "forward.fill")
+                        Image(systemName: "forward.end.fill")
                             .font(.title)
                             .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
                     }
                     .disabled(bigModel.currentProgramIndex == filesPrefixs.count - 1)
+                    
+                    Image(systemName: liked ? "hand.thumbsup.fill" : "hand.thumbsup")
+                        .foregroundColor(.white)
+                        .onTapGesture {
+                            
+                            if (!liked) {
+                                if (disliked) {
+                                    bigModel.deleteFeedback { result in
+                                        switch result {
+                                            case .success(let message):
+                                                print("Succès :", message)
+                                                disliked.toggle()
+                                                bigModel.giveFeedback(feedback: "Good") { result in
+                                                    switch result {
+                                                        case .success(let message):
+                                                            print("Succès :", message)
+                                                            liked.toggle()
+                                                        case .failure(let error):
+                                                            print("Erreur :", error.localizedDescription)
+                                                    }
+                                                }
+                                            case .failure(let error):
+                                                print("Erreur :", error.localizedDescription)
+                                        }
+                                    }
+                                } else {
+                                    bigModel.giveFeedback(feedback: "Good") { result in
+                                        switch result {
+                                            case .success(let message):
+                                                print("Succès :", message)
+                                                liked.toggle()
+                                            case .failure(let error):
+                                                print("Erreur :", error.localizedDescription)
+                                        }
+                                    }
+                                }
+                            } else {
+                                bigModel.deleteFeedback { result in
+                                    switch result {
+                                        case .success(let message):
+                                            print("Succès :", message)
+                                            liked.toggle()
+                                        case .failure(let error):
+                                            print("Erreur :", error.localizedDescription)
+                                    }
+                                }
+                            }
+                            
+                        }
+                    
                 }
                 .padding()
                 
@@ -510,6 +616,27 @@ struct FullAudioPlayerTest: View {
             }
 
             BottomSheetView(offsetY: $offsetY, minHeight: minHeight, maxHeight: maxHeight, programs: bigModel.programs)
+        }.onAppear {
+            
+            bigModel.getFeedback { result in
+                DispatchQueue.main.async {
+                    switch result {
+                    case .success(let feedback):
+                        if feedback == "Good" {
+                            liked = true
+                            disliked = false
+                        }
+                        if feedback == "Bad" {
+                            liked = false
+                            disliked = true
+                        }
+                    case .failure(let error):
+                        print("Erreur lors du chargement")
+                        print(error.localizedDescription)
+                    }
+                }
+            }
+            
         }
     }
 }

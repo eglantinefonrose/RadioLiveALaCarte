@@ -268,4 +268,12 @@ public class RadioLiveALaCarteServiceTest {
         }
     }
 
+    @Test public void feedback() {
+        try {
+            System.out.println(RadioLiveALaCarteDataStorage.getInstance().getFeedback("3bbe60fc-c0cd-47c6-890d-cd93d425dde3"));
+        } catch (ProutechosBaseException e) {
+            System.out.println(e);
+        }
+    }
+
 }
