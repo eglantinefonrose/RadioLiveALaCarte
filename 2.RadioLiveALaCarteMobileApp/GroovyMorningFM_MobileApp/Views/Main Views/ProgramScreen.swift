@@ -126,16 +126,42 @@ struct ProgramScreen: View {
                 }
             }
             
-            VStack {
+            VStack(spacing: 0) {
                   
                 if bigModel.isAnAudioSelected {
+                    
                     HStack {
+                        
                         Spacer()
-                        Image(systemName: bigModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
+                            .frame(width: 10)
+                        
+                        AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)) { phase in
+                            if let image = phase.image {
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                            } else {
+                                ProgressView()
+                            }
+                        }.frame(width: 50)
+                        
+                        Text(bigModel.programs[bigModel.currentProgramIndex].radioName)
+                            .fontWeight(.bold)
+                            .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
+                        
+                        Spacer()
+                        
+                        Image(systemName: bigModel.isPlaying ? "pause" : "play")
+                            .font(.title)
+                            .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
                             .onTapGesture {
                                 AudioPlayerManager952025.shared.togglePlayPause()
                             }
+                            .padding(.vertical, 20)
+                        
                         Spacer()
+                            .frame(width: 10)
+                        
                     }.background(bigModel.playerBackgroudColor)
                 }
                 
