@@ -125,6 +125,122 @@ class BigModel: ObservableObject {
         }
     }
     
+    //
+    //
+    // FEEDBACK
+    //
+    //
+    
+    func giveFeedback(feedback: String, completion: @escaping (Result<String, Error>) -> Void) {
+            // Construction correcte de l'URL
+        let urlString = "http://\(self.ipAdress):8287/api/radio/createFeedback/programID/\(self.programs[self.currentProgramIndex].id)/feedback/\(feedback)"
+            print(urlString)
+            
+            // Vérification de l'URL valide
+            guard let url = URL(string: urlString) else {
+                completion(.failure(NSError(domain: "URL invalide", code: 400, userInfo: nil)))
+                return
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            
+            // Exécution de la requête
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                // Vérification d'une erreur réseau
+                if let error = error {
+                    DispatchQueue.main.async {
+                        completion(.failure(error))
+                    }
+                    return
+                }
+                
+                // Vérification du code HTTP
+                if let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
+                    DispatchQueue.main.async {
+                        completion(.success("Requête réussie avec statut \(httpResponse.statusCode)"))
+                    }
+                } else {
+                    let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+                    let errorMessage = "Requête échouée avec statut \(statusCode)"
+                    DispatchQueue.main.async {
+                        completion(.failure(NSError(domain: errorMessage, code: statusCode, userInfo: nil)))
+                    }
+                }
+            }.resume()
+        }
+        
+        func deleteFeedback(completion: @escaping (Result<String, Error>) -> Void) {
+            // Construction correcte de l'URL
+            let urlString = "http://\(self.ipAdress):8287/api/radio/deleteFeedback/programID/\(self.programs[self.currentProgramIndex].id)"
+            print(urlString)
+            
+            // Vérification de l'URL valide
+            guard let url = URL(string: urlString) else {
+                completion(.failure(NSError(domain: "URL invalide", code: 400, userInfo: nil)))
+                return
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            
+            // Exécution de la requête
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                // Vérification d'une erreur réseau
+                if let error = error {
+                    DispatchQueue.main.async {
+                        completion(.failure(error))
+                    }
+                    return
+                }
+                
+                // Vérification du code HTTP
+                if let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) {
+                    DispatchQueue.main.async {
+                        completion(.success("Requête réussie avec statut \(httpResponse.statusCode)"))
+                    }
+                } else {
+                    let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+                    let errorMessage = "Requête échouée avec statut \(statusCode)"
+                    DispatchQueue.main.async {
+                        completion(.failure(NSError(domain: errorMessage, code: statusCode, userInfo: nil)))
+                    }
+                }
+            }.resume()
+        }
+    
+    func getFeedback(completion: @escaping (Result<String, Error>) -> Void) {
+            let urlString = "http://\(self.ipAdress):8287/api/radio/getFeedback/programID/\(self.programs[self.currentProgramIndex].id)"
+            print(urlString)
+            
+            guard let url = URL(string: urlString) else {
+                completion(.failure(NSError(domain: "URL invalide", code: 400, userInfo: nil)))
+                return
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode) else {
+                    let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
+                    completion(.failure(NSError(domain: "Requête échouée", code: statusCode, userInfo: nil)))
+                    return
+                }
+                
+                if let data = data, let feedback = String(data: data, encoding: .utf8) {
+                    completion(.success(feedback))
+                } else {
+                    completion(.failure(NSError(domain: "Données invalides", code: 500, userInfo: nil)))
+                }
+            }.resume()
+        }
+    
 }
 
 extension Notification.Name {
