@@ -326,13 +326,35 @@ struct FluidPlayerTest: View {
                     .font(.headline)
                     .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white)
 
-                Slider(
-                    value: Binding(
-                        get: { manager.currentTime },
-                        set: { newVal in manager.seek(to: newVal) }
-                    ),
-                    in: 0...manager.duration
-                )
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        // Track
+                        Rectangle()
+                            .foregroundColor(.gray.opacity(0.3))
+                            .frame(height: 4)
+
+                        // Filled track
+                        Rectangle()
+                            .foregroundColor(.blue)
+                            .frame(width: CGFloat(manager.currentTime / manager.duration) * geo.size.width, height: 4)
+
+                        // Thumb (optionnel)
+                        Circle()
+                            .foregroundColor(.white)
+                            .frame(width: 12, height: 12)
+                            .offset(x: CGFloat(manager.currentTime / manager.duration) * geo.size.width - 6)
+                    }
+                    .contentShape(Rectangle()) // Permet de détecter les tap même en dehors du trait fin
+                    .gesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { value in
+                                let ratio = min(max(0, value.location.x / geo.size.width), 1)
+                                let newVal = ratio * manager.duration
+                                manager.seek(to: newVal)
+                            }
+                    )
+                }
+                .frame(height: 20)
                 .padding()
 
             }
