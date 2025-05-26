@@ -177,18 +177,24 @@ class AudioPlayerManager952025: ObservableObject {
                 case .success(let transcription):
                     print("✅ Transcription réussie : \(transcription)")
 
-                    if transcription.localizedStandardContains("et") {
+                    if transcription.localizedStandardContains("image") {
                         let item = AVPlayerItem(url: segment.url)
                         self.player.insert(item, after: nil)
                         self.segments.append(segment)
                         self.itemSegmentMap[item] = segment
                         triggerFound = true
+                    } else {
+                        do {
+                            try FileManager.default.removeItem(at: segment.url)
+                            print("🗑️ Fichier supprimé : \(segment.url.lastPathComponent)")
+                        } catch {
+                            print("⚠️ Erreur lors de la suppression du fichier : \(error.localizedDescription)")
+                        }
                     }
 
                 case .failure(let error):
                     print("❌ Erreur lors de la transcription : \(error.localizedDescription)")
                 }
-
 
                 // Traitement du suivant
                 self.processSegmentsSequentially(segments, index: index + 1, foundTrigger: triggerFound)
