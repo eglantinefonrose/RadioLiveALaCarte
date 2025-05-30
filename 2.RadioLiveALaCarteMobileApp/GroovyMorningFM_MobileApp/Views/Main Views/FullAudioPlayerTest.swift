@@ -24,7 +24,7 @@ class AudioPlayerManager952025: ObservableObject {
     private var segments: [AudioSegment] = []
     private var itemSegmentMap: [AVPlayerItem: AudioSegment] = [:]
     private let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-    let filePrefix: String
+    //let filePrefix: String
     var keywordFound: Bool = false
     
     var firstPlay: Bool = true
@@ -39,9 +39,7 @@ class AudioPlayerManager952025: ObservableObject {
     
     init(filePrefix: String) {
         BigModel.shared.isAnAudioSelected = true
-        self.filePrefix = filePrefix
-        startMonitoring()
-        //loadSegments()
+        startMonitoring(filePrefix: filePrefix)
         observeTime()
         
         // Demande de permission au lancement
@@ -90,15 +88,15 @@ class AudioPlayerManager952025: ObservableObject {
         currentTime = previousDurations + currentItemTime
     }
 
-    func startMonitoring() {
-        loadSegments()
+    func startMonitoring(filePrefix: String) {
+        loadSegments(filePrefix: filePrefix)
         timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in
-            self?.loadSegments()
+            self?.loadSegments(filePrefix: filePrefix)
         }
         player.play()
     }
     
-    private func loadSegments() {
+    private func loadSegments(filePrefix: String) {
         let files = try? FileManager.default.contentsOfDirectory(at: documentsDirectory, includingPropertiesForKeys: nil)
         let newFiles = (files ?? [])
             .filter { $0.lastPathComponent.hasPrefix(filePrefix) && $0.pathExtension == "mp4" }
@@ -208,6 +206,15 @@ class AudioPlayerManager952025: ObservableObject {
     private func updateTotalDuration() {
         duration = segments.map { $0.duration }.reduce(0, +)
     }
+    
+    func videLesSegments() {
+        player.pause() // facultatif, mais souvent recommandé
+        player.removeAllItems()
+        segments.removeAll()
+        itemSegmentMap.removeAll()
+        currentTime = 0
+        duration = 0
+    }
 
     func seek(to globalTime: Double) {
         guard !segments.isEmpty else { return }
@@ -278,100 +285,6 @@ class AudioPlayerManager952025: ObservableObject {
 }
 
 
-struct FluidPlayerTest: View {
-    
-    let filePrefix: String
-    @StateObject private var manager: AudioPlayerManager952025
-    @ObservedObject private var bigModel: BigModel = BigModel.shared
-    var playing: Bool = true
-    
-    @State var disliked: Bool = false
-    @State var liked: Bool = false
-    
-    init(filePrefix: String, playing: Bool) {
-        self.filePrefix = filePrefix
-        self.playing = playing
-        AudioPlayerManager952025.configure(filePrefix: filePrefix)
-        _manager = StateObject(wrappedValue: AudioPlayerManager952025.shared)
-    }
-
-    var body: some View {
-        if (!manager.keywordFound) {
-            VStack {
-                Spacer()
-                ProgressView()
-                    .progressViewStyle(CircularProgressViewStyle())
-                    .scaleEffect(1)
-                    .padding()
-                    .foregroundStyle(Color.purple)
-                Spacer()
-            }.padding()
-        } else {
-            VStack {
-
-                AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)) { phase in
-                    if let image = phase.image {
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .onAppear {
-                                bigModel.extractDominantColor(from: image)
-                            }
-                    } else {
-                        ProgressView()
-                    }
-                }.padding()
-
-                Text("\(formatTime(manager.currentTime)) / \(formatTime(manager.duration))")
-                    .font(.headline)
-                    .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white)
-
-                GeometryReader { geo in
-                    ZStack(alignment: .leading) {
-                        // Track
-                        Rectangle()
-                            .foregroundColor(.gray.opacity(0.3))
-                            .frame(height: 4)
-
-                        // Filled track
-                        Rectangle()
-                            .foregroundColor(.blue)
-                            .frame(width: CGFloat(manager.currentTime / manager.duration) * geo.size.width, height: 4)
-
-                        // Thumb (optionnel)
-                        Circle()
-                            .foregroundColor(.white)
-                            .frame(width: 12, height: 12)
-                            .offset(x: CGFloat(manager.currentTime / manager.duration) * geo.size.width - 6)
-                    }
-                    .contentShape(Rectangle()) // Permet de détecter les tap même en dehors du trait fin
-                    .gesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { value in
-                                let ratio = min(max(0, value.location.x / geo.size.width), 1)
-                                let newVal = ratio * manager.duration
-                                manager.seek(to: newVal)
-                            }
-                    )
-                }
-                .frame(height: 20)
-                .padding()
-
-            }
-            .onChange(of: playing) { oldValue, newValue in
-                manager.togglePlayPause()
-            }
-        }
-    }
-
-    private func formatTime(_ seconds: Double) -> String {
-        let intSec = Int(seconds)
-        let minutes = intSec / 60
-        let secs = intSec % 60
-        return String(format: "%02d:%02d", minutes, secs)
-    }
-
-}
 
 extension UIImage {
     func dominantColor() -> UIColor? {
@@ -482,7 +395,9 @@ struct FullAudioPlayerTest: View {
     
     @State var disliked: Bool = false
     @State var liked: Bool = false
-        
+    
+    @StateObject private var manager: AudioPlayerManager952025 = AudioPlayerManager952025.shared
+            
     var body: some View {
         ZStack {
             
@@ -499,11 +414,77 @@ struct FullAudioPlayerTest: View {
                 
                 Spacer()
                 
-                FluidPlayerTest(
-                    filePrefix: "\(filesPrefixs[bigModel.currentProgramIndex])_",
-                    playing: playing
-                )
-                .id(filesPrefixs[bigModel.currentProgramIndex])
+                
+                if (!manager.keywordFound) {
+                    VStack {
+                        Spacer()
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle())
+                            .scaleEffect(1)
+                            .padding()
+                            .foregroundStyle(Color.purple)
+                        Spacer()
+                    }.padding()
+                } else {
+                    VStack {
+
+                        AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)) { phase in
+                            if let image = phase.image {
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                                    .onAppear {
+                                        bigModel.extractDominantColor(from: image)
+                                    }
+                            } else {
+                                ProgressView()
+                            }
+                        }.padding()
+
+                        Text("\(formatTime(manager.currentTime)) / \(formatTime(manager.duration))")
+                            .font(.headline)
+                            .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white)
+
+                        GeometryReader { geo in
+                            ZStack(alignment: .leading) {
+                                // Track
+                                Rectangle()
+                                    .foregroundColor(.gray.opacity(0.3))
+                                    .frame(height: 4)
+
+                                // Filled track
+                                Rectangle()
+                                    .foregroundColor(.blue)
+                                    .frame(width: CGFloat(manager.currentTime / manager.duration) * geo.size.width, height: 4)
+
+                                // Thumb (optionnel)
+                                Circle()
+                                    .foregroundColor(.white)
+                                    .frame(width: 12, height: 12)
+                                    .offset(x: CGFloat(manager.currentTime / manager.duration) * geo.size.width - 6)
+                            }
+                            .contentShape(Rectangle()) // Permet de détecter les tap même en dehors du trait fin
+                            .gesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged { value in
+                                        let ratio = min(max(0, value.location.x / geo.size.width), 1)
+                                        let newVal = ratio * manager.duration
+                                        manager.seek(to: newVal)
+                                    }
+                            )
+                        }
+                        .frame(height: 20)
+                        .padding()
+
+                    }
+                    .onChange(of: playing) { oldValue, newValue in
+                        manager.togglePlayPause()
+                    }
+                    .onChange(of: bigModel.currentProgramIndex) { oldValue, newValue in
+                        manager.videLesSegments()
+                        manager.startMonitoring(filePrefix: "\(filesPrefixs[bigModel.currentProgramIndex])_")
+                    }
+                }
 
                 HStack {
                     
@@ -667,6 +648,14 @@ struct FullAudioPlayerTest: View {
             
         }
     }
+    
+    private func formatTime(_ seconds: Double) -> String {
+        let intSec = Int(seconds)
+        let minutes = intSec / 60
+        let secs = intSec % 60
+        return String(format: "%02d:%02d", minutes, secs)
+    }
+    
 }
 
 
