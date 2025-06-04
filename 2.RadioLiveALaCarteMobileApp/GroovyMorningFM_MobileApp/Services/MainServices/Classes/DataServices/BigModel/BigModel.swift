@@ -32,7 +32,11 @@ class BigModel: ObservableObject {
     
     @Published var delayedProgramsNames: [String] = []
     @Published var liveProgramsNames: [String] = []
-    @Published var currentProgramIndex: Int = 0
+    @Published var currentProgramIndex: Int = 0 {
+        didSet {
+            updateBackgroundColor()
+        }
+    }
     
     @Published var currentDelayedProgramIndex: Int = 0
     @Published var currentLiveProgramIndex: Int = 0
@@ -111,17 +115,24 @@ class BigModel: ObservableObject {
     @MainActor
     func extractDominantColor(from image: Image) {
         let renderer = ImageRenderer(content: image)
+        if let uiImage = renderer.uiImage, let uiColor = uiImage.dominantColor() {
+            self.playerBackgroudColor = Color(uiColor)
+        } else {
+            self.playerBackgroudColor = .gray
+        }
+    }
 
-        if let uiImage = renderer.uiImage {
-            if let uiColor = uiImage.dominantColor() {
-                DispatchQueue.main.async {
-                    self.playerBackgroudColor = Color(uiColor)
-                }
-            } else {
-                DispatchQueue.main.async {
-                    self.playerBackgroudColor = .gray
+    func updateBackgroundColor() {
+        let urlString = programs[currentProgramIndex].favIcoURL
+        if let url = URL(string: urlString) {
+            let task = URLSession.shared.dataTask(with: url) { data, response, error in
+                guard let data = data, let uiImage = UIImage(data: data) else { return }
+                let swiftUIImage = Image(uiImage: uiImage)
+                Task { @MainActor in
+                    self.extractDominantColor(from: swiftUIImage)
                 }
             }
+            task.resume()
         }
     }
     

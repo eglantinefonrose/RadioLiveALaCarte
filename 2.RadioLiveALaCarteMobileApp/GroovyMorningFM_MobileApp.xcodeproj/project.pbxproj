@@ -105,7 +105,6 @@
 		7091436D2D6394C100D3C3A9 /* GroovyRootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroovyRootView.swift; sourceTree = "<group>"; };
 		7091436F2D639DB200D3C3A9 /* BigModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigModel.swift; sourceTree = "<group>"; };
 		709261CC2DCBA4D7009400F8 /* FullAudioPlayerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullAudioPlayerTest.swift; sourceTree = "<group>"; };
-		709261CE2DCDFC0C009400F8 /* RecorderExecutor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecorderExecutor.swift; sourceTree = "<group>"; };
 		709261CF2DCDFC18009400F8 /* GroovyMorningFM_MobileApp.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = GroovyMorningFM_MobileApp.xcodeproj; sourceTree = SOURCE_ROOT; };
 		709750312D71E3100091A938 /* IPAdressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPAdressView.swift; sourceTree = "<group>"; };
 		70983FD82D6B7BBD00B01BBF /* LightenedRadioStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightenedRadioStation.swift; sourceTree = "<group>"; };
@@ -449,7 +448,6 @@
 		70A101B72DB250F8007348E7 /* Main Views */ = {
 			isa = PBXGroup;
 			children = (
-				709261CE2DCDFC0C009400F8 /* RecorderExecutor.swift */,
 				700764052D4AD5B500411F53 /* ProgramScreen.swift */,
 				70BBAC202DE4D029001EC6C3 /* LaunchScreen.swift */,
 				707457502D4AB236000DC5EC /* NewProgramScreen.swift */,

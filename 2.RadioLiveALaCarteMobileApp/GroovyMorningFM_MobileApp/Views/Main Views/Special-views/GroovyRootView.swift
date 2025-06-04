@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GroovyRootView: View {
     
-    @ObservedObject var bigModel: BigModel
+    @StateObject var bigModel: BigModel
     var danielMorinVersion: Bool
     
     var body: some View {
@@ -37,6 +37,7 @@ struct GroovyRootView: View {
             if (BigModel.shared.currentView == .MultipleAudiosPlayer) {
                 //MultipleAudiosPlayer()
                 FullAudioPlayerTest()
+                    .environmentObject(BigModel.shared)
             }
             
         }.onAppear {
