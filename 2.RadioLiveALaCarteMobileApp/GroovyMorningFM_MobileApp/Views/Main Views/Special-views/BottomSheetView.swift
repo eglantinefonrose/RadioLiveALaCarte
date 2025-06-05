@@ -24,19 +24,7 @@ struct BottomSheetView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .fontWeight(  (index == bigModel.currentProgramIndex) ? .bold : .regular)
                         .onTapGesture {
-                            if (programs[index].isProgramAvailable() || programs[index].isInLive()) {
-                                
-                                let result = bigModel.verifierValeur(index: index)
-                                
-                                if (result == 1) {
-                                    bigModel.currentView = .MultipleAudiosPlayer
-                                }
-                                
-                                if (result == 2) {
-                                    bigModel.currentView = .LiveAudioPlayer
-                                }
-                                
-                            }
+                            bigModel.currentProgramIndex = index
                         }
                 }
             }
