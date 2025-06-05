@@ -29,6 +29,8 @@ class AudioPlayerManager952025: ObservableObject {
     
     var firstPlay: Bool = true
     
+    var trimmingModeActivated: Bool = false
+    
     //
     //
     // SINGLETON
@@ -133,12 +135,38 @@ class AudioPlayerManager952025: ObservableObject {
 
         group.notify(queue: .main) {
             let sortedSegments = loadedSegments.sorted { $0.url.lastPathComponent < $1.url.lastPathComponent }
-            self.processSegmentsSequentially(sortedSegments)
+            
+            if self.trimmingModeActivated {
+                self.processSegmentsSequentiallyWithTrimming(sortedSegments)
+            } else {
+                self.processSegmentsSequentiallyWithoutTrimming(sortedSegments)
+            }
             
         }
     }
+    
+    private func processSegmentsSequentiallyWithoutTrimming(_ segments: [AudioSegment], index: Int = 0) {
+        guard index < segments.count else {
+            self.updateTotalDuration()
+            return
+        }
 
-    private func processSegmentsSequentially(_ segments: [AudioSegment], index: Int = 0, foundTrigger: Bool = false) {
+        let segment = segments[index]
+
+        // Si la condition a été déclenchée précédemment, on ajoute immédiatement sans transcription
+        //if foundTrigger {
+            keywordFound = true
+            let item = AVPlayerItem(url: segment.url)
+            self.player.insert(item, after: nil)
+            self.segments.append(segment)
+            self.itemSegmentMap[item] = segment
+            self.processSegmentsSequentiallyWithTrimming(segments, index: index + 1)
+            return
+        //}
+        
+    }
+
+    private func processSegmentsSequentiallyWithTrimming(_ segments: [AudioSegment], index: Int = 0, foundTrigger: Bool = false) {
         guard index < segments.count else {
             self.updateTotalDuration()
             return
@@ -153,7 +181,7 @@ class AudioPlayerManager952025: ObservableObject {
             self.player.insert(item, after: nil)
             self.segments.append(segment)
             self.itemSegmentMap[item] = segment
-            self.processSegmentsSequentially(segments, index: index + 1, foundTrigger: true)
+            self.processSegmentsSequentiallyWithTrimming(segments, index: index + 1, foundTrigger: true)
             return
         }
 
@@ -165,7 +193,7 @@ class AudioPlayerManager952025: ObservableObject {
             self.player.insert(item, after: nil)
             self.segments.append(segment)
             self.itemSegmentMap[item] = segment
-            self.processSegmentsSequentially(segments, index: index + 1, foundTrigger: true)
+            self.processSegmentsSequentiallyWithTrimming(segments, index: index + 1, foundTrigger: true)
             
         } else {
             
@@ -195,7 +223,7 @@ class AudioPlayerManager952025: ObservableObject {
                 }
 
                 // Traitement du suivant
-                self.processSegmentsSequentially(segments, index: index + 1, foundTrigger: triggerFound)
+                self.processSegmentsSequentiallyWithTrimming(segments, index: index + 1, foundTrigger: triggerFound)
             }
             
         }

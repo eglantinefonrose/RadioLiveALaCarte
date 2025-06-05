@@ -34,13 +34,13 @@ struct ProgramScreen: View {
         
         VStack {
             
-            if isLoading {
+            /*if isLoading {
                 
                 LaunchScreenView()
                     .transition(.opacity)
                     .zIndex(1)
                 
-            } else {
+            } else {*/
                 
                 VStack(spacing: 0) {
                 
@@ -111,6 +111,9 @@ struct ProgramScreen: View {
                                                 let fetchedPrograms = await apiService.fetchPrograms(for: userId)
                                                 self.programs = fetchedPrograms
                                                 bigModel.programs = fetchedPrograms
+                                                if (index == bigModel.currentProgramIndex) {
+                                                    bigModel.isAnAudioSelected = false
+                                                }
                                             }
                                         case .failure(let error):
                                             print("Erreur lors de la suppression :", error.localizedDescription)
@@ -189,7 +192,7 @@ struct ProgramScreen: View {
                 }
                 
             }
-        }
+        //}
             
         }
         .onChange(of: bigModel.ipAdress) { oldId, newIp in
