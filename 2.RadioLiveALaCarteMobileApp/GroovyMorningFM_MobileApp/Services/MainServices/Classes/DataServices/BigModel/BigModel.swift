@@ -109,14 +109,14 @@ class BigModel: ObservableObject {
     //
     //
     @Published var isPlaying: Bool = true
-    @Published var playerBackgroudColor: Color = Color.gray
+    @Published var playerBackgroudColor: UIColor = UIColor(Color.gray)
     @Published var isAnAudioSelected: Bool = false
     
     @MainActor
     func extractDominantColor(from image: Image) {
         let renderer = ImageRenderer(content: image)
         if let uiImage = renderer.uiImage, let uiColor = uiImage.dominantColor() {
-            self.playerBackgroudColor = Color(uiColor)
+            self.playerBackgroudColor = uiColor
         } else {
             self.playerBackgroudColor = .gray
         }
@@ -257,3 +257,28 @@ class BigModel: ObservableObject {
 extension Notification.Name {
     static let ipAdressUpdated = Notification.Name("ipAdressUpdated")
 }
+
+extension UIColor {
+    func toHexString() -> String {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+
+        getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+
+        let r = Int(red * 255)
+        let g = Int(green * 255)
+        let b = Int(blue * 255)
+
+        return String(format: "#%02X%02X%02X", r, g, b)
+    }
+}
+
+extension Color {
+    func toUIColor() -> UIColor {
+        let components = UIColor(self).cgColor.components ?? [0,0,0,0]
+        return UIColor(red: components[0], green: components[1], blue: components[2], alpha: components.count >= 4 ? components[3] : 1)
+    }
+}
+

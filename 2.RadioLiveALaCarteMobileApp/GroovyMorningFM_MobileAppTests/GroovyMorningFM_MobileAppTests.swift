@@ -8,6 +8,7 @@
 import XCTest
 import Speech
 @testable import GroovyMorningFM_MobileApp
+import UIKit
 
 final class GroovyMorningFM_MobileAppTests: XCTestCase {
 
