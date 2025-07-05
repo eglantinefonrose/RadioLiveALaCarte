@@ -24,7 +24,7 @@ class AudioPlayerManager952025: ObservableObject {
     @Published var currentTime: Double = 0
     @Published var isPlaying: Bool = true
 
-    private var player = AVQueuePlayer()
+    var player = AVQueuePlayer()
     private var timeObserver: Any?
     private var timer: Timer?
     

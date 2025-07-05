@@ -10,7 +10,6 @@ struct FullAudioPlayerTest: View {
     
     let filesPrefixs: [String] = BigModel.shared.liveProgramsNames
     @ObservedObject var bigModel: BigModel = BigModel.shared
-    @State var playing: Bool = true
     
     @State private var offsetY: CGFloat = UIScreen.main.bounds.height / 2
     let minHeight: CGFloat = UIScreen.main.bounds.height / 2
@@ -104,22 +103,22 @@ struct FullAudioPlayerTest: View {
                         .padding()
                         
                     }
-                    .onChange(of: playing) { oldValue, newValue in
+                    .onChange(of: manager.player.rate) { oldValue, newValue in
                         manager.togglePlayPause()
                     }
                     .onChange(of: bigModel.currentProgramIndex) { oldValue, newValue in
                         manager.videLesSegments()
                         manager.startMonitoring()
-                        if (!playing) {
+                        /*if (manager.player.rate == 0) {
                             playing = true
-                        }
+                        }*/
                     }
                 }
                 
                 HStack {
                     
                     Image(systemName: disliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
-                        .foregroundColor(.white)
+                        .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
                         .onTapGesture {
                             
                             if (!disliked) {
@@ -180,7 +179,7 @@ struct FullAudioPlayerTest: View {
                         }
                     
                     Button(action: {
-                        playing.toggle()
+                        manager.player.rate == 0 ? manager.player.play() : manager.player.pause()
                     }) {
                         Image(systemName: bigModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
                             .resizable()
@@ -200,7 +199,7 @@ struct FullAudioPlayerTest: View {
                     .disabled(bigModel.currentProgramIndex == filesPrefixs.count - 1)
                     
                     Image(systemName: liked ? "hand.thumbsup.fill" : "hand.thumbsup")
-                        .foregroundColor(.white)
+                        .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
                         .onTapGesture {
                             
                             if (!liked) {
