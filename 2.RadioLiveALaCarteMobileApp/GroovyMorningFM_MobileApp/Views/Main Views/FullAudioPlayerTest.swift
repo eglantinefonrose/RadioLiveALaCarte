@@ -58,10 +58,10 @@ class AudioPlayerManager952025: ObservableObject {
     }
     
     static func configure(filePrefix: String) {
-        guard shared == nil else {
+        /*guard shared == nil else {
             print("MonManager est déjà configuré.")
             return
-        }
+        }*/
         shared = AudioPlayerManager952025(filePrefix: filePrefix)
     }
 
@@ -498,7 +498,7 @@ struct FullAudioPlayerTest: View {
                 } else {
                     VStack {
                         
-                        /*AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)) { phase in
+                        AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)) { phase in
                             if let image = phase.image {
                                 image
                                     .resizable()
@@ -511,7 +511,7 @@ struct FullAudioPlayerTest: View {
                             } else {
                                 ProgressView()
                             }
-                        }.padding()*/
+                        }.padding()
                         
                         Text("\(formatTime(manager.currentTime)) / \(formatTime(manager.duration))")
                             .font(.headline)
