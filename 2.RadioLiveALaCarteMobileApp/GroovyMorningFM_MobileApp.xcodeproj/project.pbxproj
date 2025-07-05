@@ -54,6 +54,7 @@
 		70BBAC212DE4D029001EC6C3 /* LaunchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70BBAC202DE4D029001EC6C3 /* LaunchScreen.swift */; };
 		70D3B9472D5BB71B00BFF6F7 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D3B9462D5BB71B00BFF6F7 /* AudioPlayerManager.swift */; };
 		70D3B9492D5FE73600BFF6F7 /* RecordName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D3B9482D5FE73600BFF6F7 /* RecordName.swift */; };
+		70F267502E19996F00EF570B /* AudioPlayerManager952025.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F2674F2E19996F00EF570B /* AudioPlayerManager952025.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,6 +127,7 @@
 		70BBAC202DE4D029001EC6C3 /* LaunchScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreen.swift; sourceTree = "<group>"; };
 		70D3B9462D5BB71B00BFF6F7 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
 		70D3B9482D5FE73600BFF6F7 /* RecordName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordName.swift; sourceTree = "<group>"; };
+		70F2674F2E19996F00EF570B /* AudioPlayerManager952025.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AudioPlayerManager952025.swift; path = GroovyMorningFM_MobileApp/Services/MainServices/Classes/AudioServices/AudioManager/AudioPlayerManager952025.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -384,6 +386,7 @@
 		70A101AF2DB24D7D007348E7 /* AudioServices */ = {
 			isa = PBXGroup;
 			children = (
+				70F267512E19998C00EF570B /* New Group */,
 				70A101AE2DB24D51007348E7 /* RecordingService */,
 				70A101A02DB24A91007348E7 /* BackgroundSilentAudio */,
 				704058F92DCFA02E00359F7A /* TranscriptionService.swift */,
@@ -472,6 +475,14 @@
 		70D8F1C22DCE1A090043820F /* Products */ = {
 			isa = PBXGroup;
 			name = Products;
+			sourceTree = "<group>";
+		};
+		70F267512E19998C00EF570B /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+				70F2674F2E19996F00EF570B /* AudioPlayerManager952025.swift */,
+			);
+			path = "New Group";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -619,6 +630,7 @@
 				70A1019F2DB24A32007348E7 /* SilentAudioPlayerProtocol.swift in Sources */,
 				704F64282D6E016D000C5556 /* AudioPlayerViewDanielMorin.swift in Sources */,
 				707A5ABC2DAA5F5F00D8198C /* TestFFMPEGConcatene.swift in Sources */,
+				70F267502E19996F00EF570B /* AudioPlayerManager952025.swift in Sources */,
 				70A1018C2DB120ED007348E7 /* SandboxMP4FilesPlayer.swift in Sources */,
 				700764062D4AD5B500411F53 /* ProgramScreen.swift in Sources */,
 				700764042D4AD12D00411F53 /* Program.swift in Sources */,
