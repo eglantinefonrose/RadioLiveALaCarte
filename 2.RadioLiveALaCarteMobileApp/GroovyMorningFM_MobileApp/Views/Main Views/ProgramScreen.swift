@@ -168,7 +168,7 @@ struct ProgramScreen: View {
                             Spacer()
                                 .frame(width: 10)
                             
-                        }.background(bigModel.playerBackgroudColor)
+                        }.background(Color(hex: bigModel.playerBackgroudColor.toHexString()))
                             .onTapGesture {
                                 bigModel.currentView = .MultipleAudiosPlayer
                             }

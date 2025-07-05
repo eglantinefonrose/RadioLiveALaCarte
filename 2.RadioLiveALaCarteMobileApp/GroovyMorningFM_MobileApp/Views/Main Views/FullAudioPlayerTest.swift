@@ -58,10 +58,10 @@ class AudioPlayerManager952025: ObservableObject {
     }
     
     static func configure(filePrefix: String) {
-        guard shared == nil else {
+        /*guard shared == nil else {
             print("MonManager est déjà configuré.")
             return
-        }
+        }*/
         shared = AudioPlayerManager952025(filePrefix: filePrefix)
     }
 
@@ -408,6 +408,46 @@ extension Color {
     
 }
 
+extension Color {
+    init(hex: String) {
+        let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int = UInt64()
+        Scanner(string: hex).scanHexInt64(&int)
+        let r, g, b: UInt64
+        switch hex.count {
+        case 6: // RRGGBB
+            (r, g, b) = ((int >> 16) & 0xFF, (int >> 8) & 0xFF, int & 0xFF)
+        default:
+            (r, g, b) = (1, 1, 1) // default white
+        }
+        self.init(
+            .sRGB,
+            red: Double(r) / 255,
+            green: Double(g) / 255,
+            blue: Double(b) / 255,
+            opacity: 1
+        )
+    }
+}
+
+extension UIColor {
+    
+    func isCloserToWhite() -> Bool {
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+
+        self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+
+        // Calcul de la luminance perçue (standard sRGB)
+        let luminance = 0.299 * red + 0.587 * green + 0.114 * blue
+
+        return luminance > 0.5 // Plus proche du blanc si > 0.5
+    }
+    
+}
+
 
 
 
@@ -431,7 +471,7 @@ struct FullAudioPlayerTest: View {
     var body: some View {
         ZStack {
             
-            bigModel.playerBackgroudColor
+            Color(hex: bigModel.playerBackgroudColor.toHexString())
                 .ignoresSafeArea()
             
             VStack {
@@ -475,7 +515,7 @@ struct FullAudioPlayerTest: View {
                         
                         Text("\(formatTime(manager.currentTime)) / \(formatTime(manager.duration))")
                             .font(.headline)
-                            .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white)
+                            .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
                         
                         GeometryReader { geo in
                             ZStack(alignment: .leading) {
