@@ -109,17 +109,53 @@ class BigModel: ObservableObject {
     //
     //
     @Published var isPlaying: Bool = true
-    @Published var playerBackgroudColor: UIColor = UIColor(Color.gray)
+    @Published var playerBackgroudColorHexCode: String = "#A357D7"
     @Published var isAnAudioSelected: Bool = false
     
     @MainActor
-    func extractDominantColor(from image: Image) {
-        let renderer = ImageRenderer(content: image)
-        if let uiImage = renderer.uiImage, let uiColor = uiImage.dominantColor() {
-            self.playerBackgroudColor = uiColor
-        } else {
-            self.playerBackgroudColor = .gray
+    func dominantColorHex(from image: UIImage) {
+        
+        let size = CGSize(width: 40, height: 40)
+        UIGraphicsBeginImageContext(size)
+        image.draw(in: CGRect(origin: .zero, size: size))
+        guard let resizedImage = UIGraphicsGetImageFromCurrentImageContext() else {
+            UIGraphicsEndImageContext()
+            return
         }
+        UIGraphicsEndImageContext()
+
+        guard let cgImage = resizedImage.cgImage else { return }
+        guard let data = cgImage.dataProvider?.data else { return }
+        let ptr = CFDataGetBytePtr(data)
+
+        let width = cgImage.width
+        let height = cgImage.height
+        var colorCount: [UInt32: Int] = [:]
+
+        for x in 0..<width {
+            for y in 0..<height {
+                let offset = ((y * width) + x) * 4
+                let r = ptr![offset]
+                let g = ptr![offset + 1]
+                let b = ptr![offset + 2]
+                let a = ptr![offset + 3]
+                if a < 127 { continue } // Ignorer les pixels presque transparents
+
+                // Convertir la couleur en un UInt32 pour dictionnaire
+                let colorKey = (UInt32(r) << 16) + (UInt32(g) << 8) + UInt32(b)
+                colorCount[colorKey, default: 0] += 1
+            }
+        }
+
+        // Trouver la couleur la plus fréquente
+        if let (colorKey, _) = colorCount.max(by: { $0.value < $1.value }) {
+            let r = (colorKey >> 16) & 0xFF
+            let g = (colorKey >> 8) & 0xFF
+            let b = colorKey & 0xFF
+            self.playerBackgroudColorHexCode = String(format: "#%02X%02X%02X", r, g, b)
+        }
+
+        return
     }
 
     func updateBackgroundColor() {
@@ -127,9 +163,8 @@ class BigModel: ObservableObject {
         if let url = URL(string: urlString) {
             let task = URLSession.shared.dataTask(with: url) { data, response, error in
                 guard let data = data, let uiImage = UIImage(data: data) else { return }
-                let swiftUIImage = Image(uiImage: uiImage)
                 Task { @MainActor in
-                    self.extractDominantColor(from: swiftUIImage)
+                    self.dominantColorHex(from: uiImage)
                 }
             }
             task.resume()
@@ -279,6 +314,25 @@ extension Color {
     func toUIColor() -> UIColor {
         let components = UIColor(self).cgColor.components ?? [0,0,0,0]
         return UIColor(red: components[0], green: components[1], blue: components[2], alpha: components.count >= 4 ? components[3] : 1)
+    }
+}
+
+extension String {
+    /// Retourne `true` si la couleur hex est considérée comme "claire" (plus proche du blanc)
+    var isLightColor: Bool {
+        guard let color = UIColor(named: self) else { return false }
+
+        var red: CGFloat = 0
+        var green: CGFloat = 0
+        var blue: CGFloat = 0
+        var alpha: CGFloat = 0
+
+        color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+
+        // Luminance perçue (formule standard pour le contraste)
+        let luminance = 0.299 * red + 0.587 * green + 0.114 * blue
+
+        return luminance > 0.5
     }
 }
 

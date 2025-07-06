@@ -139,12 +139,18 @@ struct ProgramScreen: View {
                                 .frame(width: 10)
                             
                             AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)) { phase in
-                                if let image = phase.image {
-                                    image
+                                if let swiftUIimage = phase.image {
+                                    swiftUIimage
                                         .resizable()
                                         .scaledToFit()
                                         .onAppear {
-                                            bigModel.extractDominantColor(from: image)
+                                            // Utiliser ImageRenderer pour obtenir la UIImage
+                                            let renderer = ImageRenderer(content: swiftUIimage)
+                                            if let uiImage = renderer.uiImage {
+                                                DispatchQueue.main.async {
+                                                    bigModel.dominantColorHex(from: uiImage)
+                                                }
+                                            }
                                         }
                                 } else {
                                     ProgressView()
@@ -153,13 +159,13 @@ struct ProgramScreen: View {
                             
                             Text(bigModel.programs[bigModel.currentProgramIndex].radioName)
                                 .fontWeight(.bold)
-                                .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
+                                .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white.darker(by: 10))
                             
                             Spacer()
                             
                             Image(systemName: bigModel.isPlaying ? "pause" : "play")
                                 .font(.title)
-                                .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
+                                .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white.darker(by: 10))
                                 .onTapGesture {
                                     AudioPlayerManager952025.shared.togglePlayPause()
                                 }
@@ -168,7 +174,7 @@ struct ProgramScreen: View {
                             Spacer()
                                 .frame(width: 10)
                             
-                        }.background(Color(hex: bigModel.playerBackgroudColor.toHexString()))
+                        }.background(Color(hex: bigModel.playerBackgroudColorHexCode))
                             .onTapGesture {
                                 bigModel.currentView = .MultipleAudiosPlayer
                             }

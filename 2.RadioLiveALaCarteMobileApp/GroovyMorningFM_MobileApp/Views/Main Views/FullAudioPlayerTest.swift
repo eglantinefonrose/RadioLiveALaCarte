@@ -20,24 +20,43 @@ struct FullAudioPlayerTest: View {
     
     @State var backgroundColor: Color = Color.gray
     
+    @State private var image: UIImage? = nil
+    
     @StateObject private var manager: AudioPlayerManager952025 = AudioPlayerManager952025.shared
             
     var body: some View {
         ZStack {
             
-            Color(hex: bigModel.playerBackgroudColor.toHexString())
+            Color(hex: bigModel.playerBackgroudColorHexCode)
                 .ignoresSafeArea()
             
             VStack {
                 
                 Image(systemName: "house")
-                    .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
+                    .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white.darker(by: 10))
                     .onTapGesture {
                         bigModel.currentView = .ProgramScreen
                     }
                 
                 Spacer()
                 
+                HStack {
+                    VStack(alignment: .leading) {
+                        Text(bigModel.programs[bigModel.currentProgramIndex].radioName)
+                            .font(.largeTitle)
+                            .fontWeight(.heavy)
+                        Text("9:01 - 9:14")
+                            .font(.largeTitle)
+                            .foregroundStyle(Color.gray)
+                        HStack {
+                            Image(systemName: "hand.thumbsdown")
+                                .font(.largeTitle)
+                            Image(systemName: "hand.thumbsup")
+                                .font(.largeTitle)
+                        }
+                    }
+                    Spacer()
+                }.padding(.horizontal)
                 
                 if (!manager.keywordFound) {
                     VStack {
@@ -53,23 +72,38 @@ struct FullAudioPlayerTest: View {
                     VStack {
                         
                         AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)) { phase in
-                            if let image = phase.image {
-                                image
+                            if let swiftUIimage = phase.image { // Renommons-la pour clarifier
+                                swiftUIimage
                                     .resizable()
                                     .scaledToFit()
                                     .onAppear {
-                                        DispatchQueue.main.async {
-                                            bigModel.extractDominantColor(from: image)
+                                        // Utiliser ImageRenderer pour obtenir la UIImage
+                                        let renderer = ImageRenderer(content: swiftUIimage)
+                                        if let uiImage = renderer.uiImage {
+                                            DispatchQueue.main.async {
+                                                bigModel.dominantColorHex(from: uiImage)
+                                            }
                                         }
                                     }
                             } else {
                                 ProgressView()
                             }
-                        }.padding()
+                        }
+                        .padding()
+                        
+                        if let uiImage = image {
+                            Image(uiImage: uiImage)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .frame(width: 300, height: 200)
+                        } else {
+                            ProgressView("Chargement de l'image...")
+                                .frame(width: 300, height: 200)
+                        }
                         
                         Text("\(formatTime(manager.currentTime)) / \(formatTime(manager.duration))")
                             .font(.headline)
-                            .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
+                            .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white.darker(by: 10))
                         
                         GeometryReader { geo in
                             ZStack(alignment: .leading) {
@@ -109,13 +143,34 @@ struct FullAudioPlayerTest: View {
                     .onChange(of: bigModel.currentProgramIndex) { oldValue, newValue in
                         manager.videLesSegments()
                         manager.startMonitoring()
-                        /*if (manager.player.rate == 0) {
-                            playing = true
-                        }*/
                     }
                 }
                 
+                HStack(spacing: 5) {
+                    ForEach(["backward.end.fill", "pause", "forward.end.fill"], id: \.self) { icon in
+                        GeometryReader { geometry in
+                            let side = geometry.size.width
+                            ZStack {
+                                RoundedRectangle(cornerRadius: 20)
+                                    .fill(Color.gray.opacity(0.2))
+                                Image(systemName: icon)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: side * 0.3, height: side * 0.3)
+                            }
+                            .frame(width: side, height: side)
+                        }
+                        .aspectRatio(1, contentMode: .fit)
+                    }
+                }
+                            
                 HStack {
+                    Text("0:00:00")
+                    Spacer()
+                    Text("0:14:56")
+                }.padding(.horizontal)
+                
+                /*HStack {
                     
                     Image(systemName: disliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
                         .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
@@ -248,7 +303,7 @@ struct FullAudioPlayerTest: View {
                         }
                     
                 }
-                .padding()
+                .padding()*/
                 
                 Spacer()
             }
@@ -275,21 +330,29 @@ struct FullAudioPlayerTest: View {
                 }
             }
             
+            /*URLSession.shared.dataTask(with: bigModel.programs[bigModel.currentProgramIndex].favIcoURL) { data, _, _ in
+                if let data = data, let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self.uiImage = image
+                    }
+                }
+            }.resume()*/
+            
         }
         .onChange(of: bigModel.currentProgramIndex) { _ in
             // On change de programme => on télécharge et extrait la couleur
-            let urlString = bigModel.programs[bigModel.currentProgramIndex].favIcoURL
+            /*let urlString = bigModel.programs[bigModel.currentProgramIndex].favIcoURL
             if let url = URL(string: urlString) {
                 // Charge l'image (ici un AsyncImage ferait la même chose, mais pour la démo, on peut charger manuellement)
                 let task = URLSession.shared.dataTask(with: url) { data, response, error in
                     guard let data = data, let uiImage = UIImage(data: data) else { return }
                     let swiftUIImage = Image(uiImage: uiImage)
                     Task { @MainActor in
-                        bigModel.extractDominantColor(from: swiftUIImage)
+                        bigModel.dominantColorHex(from: swiftUIImage)
                     }
                 }
                 task.resume()
-            }
+            }*/
         }
     }
     
@@ -301,5 +364,4 @@ struct FullAudioPlayerTest: View {
     }
     
 }
-
 
