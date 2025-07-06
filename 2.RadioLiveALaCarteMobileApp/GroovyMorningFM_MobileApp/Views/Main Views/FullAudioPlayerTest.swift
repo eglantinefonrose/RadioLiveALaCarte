@@ -28,35 +28,88 @@ struct FullAudioPlayerTest: View {
         ZStack {
             
             Color(hex: bigModel.playerBackgroudColorHexCode)
+                .darker(by: 10)
                 .ignoresSafeArea()
             
             VStack {
-                
-                Image(systemName: "house")
-                    .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white.darker(by: 10))
-                    .onTapGesture {
-                        bigModel.currentView = .ProgramScreen
-                    }
-                
-                Spacer()
-                
+                                
                 HStack {
                     VStack(alignment: .leading) {
+                        
+                        Image(systemName: "house")
+                            .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white.darker(by: 10))
+                            .onTapGesture {
+                                bigModel.currentView = .ProgramScreen
+                            }
+                        
+                        Spacer()
+                            .frame(height: 5)
+                        
                         Text(bigModel.programs[bigModel.currentProgramIndex].radioName)
                             .font(.largeTitle)
                             .fontWeight(.heavy)
+                            .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
                         Text("9:01 - 9:14")
                             .font(.largeTitle)
                             .foregroundStyle(Color.gray)
                         HStack {
                             Image(systemName: "hand.thumbsdown")
                                 .font(.largeTitle)
+                                .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
+                                .onTapGesture {
+                                    
+                                    if (!disliked) {
+                                        if (liked) {
+                                            bigModel.deleteFeedback { result in
+                                                switch result {
+                                                case .success(let message):
+                                                    print("Succès :", message)
+                                                    liked.toggle()
+                                                    bigModel.giveFeedback(feedback: "Bad") { result in
+                                                        switch result {
+                                                        case .success(let message):
+                                                            print("Succès :", message)
+                                                            disliked.toggle()
+                                                        case .failure(let error):
+                                                            print("Erreur :", error.localizedDescription)
+                                                        }
+                                                    }
+                                                case .failure(let error):
+                                                    print("Erreur :", error.localizedDescription)
+                                                }
+                                            }
+                                        } else {
+                                            bigModel.giveFeedback(feedback: "Bad") { result in
+                                                switch result {
+                                                case .success(let message):
+                                                    print("Succès :", message)
+                                                    disliked.toggle()
+                                                case .failure(let error):
+                                                    print("Erreur :", error.localizedDescription)
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        bigModel.deleteFeedback { result in
+                                            switch result {
+                                            case .success(let message):
+                                                print("Succès :", message)
+                                                liked.toggle()
+                                            case .failure(let error):
+                                                print("Erreur :", error.localizedDescription)
+                                            }
+                                        }
+                                    }
+                                    
+                                }
+                            
                             Image(systemName: "hand.thumbsup")
+                                .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
                                 .font(.largeTitle)
                         }
                     }
                     Spacer()
-                }.padding(.horizontal)
+                }
                 
                 if (!manager.keywordFound) {
                     VStack {
@@ -69,246 +122,127 @@ struct FullAudioPlayerTest: View {
                         Spacer()
                     }.padding()
                 } else {
-                    VStack {
-                        
-                        AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)) { phase in
-                            if let swiftUIimage = phase.image { // Renommons-la pour clarifier
-                                swiftUIimage
-                                    .resizable()
-                                    .scaledToFit()
-                                    .onAppear {
-                                        // Utiliser ImageRenderer pour obtenir la UIImage
-                                        let renderer = ImageRenderer(content: swiftUIimage)
-                                        if let uiImage = renderer.uiImage {
-                                            DispatchQueue.main.async {
-                                                bigModel.dominantColorHex(from: uiImage)
-                                            }
-                                        }
-                                    }
-                            } else {
-                                ProgressView()
-                            }
-                        }
-                        .padding()
-                        
-                        if let uiImage = image {
-                            Image(uiImage: uiImage)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: 300, height: 200)
-                        } else {
-                            ProgressView("Chargement de l'image...")
-                                .frame(width: 300, height: 200)
-                        }
-                        
-                        Text("\(formatTime(manager.currentTime)) / \(formatTime(manager.duration))")
-                            .font(.headline)
-                            .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white.darker(by: 10))
-                        
-                        GeometryReader { geo in
-                            ZStack(alignment: .leading) {
-                                // Track
-                                Rectangle()
-                                    .foregroundColor(.gray.opacity(0.3))
-                                    .frame(height: 4)
-                                
-                                // Filled track
-                                Rectangle()
-                                    .foregroundColor(.blue)
-                                    .frame(width: CGFloat(manager.currentTime / manager.duration) * geo.size.width, height: 4)
-                                
-                                // Thumb (optionnel)
-                                Circle()
-                                    .foregroundColor(.white)
-                                    .frame(width: 12, height: 12)
-                                    .offset(x: CGFloat(manager.currentTime / manager.duration) * geo.size.width - 6)
-                            }
-                            .contentShape(Rectangle()) // Permet de détecter les tap même en dehors du trait fin
-                            .gesture(
-                                DragGesture(minimumDistance: 0)
-                                    .onChanged { value in
-                                        let ratio = min(max(0, value.location.x / geo.size.width), 1)
-                                        let newVal = ratio * manager.duration
-                                        manager.seek(to: newVal)
-                                    }
-                            )
-                        }
-                        .frame(height: 20)
-                        .padding()
-                        
-                    }
-                    .onChange(of: manager.player.rate) { oldValue, newValue in
-                        manager.togglePlayPause()
-                    }
-                    .onChange(of: bigModel.currentProgramIndex) { oldValue, newValue in
-                        manager.videLesSegments()
-                        manager.startMonitoring()
-                    }
-                }
-                
-                HStack(spacing: 5) {
-                    ForEach(["backward.end.fill", "pause", "forward.end.fill"], id: \.self) { icon in
-                        GeometryReader { geometry in
-                            let side = geometry.size.width
-                            ZStack {
-                                RoundedRectangle(cornerRadius: 20)
-                                    .fill(Color.gray.opacity(0.2))
-                                Image(systemName: icon)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: side * 0.3, height: side * 0.3)
-                            }
-                            .frame(width: side, height: side)
-                        }
-                        .aspectRatio(1, contentMode: .fit)
-                    }
-                }
-                            
-                HStack {
-                    Text("0:00:00")
+                    
                     Spacer()
-                    Text("0:14:56")
-                }.padding(.horizontal)
-                
-                /*HStack {
-                    
-                    Image(systemName: disliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
-                        .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
-                        .onTapGesture {
-                            
-                            if (!disliked) {
-                                if (liked) {
-                                    bigModel.deleteFeedback { result in
-                                        switch result {
-                                        case .success(let message):
-                                            print("Succès :", message)
-                                            liked.toggle()
-                                            bigModel.giveFeedback(feedback: "Bad") { result in
-                                                switch result {
-                                                case .success(let message):
-                                                    print("Succès :", message)
-                                                    disliked.toggle()
-                                                case .failure(let error):
-                                                    print("Erreur :", error.localizedDescription)
-                                                }
-                                            }
-                                        case .failure(let error):
-                                            print("Erreur :", error.localizedDescription)
-                                        }
-                                    }
-                                } else {
-                                    bigModel.giveFeedback(feedback: "Bad") { result in
-                                        switch result {
-                                        case .success(let message):
-                                            print("Succès :", message)
-                                            disliked.toggle()
-                                        case .failure(let error):
-                                            print("Erreur :", error.localizedDescription)
-                                        }
-                                    }
-                                }
-                            } else {
-                                bigModel.deleteFeedback { result in
-                                    switch result {
-                                    case .success(let message):
-                                        print("Succès :", message)
-                                        liked.toggle()
-                                    case .failure(let error):
-                                        print("Erreur :", error.localizedDescription)
-                                    }
-                                }
-                            }
-                            
-                        }
-                    
-                    Image(systemName: "backward.end.fill")
-                        .font(.title)
-                        .disabled(bigModel.currentProgramIndex == 0)
-                        .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white)
-                        .onTapGesture {
-                            if bigModel.currentProgramIndex > 0 {
-                                bigModel.currentProgramIndex -= 1
-                            } else if !bigModel.delayedProgramsNames.isEmpty {
-                                bigModel.currentView = .MultipleAudiosPlayer
-                            }
-                        }
-                    
-                    Button(action: {
-                        manager.player.rate == 0 ? manager.player.play() : manager.player.pause()
-                    }) {
-                        Image(systemName: bigModel.isPlaying ? "pause.circle.fill" : "play.circle.fill")
-                            .resizable()
-                            .frame(width: 60, height: 60)
-                            .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
-                    }
-                    
-                    Button(action: {
-                        if bigModel.currentProgramIndex < filesPrefixs.count - 1 {
-                            bigModel.currentProgramIndex += 1
-                        }
-                    }) {
-                        Image(systemName: "forward.end.fill")
-                            .font(.title)
-                            .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
-                    }
-                    .disabled(bigModel.currentProgramIndex == filesPrefixs.count - 1)
-                    
-                    Image(systemName: liked ? "hand.thumbsup.fill" : "hand.thumbsup")
-                        .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
-                        .onTapGesture {
-                            
-                            if (!liked) {
-                                if (disliked) {
-                                    bigModel.deleteFeedback { result in
-                                        switch result {
-                                        case .success(let message):
-                                            print("Succès :", message)
-                                            disliked.toggle()
-                                            bigModel.giveFeedback(feedback: "Good") { result in
-                                                switch result {
-                                                case .success(let message):
-                                                    print("Succès :", message)
-                                                    liked.toggle()
-                                                case .failure(let error):
-                                                    print("Erreur :", error.localizedDescription)
-                                                }
-                                            }
-                                        case .failure(let error):
-                                            print("Erreur :", error.localizedDescription)
-                                        }
-                                    }
-                                } else {
-                                    bigModel.giveFeedback(feedback: "Good") { result in
-                                        switch result {
-                                        case .success(let message):
-                                            print("Succès :", message)
-                                            liked.toggle()
-                                        case .failure(let error):
-                                            print("Erreur :", error.localizedDescription)
-                                        }
-                                    }
-                                }
-                            } else {
-                                bigModel.deleteFeedback { result in
-                                    switch result {
-                                    case .success(let message):
-                                        print("Succès :", message)
-                                        liked.toggle()
-                                    case .failure(let error):
-                                        print("Erreur :", error.localizedDescription)
-                                    }
-                                }
-                            }
-                            
-                        }
                     
                 }
-                .padding()*/
                 
-                Spacer()
-            }
+                VStack(spacing: 2) {
+                    
+                    GeometryReader { geometry in
+                        let size = geometry.size.width / 3
+
+                        HStack(spacing: 2) {
+                            Button(action: {
+                                if bigModel.currentProgramIndex > 0 {
+                                    bigModel.currentProgramIndex -= 1
+                                } else if !bigModel.delayedProgramsNames.isEmpty {
+                                    bigModel.currentView = .MultipleAudiosPlayer
+                                }
+                            }) {
+                                ZStack {
+                                    Rectangle()
+                                        .foregroundStyle(Color(hex: bigModel.playerBackgroudColorHexCode))
+                                        .cornerRadius(16)
+                                        .frame(width: size, height: size)
+                                    Image(systemName: "backward.fill")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: size * 0.4, height: size * 0.4)
+                                        .foregroundColor(.white)
+                                }
+                            }
+
+                            Button(action: {
+                                if manager.player.rate == 0 {
+                                    manager.player.play()
+                                } else {
+                                    manager.player.pause()
+                                }
+                            }) {
+                                ZStack {
+                                    Rectangle()
+                                        .foregroundStyle(Color(hex: bigModel.playerBackgroudColorHexCode))
+                                        .cornerRadius(16)
+                                        .frame(width: size, height: size)
+                                    Image(systemName: manager.player.rate == 0 ? "play.fill" : "pause")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: size * 0.4, height: size * 0.4)
+                                        .foregroundColor(.white)
+                                        .frame(width: size, height: size)
+                                        .cornerRadius(16)
+                                }
+                            }
+
+                            Button(action: {
+                                if bigModel.currentProgramIndex < filesPrefixs.count - 1 {
+                                    bigModel.currentProgramIndex += 1
+                                }
+                            }) {
+                                ZStack {
+                                    Rectangle()
+                                        .foregroundStyle(Color(hex: bigModel.playerBackgroudColorHexCode))
+                                        .cornerRadius(16)
+                                        .frame(width: size, height: size)
+                                    Image(systemName: "forward.fill")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .frame(width: size * 0.4, height: size * 0.4)
+                                        .foregroundColor(.white)
+                                        .frame(width: size, height: size)
+                                        .cornerRadius(16)
+                                }
+                            }
+                        }
+                    }
+                    .frame(height: UIScreen.main.bounds.width / 3)
+                    
+                    GeometryReader { geo in
+                        ZStack(alignment: .leading) {
+                            // Track
+                            Rectangle()
+                                .foregroundColor(.gray.opacity(0.3))
+                                .frame(height: 4)
+                            
+                            // Filled track
+                            Rectangle()
+                                .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
+                                .frame(width: CGFloat(manager.currentTime / manager.duration) * geo.size.width, height: 4)
+                            
+                            // Thumb (optionnel)
+                            Rectangle()
+                                .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
+                                .frame(width: 4, height: 24)
+                                .offset(x: CGFloat(manager.currentTime / manager.duration) * geo.size.width - 2)
+                        }
+                        .contentShape(Rectangle()) // Permet de détecter les tap même en dehors du trait fin
+                        .gesture(
+                            DragGesture(minimumDistance: 0)
+                                .onChanged { value in
+                                    let ratio = min(max(0, value.location.x / geo.size.width), 1)
+                                    let newVal = ratio * manager.duration
+                                    manager.seek(to: newVal)
+                                }
+                        )
+                    }
+                    .frame(height: 20)
+                    .padding(.horizontal)
+                                
+                    HStack {
+                        Text(formatTime(manager.currentTime))
+                            .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
+                        Spacer()
+                        Text(formatTime(manager.duration))
+                            .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
+                    }.padding(.horizontal)
+                    
+                }
+                
+            }.padding()
             
             BottomSheetView(offsetY: $offsetY, minHeight: minHeight, maxHeight: maxHeight, programs: bigModel.programs)
+            
         }.onAppear {
             
             bigModel.getFeedback { result in
@@ -330,14 +264,15 @@ struct FullAudioPlayerTest: View {
                 }
             }
             
-            /*URLSession.shared.dataTask(with: bigModel.programs[bigModel.currentProgramIndex].favIcoURL) { data, _, _ in
-                if let data = data, let image = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        self.uiImage = image
-                    }
-                }
-            }.resume()*/
+            updateBackgroundColor()
             
+        }
+        .onChange(of: manager.player.rate) { oldValue, newValue in
+            manager.togglePlayPause()
+        }
+        .onChange(of: bigModel.currentProgramIndex) { oldValue, newValue in
+            manager.videLesSegments()
+            manager.startMonitoring()
         }
         .onChange(of: bigModel.currentProgramIndex) { _ in
             // On change de programme => on télécharge et extrait la couleur
@@ -361,6 +296,22 @@ struct FullAudioPlayerTest: View {
         let minutes = intSec / 60
         let secs = intSec % 60
         return String(format: "%02d:%02d", minutes, secs)
+    }
+    
+    private func updateBackgroundColor() {
+        AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)) { phase in
+            if let image = phase.image {
+                Color.clear // On n'affiche rien visuellement
+                    .onAppear {
+                        let renderer = ImageRenderer(content: image)
+                        if let uiImage = renderer.uiImage {
+                            bigModel.dominantColorHex(from: uiImage)
+                        }
+                    }
+            } else {
+                EmptyView()
+            }
+        }
     }
     
 }

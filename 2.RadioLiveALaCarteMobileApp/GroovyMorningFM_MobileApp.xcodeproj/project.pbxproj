@@ -55,6 +55,7 @@
 		70D3B9472D5BB71B00BFF6F7 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D3B9462D5BB71B00BFF6F7 /* AudioPlayerManager.swift */; };
 		70D3B9492D5FE73600BFF6F7 /* RecordName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D3B9482D5FE73600BFF6F7 /* RecordName.swift */; };
 		70F267502E19996F00EF570B /* AudioPlayerManager952025.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F2674F2E19996F00EF570B /* AudioPlayerManager952025.swift */; };
+		70F267532E1A7A4F00EF570B /* NewDesignPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F267522E1A7A4F00EF570B /* NewDesignPlayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,6 +129,7 @@
 		70D3B9462D5BB71B00BFF6F7 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
 		70D3B9482D5FE73600BFF6F7 /* RecordName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordName.swift; sourceTree = "<group>"; };
 		70F2674F2E19996F00EF570B /* AudioPlayerManager952025.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AudioPlayerManager952025.swift; path = GroovyMorningFM_MobileApp/Services/MainServices/Classes/AudioServices/AudioManager/AudioPlayerManager952025.swift; sourceTree = SOURCE_ROOT; };
+		70F267522E1A7A4F00EF570B /* NewDesignPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDesignPlayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +162,7 @@
 		7007640B2D4B5D4200411F53 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				70F267522E1A7A4F00EF570B /* NewDesignPlayer.swift */,
 				70A101B82DB25110007348E7 /* InvisibleViews */,
 				70A101B72DB250F8007348E7 /* Main Views */,
 			);
@@ -653,6 +656,7 @@
 				7034A86F2DCF57E200CD5B36 /* TranscriptionTest.swift in Sources */,
 				70A101A62DB24C79007348E7 /* ProgramManagerProtocol.swift in Sources */,
 				704058FA2DCFA02E00359F7A /* TranscriptionService.swift in Sources */,
+				70F267532E1A7A4F00EF570B /* NewDesignPlayer.swift in Sources */,
 				70A1018A2DB024B5007348E7 /* TestFFMPEGSemaphore.swift in Sources */,
 				70639F842DA80C4A00E20060 /* SilentAudioManager.swift in Sources */,
 				70B636052DA9B56700C94540 /* AudioPlayerManager_2237.swift in Sources */,
