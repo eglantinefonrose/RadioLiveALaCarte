@@ -65,6 +65,10 @@ final class GroovyMorningFM_MobileAppTests: XCTestCase {
     func testColor() {
         print(Color.purple.toUIColor().toHexString())
     }
+    
+    func testEpoc() {
+        print(ProgramManager.shared.convertEpochToHHMMSS(epoch: 1751872149))
+    }
 
     
 }

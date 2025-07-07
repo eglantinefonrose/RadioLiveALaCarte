@@ -50,7 +50,7 @@ struct FullAudioPlayerTest: View {
                             .fontWeight(.heavy)
                             .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
                         
-                        Text("9:01 - 9:14")
+                        Text(ProgramManager.shared.convertEpochToHHMMSS(epoch: bigModel.programs[bigModel.currentProgramIndex].startTime))
                             .font(.largeTitle)
                             .foregroundStyle(Color.gray)
                         

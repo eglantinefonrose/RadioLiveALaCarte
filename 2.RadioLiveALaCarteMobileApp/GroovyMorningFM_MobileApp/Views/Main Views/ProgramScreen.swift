@@ -95,7 +95,7 @@ struct ProgramScreen: View {
                                 Text(program.radioName)
                                     .font(.headline)
                                     .foregroundStyle(program.isProgramAvailable() ? Color.black : Color.gray)
-                                Text("\(program.startTimeHour):\(program.startTimeMinute):\(program.startTimeSeconds) - \(program.endTimeHour):\(program.endTimeMinute):\(program.endTimeSeconds)")
+                                Text(ProgramManager.shared.convertEpochToHHMMSS(epoch: program.startTime))
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                             }
@@ -104,6 +104,11 @@ struct ProgramScreen: View {
                             
                             Image(systemName: "trash")
                                 .onTapGesture {
+                                    
+                                    if (index == bigModel.currentProgramIndex) {
+                                        bigModel.isAnAudioSelected = false
+                                    }
+                                    
                                     apiService.deleteProgram(programID: program.id) { result in
                                         switch result {
                                         case .success:
@@ -111,9 +116,6 @@ struct ProgramScreen: View {
                                                 let fetchedPrograms = await apiService.fetchPrograms(for: userId)
                                                 self.programs = fetchedPrograms
                                                 bigModel.programs = fetchedPrograms
-                                                if (index == bigModel.currentProgramIndex) {
-                                                    bigModel.isAnAudioSelected = false
-                                                }
                                             }
                                         case .failure(let error):
                                             print("Erreur lors de la suppression :", error.localizedDescription)

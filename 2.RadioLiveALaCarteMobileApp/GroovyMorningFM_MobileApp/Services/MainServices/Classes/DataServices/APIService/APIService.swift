@@ -14,16 +14,12 @@ class APIService: ObservableObject, APIServiceProtocol {
     
     func validerHoraire(
         radioName: String,
-        startTimeHour: Int,
-        startTimeMinute: Int,
-        startTimeSeconds: Int,
-        endTimeHour: Int,
-        endTimeMinute: Int,
-        endTimeSeconds: Int,
+        startTime: Int,
+        endTime: Int,
         completion: @escaping (Result<String, Error>) -> Void
     ) {
         // Construction correcte de l'URL
-        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeMinute)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001/danielMorinVersion/0"
+        let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createProgram/radioName/\(radioName)/startTime/\(startTime)/endTime/\(endTime)/userID/user001/danielMorinVersion/0"
         
         // Vérification de l'URL valide
         guard let url = URL(string: urlString) else {
@@ -62,18 +58,15 @@ class APIService: ObservableObject, APIServiceProtocol {
     
     func createProgram(
         radioName: String,
-        startTimeHour: Int,
-        startTimeMinute: Int,
-        startTimeSeconds: Int,
-        endTimeHour: Int,
-        endTimeMinute: Int,
-        endTimeSeconds: Int,
+        startTime: Int,
+        endTime: Int,
         radioUUID: String
     ) async throws -> String {
             
         do {
                         
-            let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createProgram/radioName/\(radioName)/startTimeHour/\(startTimeHour)/startTimeMinute/\(startTimeMinute)/startTimeSeconds/\(startTimeSeconds)/endTimeHour/\(endTimeHour)/endTimeMinute/\(endTimeMinute)/endTimeSeconds/\(endTimeSeconds)/userID/user001/danielMorinVersion/0"
+            let urlString = "http://\(bigModel.ipAdress):8287/api/radio/createProgram/radioName/\(radioName)/startTime/\(startTime)/endTime/\(endTime)/userID/user001/danielMorinVersion/0"
+            // api/radio/createProgram/radioName/FranceInter/startTime/1751872149/endTime/1751872199/userID/user001/danielMorinVersion/0
             
             guard let url = URL(string: urlString) else {
                 throw URLError(.badURL)
@@ -145,7 +138,7 @@ class APIService: ObservableObject, APIServiceProtocol {
         let programs: [Program] = await self.fetchPrograms(for: userId)
         
         if (programs.isEmpty) {
-            return Program(id: "", radioName: "", startTimeHour: 0, startTimeMinute: 0, startTimeSeconds: 0, endTimeHour: 0, endTimeMinute: 0, endTimeSeconds: 0, favIcoURL: "")
+            return Program(id: "", radioName: "", startTime: 0, endTime: 0, favIcoURL: "")
         }
         
         return programs[0]

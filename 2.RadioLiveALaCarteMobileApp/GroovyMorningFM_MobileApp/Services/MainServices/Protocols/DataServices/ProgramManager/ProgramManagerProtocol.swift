@@ -8,8 +8,7 @@
 import Foundation
 
 protocol ProgramManagerProtocol {
-    func estDansLeFutur(heure: Int, minute: Int, seconde: Int) -> Bool
-    func estEnLive(heureDebut: Int, minuteDebut: Int, secondeDebut: Int,
-                   heureFin: Int, minuteFin: Int, secondeFin: Int) -> Bool
+    func estDansLeFutur(startTime: Int) -> Bool
+    func estEnLive(startTime: Int, endTime: Int) -> Bool
 }
 
