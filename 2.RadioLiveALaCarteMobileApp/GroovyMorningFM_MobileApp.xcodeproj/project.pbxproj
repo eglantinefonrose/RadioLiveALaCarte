@@ -37,8 +37,6 @@
 		709750322D71E3100091A938 /* IPAdressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 709750312D71E3100091A938 /* IPAdressView.swift */; };
 		70983FD92D6B7BBD00B01BBF /* LightenedRadioStation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70983FD82D6B7BBD00B01BBF /* LightenedRadioStation.swift */; };
 		70983FDB2D6B7C2D00B01BBF /* LightenedRadioStationAndAmountOfResponses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70983FDA2D6B7C2D00B01BBF /* LightenedRadioStationAndAmountOfResponses.swift */; };
-		70A101822DABE64E007348E7 /* SandboxPlayerLive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A101812DABE64E007348E7 /* SandboxPlayerLive.swift */; };
-		70A101862DAC281A007348E7 /* MultipleAudiosPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A101852DAC281A007348E7 /* MultipleAudiosPlayer.swift */; };
 		70A101882DAEBC84007348E7 /* TestEnregistrement2Flux.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A101872DAEBC84007348E7 /* TestEnregistrement2Flux.swift */; };
 		70A1018A2DB024B5007348E7 /* TestFFMPEGSemaphore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A101892DB024B5007348E7 /* TestFFMPEGSemaphore.swift */; };
 		70A1018C2DB120ED007348E7 /* SandboxMP4FilesPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A1018B2DB120ED007348E7 /* SandboxMP4FilesPlayer.swift */; };
@@ -111,8 +109,6 @@
 		709750312D71E3100091A938 /* IPAdressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPAdressView.swift; sourceTree = "<group>"; };
 		70983FD82D6B7BBD00B01BBF /* LightenedRadioStation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightenedRadioStation.swift; sourceTree = "<group>"; };
 		70983FDA2D6B7C2D00B01BBF /* LightenedRadioStationAndAmountOfResponses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightenedRadioStationAndAmountOfResponses.swift; sourceTree = "<group>"; };
-		70A101812DABE64E007348E7 /* SandboxPlayerLive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxPlayerLive.swift; sourceTree = "<group>"; };
-		70A101852DAC281A007348E7 /* MultipleAudiosPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleAudiosPlayer.swift; sourceTree = "<group>"; };
 		70A101872DAEBC84007348E7 /* TestEnregistrement2Flux.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestEnregistrement2Flux.swift; sourceTree = "<group>"; };
 		70A101892DB024B5007348E7 /* TestFFMPEGSemaphore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFFMPEGSemaphore.swift; sourceTree = "<group>"; };
 		70A1018B2DB120ED007348E7 /* SandboxMP4FilesPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxMP4FilesPlayer.swift; sourceTree = "<group>"; };
@@ -457,9 +453,7 @@
 				700764052D4AD5B500411F53 /* ProgramScreen.swift */,
 				70BBAC202DE4D029001EC6C3 /* LaunchScreen.swift */,
 				707457502D4AB236000DC5EC /* NewProgramScreen.swift */,
-				70A101852DAC281A007348E7 /* MultipleAudiosPlayer.swift */,
 				709750312D71E3100091A938 /* IPAdressView.swift */,
-				70A101812DABE64E007348E7 /* SandboxPlayerLive.swift */,
 				709261CC2DCBA4D7009400F8 /* FullAudioPlayerTest.swift */,
 				709143712D64C4CF00D3C3A9 /* Special-views */,
 			);
@@ -641,8 +635,6 @@
 				70983FD92D6B7BBD00B01BBF /* LightenedRadioStation.swift in Sources */,
 				70A101BA2DB2CADD007348E7 /* BottomSheetView.swift in Sources */,
 				70A101882DAEBC84007348E7 /* TestEnregistrement2Flux.swift in Sources */,
-				70A101822DABE64E007348E7 /* SandboxPlayerLive.swift in Sources */,
-				70A101862DAC281A007348E7 /* MultipleAudiosPlayer.swift in Sources */,
 				70A101AA2DB24CC1007348E7 /* ProgramManager.swift in Sources */,
 				709143702D639DB200D3C3A9 /* BigModel.swift in Sources */,
 				709750322D71E3100091A938 /* IPAdressView.swift in Sources */,

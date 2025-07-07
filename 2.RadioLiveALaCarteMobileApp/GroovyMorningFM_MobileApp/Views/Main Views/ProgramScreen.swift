@@ -33,16 +33,8 @@ struct ProgramScreen: View {
     var body: some View {
         
         VStack {
-            
-            /*if isLoading {
                 
-                LaunchScreenView()
-                    .transition(.opacity)
-                    .zIndex(1)
-                
-            } else {*/
-                
-                VStack(spacing: 0) {
+            VStack(spacing: 0) {
                 
                 HStack {
                     Text("Back")
@@ -194,24 +186,21 @@ struct ProgramScreen: View {
                         }.padding(.vertical, 20)
                         Spacer()
                     }.background(Color.purple)
-                        .onTapGesture {
-                            bigModel.currentView = .NewProgramScreen
-                        }
+                    .onTapGesture {
+                        bigModel.currentView = .NewProgramScreen
+                    }
                     
                 }
                 
             }
-        //}
             
         }
         .onChange(of: bigModel.ipAdress) { oldId, newIp in
-            //if let newIp != "" {
             Task {
                 let fetchedPrograms = await apiService.fetchPrograms(for: userId)
                 self.programs = fetchedPrograms
                 bigModel.programs = fetchedPrograms
             }
-            //}
         }
         .onAppear {
             

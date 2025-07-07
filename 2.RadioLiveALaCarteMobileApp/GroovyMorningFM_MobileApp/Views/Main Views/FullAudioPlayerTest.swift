@@ -34,7 +34,7 @@ struct FullAudioPlayerTest: View {
             VStack {
                                 
                 HStack {
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 5) {
                         
                         Image(systemName: "house")
                             .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white.darker(by: 10))
@@ -52,84 +52,59 @@ struct FullAudioPlayerTest: View {
                         
                         Text(ProgramManager.shared.convertEpochToHHMMSS(epoch: bigModel.programs[bigModel.currentProgramIndex].startTime))
                             .font(.largeTitle)
-                            .foregroundStyle(Color.gray)
+                            .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color(hex: "#363636") : Color(hex: "#D4D4D4"))
+                        
+                        /*bigModel.deleteFeedback { result in
+                         switch result {
+                         case .success(let message):
+                             print("Succès :", message)
+                             liked.toggle()
+                             bigModel.giveFeedback(feedback: "Bad") { result in
+                                 switch result {
+                                 case .success(let message):
+                                     print("Succès :", message)
+                                     disliked.toggle()
+                                 case .failure(let error):
+                                     print("Erreur :", error.localizedDescription)
+                                 }
+                             }
+                         case .failure(let error):
+                             print("Erreur :", error.localizedDescription)
+                         }
+                     }*/
+                        
+                        /*
+                         bigModel.deleteFeedback { result in
+                             switch result {
+                             case .success(let message):
+                                 print("Succès :", message)
+                                 liked.toggle()
+                             case .failure(let error):
+                                 print("Erreur :", error.localizedDescription)
+                             }
+                         }
+                         */
                         
                         HStack {
-                            Image(systemName: "hand.thumbsdown")
+                            Image(systemName: liked ? "hand.thumbsup.fill" : "hand.thumbsup")
                                 .font(.largeTitle)
                                 .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
                                 .onTapGesture {
                                     
-                                    if (!disliked) {
-                                        if (liked) {
+                                    if !disliked {
+                                        
+                                        if liked {
                                             bigModel.deleteFeedback { result in
                                                 switch result {
-                                                case .success(let message):
-                                                    print("Succès :", message)
-                                                    liked.toggle()
-                                                    bigModel.giveFeedback(feedback: "Bad") { result in
-                                                        switch result {
-                                                        case .success(let message):
-                                                            print("Succès :", message)
-                                                            disliked.toggle()
-                                                        case .failure(let error):
-                                                            print("Erreur :", error.localizedDescription)
-                                                        }
-                                                    }
-                                                case .failure(let error):
-                                                    print("Erreur :", error.localizedDescription)
-                                                }
-                                            }
-                                        } else {
-                                            bigModel.giveFeedback(feedback: "Bad") { result in
-                                                switch result {
-                                                case .success(let message):
-                                                    print("Succès :", message)
-                                                    disliked.toggle()
-                                                case .failure(let error):
-                                                    print("Erreur :", error.localizedDescription)
+                                                    case .success(let message):
+                                                        print("Succès :", message)
+                                                        liked.toggle()
+                                                    case .failure(let error):
+                                                        print("Erreur :", error.localizedDescription)
                                                 }
                                             }
                                         }
-                                    } else {
-                                        bigModel.deleteFeedback { result in
-                                            switch result {
-                                            case .success(let message):
-                                                print("Succès :", message)
-                                                liked.toggle()
-                                            case .failure(let error):
-                                                print("Erreur :", error.localizedDescription)
-                                            }
-                                        }
-                                    }
-                                    
-                                }
-                            
-                            Image(systemName: "hand.thumbsup")
-                                .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
-                                .font(.largeTitle)
-                                .onTapGesture {
-                                    if (!liked) {
-                                        if (disliked) {
-                                            bigModel.deleteFeedback { result in
-                                                switch result {
-                                                case .success(let message):
-                                                    print("Succès :", message)
-                                                    disliked.toggle()
-                                                    bigModel.giveFeedback(feedback: "Good") { result in
-                                                        switch result {
-                                                        case .success(let message):
-                                                            print("Succès :", message)
-                                                            liked.toggle()
-                                                        case .failure(let error):
-                                                            print("Erreur :", error.localizedDescription)
-                                                        }
-                                                    }
-                                                case .failure(let error):
-                                                    print("Erreur :", error.localizedDescription)
-                                                }
-                                            }
-                                        } else {
+                                        else {
                                             bigModel.giveFeedback(feedback: "Good") { result in
                                                 switch result {
                                                 case .success(let message):
@@ -140,17 +115,93 @@ struct FullAudioPlayerTest: View {
                                                 }
                                             }
                                         }
+                                        
                                     } else {
-                                        bigModel.deleteFeedback { result in
-                                            switch result {
-                                            case .success(let message):
-                                                print("Succès :", message)
-                                                liked.toggle()
-                                            case .failure(let error):
-                                                print("Erreur :", error.localizedDescription)
+                                        
+                                        if !liked {
+                                            
+                                            bigModel.deleteFeedback { result in
+                                             switch result {
+                                             case .success(let message):
+                                                 print("Succès :", message)
+                                                 disliked.toggle()
+                                                 bigModel.giveFeedback(feedback: "Good") { result in
+                                                     switch result {
+                                                     case .success(let message):
+                                                         print("Succès :", message)
+                                                         liked.toggle()
+                                                     case .failure(let error):
+                                                         print("Erreur :", error.localizedDescription)
+                                                     }
+                                                 }
+                                             case .failure(let error):
+                                                 print("Erreur :", error.localizedDescription)
+                                             }
+                                         }
+                                            
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                            
+                            Image(systemName: disliked ? "hand.thumbsdown.fill" : "hand.thumbsdown")
+                                .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
+                                .font(.largeTitle)
+                                .onTapGesture {
+                                    
+                                    if !liked {
+                                        
+                                        if disliked {
+                                            bigModel.deleteFeedback { result in
+                                                switch result {
+                                                    case .success(let message):
+                                                        print("Succès :", message)
+                                                        disliked.toggle()
+                                                    case .failure(let error):
+                                                        print("Erreur :", error.localizedDescription)
+                                                }
                                             }
                                         }
+                                        else {
+                                            bigModel.giveFeedback(feedback: "Bad") { result in
+                                                switch result {
+                                                case .success(let message):
+                                                    print("Succès :", message)
+                                                    disliked.toggle()
+                                                case .failure(let error):
+                                                    print("Erreur :", error.localizedDescription)
+                                                }
+                                            }
+                                        }
+                                        
+                                    } else {
+                                        
+                                        if !liked {
+                                            
+                                            bigModel.deleteFeedback { result in
+                                             switch result {
+                                             case .success(let message):
+                                                 print("Succès :", message)
+                                                 liked.toggle()
+                                                 bigModel.giveFeedback(feedback: "Bad") { result in
+                                                     switch result {
+                                                     case .success(let message):
+                                                         print("Succès :", message)
+                                                         disliked.toggle()
+                                                     case .failure(let error):
+                                                         print("Erreur :", error.localizedDescription)
+                                                     }
+                                                 }
+                                             case .failure(let error):
+                                                 print("Erreur :", error.localizedDescription)
+                                             }
+                                         }
+                                            
+                                        }
+                                        
                                     }
+                                    
                                 }
                         }
                     }

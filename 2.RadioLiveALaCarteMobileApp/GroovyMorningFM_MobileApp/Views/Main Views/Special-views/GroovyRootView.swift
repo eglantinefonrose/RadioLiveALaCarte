@@ -18,10 +18,6 @@ struct GroovyRootView: View {
             if (BigModel.shared.currentView == .ProgramScreen) {
                 ProgramScreen()
             }
-            if (BigModel.shared.currentView == .AudioPlayerView) {
-                MultipleAudiosPlayer()
-                //AudioPlayerView()
-            }
             if (BigModel.shared.currentView == .NewProgramScreen) {
                 NewProgramScreen()
             }
@@ -30,9 +26,6 @@ struct GroovyRootView: View {
             }
             if (BigModel.shared.currentView == .DanielMorin) {
                 AudioPlayerViewDanielMorin()
-            }
-            if (BigModel.shared.currentView == .LiveAudioPlayer) {
-                SandboxPlayerLive()
             }
             if (BigModel.shared.currentView == .MultipleAudiosPlayer) {
                 //MultipleAudiosPlayer()
