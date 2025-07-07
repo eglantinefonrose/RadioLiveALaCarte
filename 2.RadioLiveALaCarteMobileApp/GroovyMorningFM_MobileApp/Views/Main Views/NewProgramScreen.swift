@@ -195,57 +195,67 @@ struct NewProgramScreen: View {
                     Task {
                         do {
                             
-                            let url = try await APIService.shared.searchURLByUUID(uuid: radioUUID)
-                            
-                            let response = try await APIService.shared.createProgram(
-                                radioName: radioName,
-                                startTimeHour: hour1,
-                                startTimeMinute: minute1,
-                                startTimeSeconds: second1,
-                                endTimeHour: hour2,
-                                endTimeMinute: minute2,
-                                endTimeSeconds: second2,
-                                radioUUID: radioUUID
-                            )
-                            
-                            print("Réponse du serveur : \(response)")
-                            
-                            if (ProgramManager.shared.estDansLeFutur(heure: hour1, minute: minute1, seconde: second1) && (radioName != "")) {
+                            if let timestamp = ProgramManager.shared.convertToTimeEpoch(startHour: hour1, startMinute: minute1, startSeconds: second1) {
                                 
-                                let delay: Int = timeStringToEpoch(hour: hour2, minute: minute2, second: second2) - timeStringToEpoch(hour: hour1, minute: minute1, second: second1)
-                                let calendar = Calendar.current
-                                let currentDate = Date()
-                                let targetTime1 = calendar.date(bySettingHour: hour1, minute: minute1, second: second1, of: currentDate)!
-                                //let targetTime2 = calendar.date(bySettingHour: hour1, minute: minute1, second: second1+10, of: currentDate)!
-
-                                let timeInterval = targetTime1.timeIntervalSince(currentDate)
-
-                                // Si l'heure cible est déjà passée aujourd'hui, ajuste pour demain
-                                if timeInterval < 0 {
-                                    let nextDay = calendar.date(byAdding: .day, value: 1, to: currentDate)!
-                                    let newTargetTime = calendar.date(bySettingHour: hour1, minute: minute1, second: second1, of: nextDay)!
+                                let url = try await APIService.shared.searchURLByUUID(uuid: radioUUID)
+                                
+                                if let timestampEnd = ProgramManager.shared.convertToTimeEpoch(startHour: hour1, startMinute: minute1, startSeconds: second1) {
                                     
-                                    RecordingService.shared.startTimer(for: newTargetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, delay: delay, outputName: response, url: url)
-                                }
-                                else {
+                                    let response = try await APIService.shared.createProgram(
+                                        radioName: radioName,
+                                        startTime: timestamp,
+                                        endTime: timestampEnd,
+                                        radioUUID: radioUUID
+                                    )
+                                    
+                                    print("Réponse du serveur : \(response)")
+                                    
+                                    if (ProgramManager.shared.estDansLeFutur(startTime: timestamp) && (radioName != "")) {
                                         
-                                    RecordingService.shared.startTimer(for: targetTime1, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, delay: delay, outputName: response, url: url)
+                                        let delay: Int = timeStringToEpoch(hour: hour2, minute: minute2, second: second2) - timeStringToEpoch(hour: hour1, minute: minute1, second: second1)
+                                        let calendar = Calendar.current
+                                        let currentDate = Date()
+                                        let targetTime1 = calendar.date(bySettingHour: hour1, minute: minute1, second: second1, of: currentDate)!
+                                        //let targetTime2 = calendar.date(bySettingHour: hour1, minute: minute1, second: second1+10, of: currentDate)!
+
+                                        let timeInterval = targetTime1.timeIntervalSince(currentDate)
+
+                                        // Si l'heure cible est déjà passée aujourd'hui, ajuste pour demain
+                                        if timeInterval < 0 {
+                                            let nextDay = calendar.date(byAdding: .day, value: 1, to: currentDate)!
+                                            let newTargetTime = calendar.date(bySettingHour: hour1, minute: minute1, second: second1, of: nextDay)!
+                                            
+                                            RecordingService.shared.startTimer(for: newTargetTime, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, delay: delay, outputName: response, url: url)
+                                        }
+                                        else {
+                                                
+                                            RecordingService.shared.startTimer(for: targetTime1, radioName: radioName.replacingOccurrences(of: " ", with: ""), startTimeHour: hour1, startTimeMinute: minute1, startTimeSeconds: second1, delay: delay, outputName: response, url: url)
+                                            
+                                        }
+                                        
+                                    } else {
+                                        print("radio name = \(radioName)")
+                                        print("Dans le futur")
+                                    }
                                     
                                 }
                                 
                             } else {
-                                print("radio name = \(radioName)")
-                                print("Dans le futur")
+                                print("Conversion échouée.")
                             }
+                            
                         } catch {
                             print("Erreur : \(error)")
                         }
                         
                     }
-                                                            
-                    if (ProgramManager.shared.estDansLeFutur(heure: hour1, minute: minute1, seconde: second1)) {
-                        print("L'horaire est déjà passée dans la journée")
+                    
+                    if let timestamp = ProgramManager.shared.convertToTimeEpoch(startHour: hour1, startMinute: minute1, startSeconds: second1) {
+                        if (ProgramManager.shared.estDansLeFutur(startTime: timestamp)) {
+                            print("L'horaire est déjà passée dans la journée")
+                        }
                     }
+                    
                     if radioName == "" {
                         print("Le champ de nom de radio est vide")
                     }

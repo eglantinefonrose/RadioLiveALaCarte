@@ -10,6 +10,11 @@ import Speech
 @testable import GroovyMorningFM_MobileApp
 import UIKit
 
+import Foundation
+import SwiftUI
+import AVFoundation
+import Combine
+
 final class GroovyMorningFM_MobileAppTests: XCTestCase {
 
     override func setUpWithError() throws {
@@ -56,5 +61,14 @@ final class GroovyMorningFM_MobileAppTests: XCTestCase {
 
         waitForExpectations(timeout: 10.0, handler: nil)
     }
+    
+    func testColor() {
+        print(Color.purple.toUIColor().toHexString())
+    }
+    
+    func testEpoc() {
+        print(ProgramManager.shared.convertEpochToHHMMSS(epoch: 1751872149))
+    }
+
     
 }

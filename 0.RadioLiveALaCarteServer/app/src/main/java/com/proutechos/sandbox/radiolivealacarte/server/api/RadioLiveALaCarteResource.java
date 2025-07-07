@@ -256,11 +256,11 @@ public class RadioLiveALaCarteResource {
     }
 
     @POST
-    @Path("/recordProgram/programId/{programId}/radioName/{radioName}/startTimeHour/{startTimeHour}/startTimeMinute/{startTimeMinute}/startTimeSeconds/{startTimeSeconds}/endTimeHour/{endTimeHour}/endTimeMinute/{endTimeMinute}/endTimeSeconds/{endTimeSeconds}/url/{url}/danielMorinVersion/{danielMorinVersion}")
-    public void recordProgram(@PathParam("programId") String programId, @PathParam("radioName") String radioName, @PathParam("startTimeHour") int startTimeHour, @PathParam("startTimeMinute") int startTimeMinute, @PathParam("startTimeSeconds") int startTimeSeconds, @PathParam("endTimeHour") int endTimeHour, @PathParam("endTimeMinute") int endTimeMinute, @PathParam("endTimeSeconds") int endTimeSeconds, @PathParam("url") String url, @PathParam("danielMorinVersion") int danielMorinVersion) throws ProutechosBaseException {
+    @Path("/recordProgram/programId/{programId}/radioName/{radioName}/startTime/{startTime}/endTime/{endTime}/url/{url}/danielMorinVersion/{danielMorinVersion}")
+    public void recordProgram(@PathParam("programId") String programId, @PathParam("radioName") String radioName, @PathParam("startTime") int startTime, @PathParam("endTime") int endTime, @PathParam("url") String url, @PathParam("danielMorinVersion") int danielMorinVersion) throws ProutechosBaseException {
 
         try {
-            Program program = new Program(programId, radioName, startTimeHour, startTimeMinute, startTimeSeconds, endTimeHour, endTimeMinute, endTimeSeconds);
+            Program program = new Program(programId, radioName, startTime, endTime);
             RadioRecordingSchedulerService.getInstance().recordProgram(program, danielMorinVersion);
         } catch (ProutechosBaseException e) {
             throw e;
@@ -314,12 +314,12 @@ public class RadioLiveALaCarteResource {
      * @return
      */
     @POST
-    @Path("/createAndRecordProgram/radioName/{radioName}/startTimeHour/{startTimeHour}/startTimeMinute/{startTimeMinute}/startTimeSeconds/{startTimeSeconds}/endTimeHour/{endTimeHour}/endTimeMinute/{endTimeMinute}/endTimeSeconds/{endTimeSeconds}/userID/{userID}/danielMorinVersion/{danielMorinVersion}")
-    public void recordProgram(@PathParam("radioName") String radioName, @PathParam("startTimeHour") int startTimeHour, @PathParam("startTimeMinute") int startTimeMinute, @PathParam("startTimeSeconds") int startTimeSeconds, @PathParam("endTimeHour") int endTimeHour, @PathParam("endTimeMinute") int endTimeMinute, @PathParam("endTimeSeconds") int endTimeSeconds, @PathParam("url") String url, @PathParam("userID") String userID, @PathParam("danielMorinVersion") Integer danielMorinVersion) throws ProutechosBaseException {
+    @Path("/createAndRecordProgram/radioName/{radioName}/startTime/{startTime}/endTime/{endTime}/userID/{userID}/danielMorinVersion/{danielMorinVersion}")
+    public void recordProgram(@PathParam("radioName") String radioName, @PathParam("startTime") int startTime, @PathParam("endTime") int endTime, @PathParam("url") String url, @PathParam("userID") String userID, @PathParam("danielMorinVersion") Integer danielMorinVersion) throws ProutechosBaseException {
 
         try {
 
-            Program program = new Program("programId", radioName, startTimeHour, startTimeMinute, startTimeSeconds, endTimeHour, endTimeMinute, endTimeSeconds);
+            Program program = new Program("programId", radioName, startTime, endTime);
 
             String programID = RadioLiveALaCarteUserService.getInstance().createProgram(program);
             RadioLiveALaCarteUserService.getInstance().addUserProgram(userID, programID);
@@ -327,7 +327,7 @@ public class RadioLiveALaCarteResource {
             Program justCreatedProgram = RadioLiveALaCarteUserService.getInstance().getProgramByID(programID);
             RadioRecordingSchedulerService.getInstance().recordProgram(justCreatedProgram, danielMorinVersion);
 
-            RadioRecordingSchedulerService.getInstance().scheduleWake(startTimeHour+":"+startTimeMinute+":"+startTimeSeconds);
+            RadioRecordingSchedulerService.getInstance().scheduleWake(startTime);
 
         } catch (ProutechosBaseException e) {
             throw e;
@@ -340,16 +340,16 @@ public class RadioLiveALaCarteResource {
     //     @Path("/createProgram/radioName/FranceInter/startTimeHour/23/startTimeMinute/0/startTimeSeconds/0/endTimeHour/23/endTimeMinute/1/endTimeSeconds/0/url/url/userID/user001/danielMorinVersion/0")
 
     /**
-     * curl -s -X GET "http://localhost:8287/api/radio/createProgram/radioName/FranceInter/startTimeHour/23/startTimeMinute/0/startTimeSeconds/0/endTimeHour/23/endTimeMinute/1/endTimeSeconds/0/url/url/userID/user001/danielMorinVersion/0"
+     * curl -s -X GET "http://localhost:8287/api/radio/createProgram/radioName/FranceInter/startTime/1751872149/endTime/1751872199/userID/user001/danielMorinVersion/0"
      * @return
      */
     @GET
-    @Path("/createProgram/radioName/{radioName}/startTimeHour/{startTimeHour}/startTimeMinute/{startTimeMinute}/startTimeSeconds/{startTimeSeconds}/endTimeHour/{endTimeHour}/endTimeMinute/{endTimeMinute}/endTimeSeconds/{endTimeSeconds}/userID/{userID}/danielMorinVersion/{danielMorinVersion}")
-    public String createProgram(@PathParam("radioName") String radioName, @PathParam("startTimeHour") int startTimeHour, @PathParam("startTimeMinute") int startTimeMinute, @PathParam("startTimeSeconds") int startTimeSeconds, @PathParam("endTimeHour") int endTimeHour, @PathParam("endTimeMinute") int endTimeMinute, @PathParam("endTimeSeconds") int endTimeSeconds, @PathParam("userID") String userID, @PathParam("danielMorinVersion") Integer danielMorinVersion) throws ProutechosBaseException {
+    @Path("/createProgram/radioName/{radioName}/startTime/{startTime}/endTime/{endTime}/userID/{userID}/danielMorinVersion/{danielMorinVersion}")
+    public String createProgram(@PathParam("radioName") String radioName, @PathParam("startTime") int startTime, @PathParam("endTime") int endTime, @PathParam("userID") String userID, @PathParam("danielMorinVersion") Integer danielMorinVersion) throws ProutechosBaseException {
 
         try {
 
-            Program program = new Program("programId", radioName, startTimeHour, startTimeMinute, startTimeSeconds, endTimeHour, endTimeMinute, endTimeSeconds);
+            Program program = new Program("programId", radioName, startTime, endTime);
 
             String programID = RadioLiveALaCarteUserService.getInstance().createProgram(program);
             RadioLiveALaCarteUserService.getInstance().addUserProgram(userID, programID);
@@ -426,7 +426,7 @@ public class RadioLiveALaCarteResource {
     public String getFeedback(@PathParam("programID") String programID)  throws Exception {
 
         try {
-            return FeedbackService.getInstance().getFeedback("3bbe60fc-c0cd-47c6-890d-cd93d425dde3");
+            return FeedbackService.getInstance().getFeedback(programID);
         } catch (ProutechosBaseException e) {
             throw e;
         }

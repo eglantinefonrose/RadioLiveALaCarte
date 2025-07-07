@@ -33,16 +33,8 @@ struct ProgramScreen: View {
     var body: some View {
         
         VStack {
-            
-            /*if isLoading {
                 
-                LaunchScreenView()
-                    .transition(.opacity)
-                    .zIndex(1)
-                
-            } else {*/
-                
-                VStack(spacing: 0) {
+            VStack(spacing: 0) {
                 
                 HStack {
                     Text("Back")
@@ -95,7 +87,7 @@ struct ProgramScreen: View {
                                 Text(program.radioName)
                                     .font(.headline)
                                     .foregroundStyle(program.isProgramAvailable() ? Color.black : Color.gray)
-                                Text("\(program.startTimeHour):\(program.startTimeMinute):\(program.startTimeSeconds) - \(program.endTimeHour):\(program.endTimeMinute):\(program.endTimeSeconds)")
+                                Text(ProgramManager.shared.convertEpochToHHMMSS(epoch: program.startTime))
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
                             }
@@ -104,6 +96,11 @@ struct ProgramScreen: View {
                             
                             Image(systemName: "trash")
                                 .onTapGesture {
+                                    
+                                    if (index == bigModel.currentProgramIndex) {
+                                        bigModel.isAnAudioSelected = false
+                                    }
+                                    
                                     apiService.deleteProgram(programID: program.id) { result in
                                         switch result {
                                         case .success:
@@ -111,9 +108,6 @@ struct ProgramScreen: View {
                                                 let fetchedPrograms = await apiService.fetchPrograms(for: userId)
                                                 self.programs = fetchedPrograms
                                                 bigModel.programs = fetchedPrograms
-                                                if (index == bigModel.currentProgramIndex) {
-                                                    bigModel.isAnAudioSelected = false
-                                                }
                                             }
                                         case .failure(let error):
                                             print("Erreur lors de la suppression :", error.localizedDescription)
@@ -123,6 +117,8 @@ struct ProgramScreen: View {
                             
                         }.onTapGesture {
                             
+                            bigModel.currentProgramIndex = index
+                            bigModel.updateBackgroundColor(from: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)
                             AudioPlayerManager952025.configure(filePrefix: "\(BigModel.shared.liveProgramsNames[bigModel.currentProgramIndex])_")
                             
                         }
@@ -138,28 +134,33 @@ struct ProgramScreen: View {
                             Spacer()
                                 .frame(width: 10)
                             
+                            /*AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)) {
+                                .frame(width: 50)
+                                .onAppear {
+                                    bigModel.updateBackgroundColor(from: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)
+                                }*/
+                            
                             AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)) { phase in
-                                if let image = phase.image {
-                                    image
+                                if let swiftUIimage = phase.image {
+                                    swiftUIimage
                                         .resizable()
                                         .scaledToFit()
+                                        .frame(width: 50)
                                         .onAppear {
-                                            bigModel.extractDominantColor(from: image)
+                                            bigModel.updateBackgroundColor(from: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)
                                         }
-                                } else {
-                                    ProgressView()
                                 }
-                            }.frame(width: 50)
+                            }
                             
                             Text(bigModel.programs[bigModel.currentProgramIndex].radioName)
                                 .fontWeight(.bold)
-                                .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
+                                .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white.darker(by: 10))
                             
                             Spacer()
                             
                             Image(systemName: bigModel.isPlaying ? "pause" : "play")
                                 .font(.title)
-                                .foregroundStyle(bigModel.playerBackgroudColor.isCloserToWhite() ? Color.black : Color.white.darker(by: 10))
+                                .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white.darker(by: 10))
                                 .onTapGesture {
                                     AudioPlayerManager952025.shared.togglePlayPause()
                                 }
@@ -168,7 +169,7 @@ struct ProgramScreen: View {
                             Spacer()
                                 .frame(width: 10)
                             
-                        }.background(Color(hex: bigModel.playerBackgroudColor.toHexString()))
+                        }.background(Color(hex: bigModel.playerBackgroudColorHexCode).darker(by: 10))
                             .onTapGesture {
                                 bigModel.currentView = .MultipleAudiosPlayer
                             }
@@ -185,24 +186,21 @@ struct ProgramScreen: View {
                         }.padding(.vertical, 20)
                         Spacer()
                     }.background(Color.purple)
-                        .onTapGesture {
-                            bigModel.currentView = .NewProgramScreen
-                        }
+                    .onTapGesture {
+                        bigModel.currentView = .NewProgramScreen
+                    }
                     
                 }
                 
             }
-        //}
             
         }
         .onChange(of: bigModel.ipAdress) { oldId, newIp in
-            //if let newIp != "" {
             Task {
                 let fetchedPrograms = await apiService.fetchPrograms(for: userId)
                 self.programs = fetchedPrograms
                 bigModel.programs = fetchedPrograms
             }
-            //}
         }
         .onAppear {
             

@@ -10,23 +10,15 @@ import Foundation
 protocol APIServiceProtocol {
     func validerHoraire(
         radioName: String,
-        startTimeHour: Int,
-        startTimeMinute: Int,
-        startTimeSeconds: Int,
-        endTimeHour: Int,
-        endTimeMinute: Int,
-        endTimeSeconds: Int,
+        startTime: Int,
+        endTime: Int,
         completion: @escaping (Result<String, Error>) -> Void
     )
     
     func createProgram(
         radioName: String,
-        startTimeHour: Int,
-        startTimeMinute: Int,
-        startTimeSeconds: Int,
-        endTimeHour: Int,
-        endTimeMinute: Int,
-        endTimeSeconds: Int,
+        startTime: Int,
+        endTime: Int,
         radioUUID: String
     ) async throws -> String
 

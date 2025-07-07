@@ -11,23 +11,15 @@ class Program: Codable, Identifiable, Equatable {
     
     var id: String = UUID().uuidString
     var radioName: String
-    var startTimeHour: Int
-    var startTimeMinute: Int
-    var startTimeSeconds: Int
-    var endTimeHour: Int
-    var endTimeMinute: Int
-    var endTimeSeconds: Int
+    var startTime: Int
+    var endTime: Int
     var favIcoURL: String
         
-    init(id: String, radioName: String, startTimeHour: Int, startTimeMinute: Int, startTimeSeconds: Int, endTimeHour: Int, endTimeMinute: Int, endTimeSeconds: Int, favIcoURL: String) {
+    init(id: String, radioName: String, startTime: Int, endTime: Int, favIcoURL: String) {
         self.id = id
         self.radioName = radioName
-        self.startTimeHour = startTimeHour
-        self.startTimeMinute = startTimeMinute
-        self.startTimeSeconds = startTimeSeconds
-        self.endTimeHour = endTimeHour
-        self.endTimeMinute = endTimeMinute
-        self.endTimeSeconds = endTimeSeconds
+        self.startTime = startTime
+        self.endTime = endTime
         self.favIcoURL = favIcoURL
     }
     
@@ -36,11 +28,11 @@ class Program: Codable, Identifiable, Equatable {
     }
     
     func isProgramAvailable() -> Bool {
-        return ( !(ProgramManager.shared.estDansLeFutur(heure: startTimeHour, minute: startTimeMinute, seconde: startTimeSeconds)) && !(isInLive()) )
+        return ( !(ProgramManager.shared.estDansLeFutur(startTime: startTime)) && !(isInLive()) )
     }
     
     func isInLive() -> Bool {
-        return (ProgramManager.shared.estEnLive(heureDebut: startTimeHour, minuteDebut: startTimeMinute, secondeDebut: startTimeSeconds, heureFin: endTimeHour, minuteFin: endTimeMinute, secondeFin: endTimeSeconds))
+        return (ProgramManager.shared.estEnLive(startTime: startTime, endTime: endTime))
     }
     
 }
