@@ -123,6 +123,8 @@ struct ProgramScreen: View {
                             
                         }.onTapGesture {
                             
+                            bigModel.currentProgramIndex = index
+                            bigModel.updateBackgroundColor(from: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)
                             AudioPlayerManager952025.configure(filePrefix: "\(BigModel.shared.liveProgramsNames[bigModel.currentProgramIndex])_")
                             
                         }
