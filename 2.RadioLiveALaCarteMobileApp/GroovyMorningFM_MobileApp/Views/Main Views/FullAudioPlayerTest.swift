@@ -49,9 +49,11 @@ struct FullAudioPlayerTest: View {
                             .font(.largeTitle)
                             .fontWeight(.heavy)
                             .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
+                        
                         Text("9:01 - 9:14")
                             .font(.largeTitle)
                             .foregroundStyle(Color.gray)
+                        
                         HStack {
                             Image(systemName: "hand.thumbsdown")
                                 .font(.largeTitle)
@@ -106,6 +108,50 @@ struct FullAudioPlayerTest: View {
                             Image(systemName: "hand.thumbsup")
                                 .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
                                 .font(.largeTitle)
+                                .onTapGesture {
+                                    if (!liked) {
+                                        if (disliked) {
+                                            bigModel.deleteFeedback { result in
+                                                switch result {
+                                                case .success(let message):
+                                                    print("Succès :", message)
+                                                    disliked.toggle()
+                                                    bigModel.giveFeedback(feedback: "Good") { result in
+                                                        switch result {
+                                                        case .success(let message):
+                                                            print("Succès :", message)
+                                                            liked.toggle()
+                                                        case .failure(let error):
+                                                            print("Erreur :", error.localizedDescription)
+                                                        }
+                                                    }
+                                                case .failure(let error):
+                                                    print("Erreur :", error.localizedDescription)
+                                                }
+                                            }
+                                        } else {
+                                            bigModel.giveFeedback(feedback: "Good") { result in
+                                                switch result {
+                                                case .success(let message):
+                                                    print("Succès :", message)
+                                                    liked.toggle()
+                                                case .failure(let error):
+                                                    print("Erreur :", error.localizedDescription)
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        bigModel.deleteFeedback { result in
+                                            switch result {
+                                            case .success(let message):
+                                                print("Succès :", message)
+                                                liked.toggle()
+                                            case .failure(let error):
+                                                print("Erreur :", error.localizedDescription)
+                                            }
+                                        }
+                                    }
+                                }
                         }
                     }
                     Spacer()
@@ -149,7 +195,7 @@ struct FullAudioPlayerTest: View {
                                         .resizable()
                                         .scaledToFit()
                                         .frame(width: size * 0.4, height: size * 0.4)
-                                        .foregroundColor(.white)
+                                        .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
                                 }
                             }
 
@@ -169,7 +215,7 @@ struct FullAudioPlayerTest: View {
                                         .resizable()
                                         .scaledToFit()
                                         .frame(width: size * 0.4, height: size * 0.4)
-                                        .foregroundColor(.white)
+                                        .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
                                         .frame(width: size, height: size)
                                         .cornerRadius(16)
                                 }
@@ -189,7 +235,7 @@ struct FullAudioPlayerTest: View {
                                         .resizable()
                                         .scaledToFit()
                                         .frame(width: size * 0.4, height: size * 0.4)
-                                        .foregroundColor(.white)
+                                        .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
                                         .frame(width: size, height: size)
                                         .cornerRadius(16)
                                 }
