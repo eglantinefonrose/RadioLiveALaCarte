@@ -32,11 +32,11 @@ class BigModel: ObservableObject {
     
     @Published var delayedProgramsNames: [String] = []
     @Published var liveProgramsNames: [String] = []
-    @Published var currentProgramIndex: Int = 0 {
+    @Published var currentProgramIndex: Int = 0/* {
         didSet {
             updateBackgroundColor()
         }
-    }
+    }*/
     
     @Published var currentDelayedProgramIndex: Int = 0
     @Published var currentLiveProgramIndex: Int = 0
@@ -112,63 +112,84 @@ class BigModel: ObservableObject {
     @Published var playerBackgroudColorHexCode: String = "#A357D7"
     @Published var isAnAudioSelected: Bool = false
     
-    @MainActor
-    func dominantColorHex(from image: UIImage) {
-        
-        let size = CGSize(width: 40, height: 40)
-        UIGraphicsBeginImageContext(size)
-        image.draw(in: CGRect(origin: .zero, size: size))
-        guard let resizedImage = UIGraphicsGetImageFromCurrentImageContext() else {
-            UIGraphicsEndImageContext()
-            return
+    private func dominantColorHex(from image: UIImage) -> String {
+        guard let cgImage = image.cgImage else {
+            return "#AF52DE"
         }
-        UIGraphicsEndImageContext()
 
-        guard let cgImage = resizedImage.cgImage else { return }
-        guard let data = cgImage.dataProvider?.data else { return }
-        let ptr = CFDataGetBytePtr(data)
+        let width = 50
+        let height = 50
 
-        let width = cgImage.width
-        let height = cgImage.height
+        let bitmapInfo = CGImageAlphaInfo.premultipliedLast.rawValue
+        guard let context = CGContext(
+            data: nil,
+            width: width,
+            height: height,
+            bitsPerComponent: 8,
+            bytesPerRow: width * 4,
+            space: CGColorSpaceCreateDeviceRGB(),
+            bitmapInfo: bitmapInfo
+        ) else {
+            return "#AF52DE"
+        }
+
+        context.interpolationQuality = .low
+        context.draw(cgImage, in: CGRect(x: 0, y: 0, width: width, height: height))
+
+        guard let data = context.data else {
+            return "#AF52DE"
+        }
+
+        let pixelBuffer = data.bindMemory(to: UInt8.self, capacity: width * height * 4)
         var colorCount: [UInt32: Int] = [:]
 
         for x in 0..<width {
             for y in 0..<height {
-                let offset = ((y * width) + x) * 4
-                let r = ptr![offset]
-                let g = ptr![offset + 1]
-                let b = ptr![offset + 2]
-                let a = ptr![offset + 3]
-                if a < 127 { continue } // Ignorer les pixels presque transparents
+                let offset = 4 * (y * width + x)
+                let r = pixelBuffer[offset]
+                let g = pixelBuffer[offset + 1]
+                let b = pixelBuffer[offset + 2]
 
-                // Convertir la couleur en un UInt32 pour dictionnaire
-                let colorKey = (UInt32(r) << 16) + (UInt32(g) << 8) + UInt32(b)
-                colorCount[colorKey, default: 0] += 1
+                let rgb = (UInt32(r) << 16) | (UInt32(g) << 8) | UInt32(b)
+                colorCount[rgb, default: 0] += 1
             }
         }
 
-        // Trouver la couleur la plus fréquente
-        if let (colorKey, _) = colorCount.max(by: { $0.value < $1.value }) {
-            let r = (colorKey >> 16) & 0xFF
-            let g = (colorKey >> 8) & 0xFF
-            let b = colorKey & 0xFF
-            self.playerBackgroudColorHexCode = String(format: "#%02X%02X%02X", r, g, b)
+        guard let (dominantRGB, _) = colorCount.max(by: { $0.value < $1.value }) else {
+            return "#AF52DE"
         }
 
-        return
+        let r = (dominantRGB >> 16) & 0xFF
+        let g = (dominantRGB >> 8) & 0xFF
+        let b = dominantRGB & 0xFF
+
+        return String(format: "#%02X%02X%02X", r, g, b)
     }
 
-    func updateBackgroundColor() {
-        let urlString = programs[currentProgramIndex].favIcoURL
-        if let url = URL(string: urlString) {
-            let task = URLSession.shared.dataTask(with: url) { data, response, error in
-                guard let data = data, let uiImage = UIImage(data: data) else { return }
-                Task { @MainActor in
-                    self.dominantColorHex(from: uiImage)
+
+    func updateBackgroundColor(from urlString: String) {
+        
+        guard let url = URL(string: urlString) else { return }
+        
+        Task {
+            do {
+                let (data, _) = try await URLSession.shared.data(from: url)
+                if let image = UIImage(data: data) {
+                    //let color = extractDominantColor(from: image)
+                    await MainActor.run {
+                        self.playerBackgroudColorHexCode = self.dominantColorHex(from: image)
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.playerBackgroudColorHexCode = "#AF52DE"
+                    }
                 }
+            } catch {
+                print("Erreur de chargement image: \(error)")
+                self.playerBackgroudColorHexCode = "#AF52DE"
             }
-            task.resume()
         }
+        
     }
     
     //

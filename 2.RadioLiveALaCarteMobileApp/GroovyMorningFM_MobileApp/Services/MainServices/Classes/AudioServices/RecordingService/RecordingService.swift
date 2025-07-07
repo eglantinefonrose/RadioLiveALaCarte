@@ -5,10 +5,10 @@
 //  Created by Eglantine Fonrose on 10/04/2025.
 //
 
+import Foundation
 import SwiftUI
 import AVFoundation
 import FFmpegSupport
-import Foundation
 
 class RecordingService: RecordingServiceProtocol {
     

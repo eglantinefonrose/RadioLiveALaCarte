@@ -206,9 +206,11 @@ struct FullAudioPlayerTest: View {
                                 .frame(height: 4)
                             
                             // Filled track
-                            Rectangle()
-                                .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
-                                .frame(width: CGFloat(manager.currentTime / manager.duration) * geo.size.width, height: 4)
+                            if (manager.duration != 0) {
+                                Rectangle()
+                                    .foregroundStyle(bigModel.playerBackgroudColorHexCode.isLightColor ? Color.black : Color.white)
+                                    .frame(width: CGFloat(manager.currentTime / manager.duration) * geo.size.width, height: 4)
+                            }
                             
                             // Thumb (optionnel)
                             Rectangle()
@@ -264,16 +266,19 @@ struct FullAudioPlayerTest: View {
                 }
             }
             
-            updateBackgroundColor()
-            
         }
         .onChange(of: manager.player.rate) { oldValue, newValue in
             manager.togglePlayPause()
         }
         .onChange(of: bigModel.currentProgramIndex) { oldValue, newValue in
+            
             manager.videLesSegments()
             manager.startMonitoring()
+            
+            bigModel.updateBackgroundColor(from: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)
+            
         }
+        
         .onChange(of: bigModel.currentProgramIndex) { _ in
             // On change de programme => on télécharge et extrait la couleur
             /*let urlString = bigModel.programs[bigModel.currentProgramIndex].favIcoURL
@@ -296,22 +301,6 @@ struct FullAudioPlayerTest: View {
         let minutes = intSec / 60
         let secs = intSec % 60
         return String(format: "%02d:%02d", minutes, secs)
-    }
-    
-    private func updateBackgroundColor() {
-        AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)) { phase in
-            if let image = phase.image {
-                Color.clear // On n'affiche rien visuellement
-                    .onAppear {
-                        let renderer = ImageRenderer(content: image)
-                        if let uiImage = renderer.uiImage {
-                            bigModel.dominantColorHex(from: uiImage)
-                        }
-                    }
-            } else {
-                EmptyView()
-            }
-        }
     }
     
 }

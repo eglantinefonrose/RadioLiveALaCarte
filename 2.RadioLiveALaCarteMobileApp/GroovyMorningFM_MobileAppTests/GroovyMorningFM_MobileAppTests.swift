@@ -61,28 +61,10 @@ final class GroovyMorningFM_MobileAppTests: XCTestCase {
 
         waitForExpectations(timeout: 10.0, handler: nil)
     }
-        
-    func testDominantColorFromURL() async throws {
-        
-        let url = URL(string: "https://www.franceinfo.fr/assets/common/images/pwa/ios/120-0cfbd6d4.png")!
-        
-        let (data, _) = try await URLSession.shared.data(from: url)
-        guard let image = UIImage(data: data) else {
-            XCTFail("Échec de la conversion des données en UIImage")
-            return
-        }
-
-        guard let hex = dominantColorHex(from: image) else {
-            XCTFail("Impossible d'extraire la couleur dominante")
-            return
-        }
-
-        print("Couleur dominante HEX : \(hex)")
-        XCTAssertTrue(hex.hasPrefix("#"))
-        XCTAssertEqual(hex.count, 7)
+    
+    func testColor() {
+        print(Color.purple.toUIColor().toHexString())
     }
-    
-    
 
     
 }

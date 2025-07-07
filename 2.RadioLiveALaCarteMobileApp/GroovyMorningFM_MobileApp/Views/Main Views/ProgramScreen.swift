@@ -138,24 +138,23 @@ struct ProgramScreen: View {
                             Spacer()
                                 .frame(width: 10)
                             
+                            /*AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)) {
+                                .frame(width: 50)
+                                .onAppear {
+                                    bigModel.updateBackgroundColor(from: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)
+                                }*/
+                            
                             AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)) { phase in
                                 if let swiftUIimage = phase.image {
                                     swiftUIimage
                                         .resizable()
                                         .scaledToFit()
+                                        .frame(width: 50)
                                         .onAppear {
-                                            // Utiliser ImageRenderer pour obtenir la UIImage
-                                            let renderer = ImageRenderer(content: swiftUIimage)
-                                            if let uiImage = renderer.uiImage {
-                                                DispatchQueue.main.async {
-                                                    bigModel.dominantColorHex(from: uiImage)
-                                                }
-                                            }
+                                            bigModel.updateBackgroundColor(from: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)
                                         }
-                                } else {
-                                    ProgressView()
                                 }
-                            }.frame(width: 50)
+                            }
                             
                             Text(bigModel.programs[bigModel.currentProgramIndex].radioName)
                                 .fontWeight(.bold)
