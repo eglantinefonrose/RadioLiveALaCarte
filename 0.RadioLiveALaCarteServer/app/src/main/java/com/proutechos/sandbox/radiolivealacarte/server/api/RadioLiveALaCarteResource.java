@@ -1,14 +1,13 @@
 package com.proutechos.sandbox.radiolivealacarte.server.api;
 
 import com.proutechos.sandbox.radiolivealacarte.server.model.*;
-import com.proutechos.sandbox.radiolivealacarte.server.service.FeedbackService;
-import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteDataStorage;
-import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteUserService;
-import com.proutechos.sandbox.radiolivealacarte.server.service.ia.TrimingWithIAService;
-import com.proutechos.sandbox.radiolivealacarte.server.service.planning.RadioInformationAndPlanningService;
-import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RadioRecordingSchedulerService;
-import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RecordName;
-import com.proutechos.sandbox.radiolivealacarte.server.service.streaming.StreamingService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.dataServices.FeedbackService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.dataServices.dataStorage.RadioLiveALaCarteDataStorage;
+import com.proutechos.sandbox.radiolivealacarte.server.service.dataServices.RadioLiveALaCarteUserService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.audioServices.planning.RadioInformationAndPlanningService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.audioServices.recording.RadioRecordingSchedulerService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.audioServices.recording.RecordName;
+import com.proutechos.sandbox.radiolivealacarte.server.service.audioServices.streaming.StreamingService;
 import com.proutechos.utils.server.rest.config.exceptions.ProutechosBaseException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;

@@ -1,4 +1,4 @@
-package com.proutechos.sandbox.radiolivealacarte.server.service.planning;
+package com.proutechos.sandbox.radiolivealacarte.server.service.audioServices.planning;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

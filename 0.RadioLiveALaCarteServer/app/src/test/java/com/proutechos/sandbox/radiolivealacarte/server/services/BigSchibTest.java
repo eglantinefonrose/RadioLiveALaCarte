@@ -1,1 +1,0 @@
-package com.proutechos.sandbox.radiolivealacarte.server.services;import org.junit.Assert;import org.junit.Test;public class BigSchibTest {    @Test    public void test001() {        Assert.fail("Not fat enough");    }}

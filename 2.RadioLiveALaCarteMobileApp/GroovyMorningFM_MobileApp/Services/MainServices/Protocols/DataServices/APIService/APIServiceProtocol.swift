@@ -26,8 +26,6 @@ protocol APIServiceProtocol {
 
     func fetchPrograms(for userId: String) async -> [Program]
 
-    func getFirstProgram(for userId: String) async -> Program
-
     static func fetchFilesWithoutSegmentNames(for userId: String, completion: @escaping ([String]) -> Void)
 
     func searchByName(for name: String, completion: @escaping (LightenedRadioStationAndAmountOfResponses) -> Void)
