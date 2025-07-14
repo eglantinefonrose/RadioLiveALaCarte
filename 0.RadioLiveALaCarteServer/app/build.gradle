@@ -17,7 +17,7 @@ repositories {
 
 dependencies {
     // Use JUnit Jupiter for testing.
-    testImplementation libs.junit.jupiter
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
 
 
     // Tomcat (embedded)
@@ -58,7 +58,7 @@ dependencies {
 
 
     // This dependency is used by the application.
-    implementation libs.guava
+    implementation 'com.google.guava:guava:33.1.0-jre'
 
     // Swagger (versions with support for 'jakarata.*' instead of 'javax.*')
     //   - OpenAPI generation
@@ -69,6 +69,10 @@ dependencies {
 
     // Quartz
     implementation 'org.quartz-scheduler:quartz:2.3.2'
+
+    implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-core:10.1.13'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:10.1.13'
 
 }
 
@@ -91,4 +95,20 @@ application {
 tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': application.mainClass.get()
+        )
+    }
+
+    // Si tu veux tout empaqueter (dépendances incluses), ce n'est pas suffisant
+    // Pour un fat JAR, vois la solution 2
+}
+
+task copyRuntimeDeps(type: Copy) {
+    from configurations.runtimeClasspath
+    into "$buildDir/dependencies"
 }

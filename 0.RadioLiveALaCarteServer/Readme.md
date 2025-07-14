@@ -1,5 +1,5 @@
 
-# Notes sur PiggyBank Server Java
+# Notes sur RadioLiveALaCarte
 
 
 
@@ -35,6 +35,37 @@ gradle prtMobileAppPushToTestFlight
 ### Installation
 
 Plus de détails dans [ce document](./docs/Tools-Java-Install.md)
+
+### Dockerization
+
+#### Principe généraux
+
+L'image Docker est créée de telle sorte que :
+ - il y ait un stage de build et un stage de run séparés (pour que l'image de run soit plus petite)
+ - les dépendances (.jar) de l'application soient toutes fetchées par gradle et téléchargée en local puis placées dans un layer
+ - la compilation se fasse après cette phase de téléchargement (de manière à rendre les builds répétitifs plus rapides)
+
+#### Commandes principales
+
+```bash
+export PROJECT_HOME="/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer"
+```
+
+Build de l'image
+```bash
+cd ${PROJECT_HOME}
+docker build -t groovy-morning-server .
+docker image ls
+```
+
+Executer le serveur dans un conteneur
+```bash
+docker run -it --rm \
+    -p 8287:8287 \
+    -v ${PROJECT_HOME}/@db:/dbStorage \
+    groovy-morning-server:latest
+
+```
 
 
 
