@@ -2,18 +2,20 @@ package com.proutechos.sandbox.radiolivealacarte.server.services;
 
 import com.proutechos.sandbox.radiolivealacarte.server.model.Program;
 import com.proutechos.sandbox.radiolivealacarte.server.model.UserModel;
-import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteDataStorage;
-import com.proutechos.sandbox.radiolivealacarte.server.service.RadioLiveALaCarteUserService;
-import com.proutechos.sandbox.radiolivealacarte.server.service.ia.TrimingWithIAService;
-import com.proutechos.sandbox.radiolivealacarte.server.service.planning.RadioInformationAndPlanningService;
-import com.proutechos.sandbox.radiolivealacarte.server.service.recording.RadioRecordingSchedulerService;
-import com.proutechos.sandbox.radiolivealacarte.server.service.streaming.StreamingService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.dataServices.dataStorage.RadioLiveALaCarteDataStorage;
+import com.proutechos.sandbox.radiolivealacarte.server.service.dataServices.RadioLiveALaCarteUserService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.audioServices.ia.TrimingWithIAService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.audioServices.planning.RadioInformationAndPlanningService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.audioServices.recording.RadioRecordingSchedulerService;
+import com.proutechos.sandbox.radiolivealacarte.server.service.audioServices.streaming.StreamingService;
 import com.proutechos.utils.server.rest.config.exceptions.ProutechosBaseException;
 
 import org.junit.Test;
-import org.quartz.SchedulerException;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.DriverManager;
 
 public class RadioLiveALaCarteServiceTest {
 
@@ -275,5 +277,15 @@ public class RadioLiveALaCarteServiceTest {
             System.out.println(e);
         }
     }
+
+    @Test public void connection() {
+
+        Path dbPath = Paths.get("").toAbsolutePath().getParent().resolve("@db/RadioLiveALaCarteDB.db");
+
+        String url = "jdbc:sqlite:" + dbPath.toString();
+        System.out.println(url);
+
+    }
+    //DriverManager.getConnection("jdbc:sqlite:/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer/@db/RadioLiveALaCarteDB.db");
 
 }

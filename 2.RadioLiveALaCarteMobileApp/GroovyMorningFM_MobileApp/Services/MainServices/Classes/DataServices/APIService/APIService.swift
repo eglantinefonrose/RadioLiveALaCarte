@@ -133,18 +133,6 @@ class APIService: ObservableObject, APIServiceProtocol {
         return []
     }
     
-    func getFirstProgram(for userId: String) async -> Program {
-        
-        let programs: [Program] = await self.fetchPrograms(for: userId)
-        
-        if (programs.isEmpty) {
-            return Program(id: "", radioName: "", startTime: 0, endTime: 0, favIcoURL: "")
-        }
-        
-        return programs[0]
-        
-    }
-    
     static func fetchFilesWithoutSegmentNames(for userId: String, completion: @escaping ([String]) -> Void) {
         let urlString = "http://example.com/getFilesWithoutSegmentNamesList/userId/\(userId)"
         guard let url = URL(string: urlString) else {
