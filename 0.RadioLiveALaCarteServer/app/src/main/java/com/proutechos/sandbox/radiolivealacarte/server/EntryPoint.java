@@ -4,6 +4,7 @@
 package com.proutechos.sandbox.radiolivealacarte.server;
 
 import ch.qos.logback.classic.Level;
+import com.proutechos.sandbox.radiolivealacarte.server.api.cache.RadioCacheManager;
 import com.proutechos.utils.server.rest.config.jaxrs.JerseyConfig;
 import com.proutechos.utils.server.rest.config.staticcontentserving.StaticContentServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -73,7 +74,14 @@ public class EntryPoint {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
+
         System.out.println(new EntryPoint().getGreeting());
+
+        // Appel au démarrage
+        RadioCacheManager.saveToCache();
+
+        // Démarrage de la tâche planifiée
+        RadioCacheManager.scheduleCacheUpdate();
 
         // Create a Tomcat instance and configure it to listen on port 8080
         //  - Create the Tomcat instance
@@ -135,6 +143,7 @@ public class EntryPoint {
         System.out.println(" -> Tomcat started");
         System.out.println("    Ctrl+C to stop it");
         tomcat.getServer().await();
+
     }
 
 }

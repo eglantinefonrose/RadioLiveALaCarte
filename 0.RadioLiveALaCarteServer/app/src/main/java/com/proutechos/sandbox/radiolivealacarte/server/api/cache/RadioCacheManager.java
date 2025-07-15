@@ -9,13 +9,18 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 
 public class RadioCacheManager {
 
     private static final String CACHE_FILE = "radio_cache.json";
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     private static List<LightenedRadioStation> fetchFromApi() throws IOException {
 
@@ -73,6 +78,7 @@ public class RadioCacheManager {
     public static void saveToCache() {
         try {
             List<LightenedRadioStation> stations = fetchFromApi();
+            System.out.println("* SAUVEGARDE DANS LE CACHE *");
             objectMapper.writerWithDefaultPrettyPrinter()
                     .writeValue(new File(CACHE_FILE), stations);
         } catch (IOException e) {
@@ -91,5 +97,14 @@ public class RadioCacheManager {
             return Collections.emptyList();
         }
     }
+
+    public static void scheduleCacheUpdate() {
+        // Exécute immédiatement, puis toutes les 24h
+        scheduler.scheduleAtFixedRate(() -> {
+            System.out.println("Mise à jour du cache planifiée...");
+            saveToCache();
+        }, 0, 24, TimeUnit.HOURS);
+    }
+
 }
 
