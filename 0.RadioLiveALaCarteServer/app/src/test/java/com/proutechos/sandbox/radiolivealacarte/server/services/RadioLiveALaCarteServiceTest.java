@@ -14,9 +14,12 @@ import com.proutechos.utils.server.rest.config.exceptions.ProutechosBaseExceptio
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class RadioLiveALaCarteServiceTest {
 
@@ -279,9 +282,15 @@ public class RadioLiveALaCarteServiceTest {
         }
     }
 
-    @Test public void connection() {
+    @Test public void connection() throws MalformedURLException, SQLException {
 
-        Path dbPath = Paths.get("").toAbsolutePath().getParent().resolve("@db/RadioLiveALaCarteDB.db");
+        Path currentPath = Paths.get("").toAbsolutePath();
+
+        // Répertoire parent
+        Path parentPath = currentPath.getParent();
+
+        // Aller dans le sous-dossier "@db" à partir du répertoire parent
+        Path dbPath = parentPath.resolve("@db/RadioLiveALaCarteDB.db");
 
         String url = "jdbc:sqlite:" + dbPath.toString();
         System.out.println(url);
