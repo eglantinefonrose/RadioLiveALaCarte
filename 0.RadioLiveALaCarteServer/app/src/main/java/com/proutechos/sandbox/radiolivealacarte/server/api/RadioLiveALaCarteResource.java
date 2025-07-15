@@ -43,26 +43,6 @@ public class RadioLiveALaCarteResource {
         return RadioInformationAndPlanningService.getInstance().getAllCountries();
     }
 
-
-    /**
-     * curl -s -X GET "http://localhost:8287/api/radio/searchByName/FranceInter"
-     * param name
-     * @return
-     */
-    @GET
-    @Path("searchByName/{name}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public RadioStation[] searchByName(@PathParam("name") String name) throws Exception {
-        return RadioInformationAndPlanningService.getInstance().searchByName(name);
-    }
-
-    @GET
-    @Path("searchByUUID/{uuid}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public RadioStation[] searchByStationUUID(@PathParam("uuid") String uuid) throws Exception {
-        return RadioInformationAndPlanningService.getInstance().searchByStationUUID(uuid);
-    }
-
     /**
      * curl -s -X GET "http://localhost:8287/api/radio/lightenSearchByName/FranceInter"
      * param name
@@ -76,7 +56,7 @@ public class RadioLiveALaCarteResource {
     }
 
     /**
-     * curl -s -X GET "http://localhost:8287/api/radio/lightenSearchByUUID/9609743b-0601-11e8-ae97-52543be04c81"
+     * curl -s -X GET "http://localhost:8287/api/radio/getURLByUUID/9609743b-0601-11e8-ae97-52543be04c81"
      * param name
      * @return
      */
@@ -87,11 +67,16 @@ public class RadioLiveALaCarteResource {
         return RadioInformationAndPlanningService.getInstance().getURLByUUID(uuid);
     }
 
+    /**
+     * curl -s -X GET "http://localhost:8287/api/radio/lightenSearchByUUID/9609743b-0601-11e8-ae97-52543be04c81"
+     * param name
+     * @return
+     */
     @GET
     @Path("lightenSearchByUUID/{uuid}")
     @Produces(MediaType.APPLICATION_JSON)
     public LightenedRadioStation lightenSearchByUUID(@PathParam("uuid") String uuid) throws Exception {
-        return RadioInformationAndPlanningService.getInstance().lightenSearchByUUID(uuid);
+        return RadioInformationAndPlanningService.getInstance().lightenSearchByID(uuid);
     }
 
     private static final String STREAM_URL = "https://stream.radiofrance.fr/franceinter/franceinter_hifi.m3u8?id=radiofrance"; // URL du flux HLS
@@ -426,20 +411,6 @@ public class RadioLiveALaCarteResource {
 
         try {
             return FeedbackService.getInstance().getFeedback(programID);
-        } catch (ProutechosBaseException e) {
-            throw e;
-        }
-
-    }
-
-    //public String getURLByName(String name) throws Exception
-    @GET
-    @Path("/getURLByName/name/{name}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public String getURLByName(@PathParam("name") String name)  throws Exception {
-
-        try {
-            return RadioInformationAndPlanningService.getInstance().getURLByName(name);
         } catch (ProutechosBaseException e) {
             throw e;
         }
