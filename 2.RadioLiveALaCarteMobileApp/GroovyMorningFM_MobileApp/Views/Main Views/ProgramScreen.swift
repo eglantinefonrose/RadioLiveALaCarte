@@ -134,12 +134,6 @@ struct ProgramScreen: View {
                             Spacer()
                                 .frame(width: 10)
                             
-                            /*AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)) {
-                                .frame(width: 50)
-                                .onAppear {
-                                    bigModel.updateBackgroundColor(from: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)
-                                }*/
-                            
                             AsyncImage(url: URL(string: bigModel.programs[bigModel.currentProgramIndex].favIcoURL)) { phase in
                                 if let swiftUIimage = phase.image {
                                     swiftUIimage
