@@ -6,7 +6,7 @@ import Combine
 import Speech
 
 
-struct FullAudioPlayerTest: View {
+struct ProgramPlayerView: View {
     
     let filesPrefixs: [String] = BigModel.shared.liveProgramsNames
     @ObservedObject var bigModel: BigModel = BigModel.shared
@@ -391,6 +391,17 @@ struct FullAudioPlayerTest: View {
                 task.resume()
             }*/
         }
+        
+        .gesture(
+            DragGesture()
+                .onEnded { value in
+                    // Détecte un swipe vers le bas
+                    if value.translation.height > 50 && abs(value.translation.width) < 100 {
+                        // Action sur swipe vers le bas
+                        bigModel.currentView = .ProgramScreen
+                    }
+                }
+        )
     }
     
     private func formatTime(_ seconds: Double) -> String {

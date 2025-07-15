@@ -29,7 +29,7 @@ struct GroovyRootView: View {
             }
             if (BigModel.shared.currentView == .MultipleAudiosPlayer) {
                 //MultipleAudiosPlayer()
-                FullAudioPlayerTest()
+                ProgramPlayerView()
                     .environmentObject(BigModel.shared)
             }
             
