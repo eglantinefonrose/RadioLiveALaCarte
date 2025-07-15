@@ -1,5 +1,6 @@
 package com.proutechos.sandbox.radiolivealacarte.server.services;
 
+import com.proutechos.sandbox.radiolivealacarte.server.api.cache.RadioCacheManager;
 import com.proutechos.sandbox.radiolivealacarte.server.model.Program;
 import com.proutechos.sandbox.radiolivealacarte.server.model.UserModel;
 import com.proutechos.sandbox.radiolivealacarte.server.service.dataServices.dataStorage.RadioLiveALaCarteDataStorage;
@@ -285,6 +286,14 @@ public class RadioLiveALaCarteServiceTest {
         String url = "jdbc:sqlite:" + dbPath.toString();
         System.out.println(url);
 
+    }
+
+    @Test public void createCacheTest() {
+        RadioCacheManager.saveToCache();
+    }
+
+    @Test public void loadCacheTest() {
+        System.out.println(RadioCacheManager.loadFromCache());
     }
     //DriverManager.getConnection("jdbc:sqlite:/Users/eglantine/Dev/0.perso/2.Proutechos/8.RadioStreaming/0.RadioLiveALaCarteServer/@db/RadioLiveALaCarteDB.db");
 
